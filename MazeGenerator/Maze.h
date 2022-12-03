@@ -1,0 +1,21 @@
+#pragma once
+#include "utils.cpp"
+#include <iostream>
+#include <vector>
+#include "Segment.h"
+
+class Maze {
+private:
+	int width;
+	int height;
+
+	std::vector<Line> walls;
+public:
+	Maze();
+	Maze(Size size);
+
+	void generate();
+
+	std::vector<std::shared_ptr<Segment>> getWalls(Size cellSize, Coordinates offset);
+};
+
