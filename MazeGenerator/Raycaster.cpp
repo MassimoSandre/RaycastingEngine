@@ -53,6 +53,10 @@ void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
 		this->rays[i]->setLength(this->raysLength);
 	}
 	for (int i = 0; i < segments.size(); i++) {
+		if (segments[i]->length <= this->raysLength&&
+			segments[i]->p1.distance(this->center) >= 2*this->raysLength &&
+			segments[i]->p2.distance(this->center) >= 2*this->raysLength) continue;
+
 		this->cast(segments[i]);
 	}
 }
@@ -72,6 +76,7 @@ void Raycaster::moveTo(Coordinates newPosition) {
 }
 
 void Raycaster::follow(Coordinates target, float distance) {
+	if (target.distance(center) <= 2) return;
 	double angle = this->center.getAngle(target);
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	this->move(o);

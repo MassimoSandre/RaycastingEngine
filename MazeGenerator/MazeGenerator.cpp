@@ -14,9 +14,9 @@
 int main(void)
 {
     Renderer r(800,800,"Maze");
-    Maze m({ 100,100 });
+    Maze m({ 50,50});
     m.generate();
-    r.addWalls(m.getWalls({ 6,6 }, { 100, 100 }));
+    r.addWalls(m.getWalls({ 12,12 }, { 100, 100 }));
 
     do {
         

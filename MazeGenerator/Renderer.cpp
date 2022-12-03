@@ -13,7 +13,7 @@ void Renderer::init() {
 	}
 	glfwMakeContextCurrent(window);
 
-	Raycaster tCaster({ 400,400 }, 3.14 / 2, 100, 50, 0);
+	Raycaster tCaster({ 400,400 }, 3.14 / 2, 30, 50, 0);
 	caster = std::make_shared<Raycaster>(tCaster);
 }
 
