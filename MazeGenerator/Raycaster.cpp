@@ -44,6 +44,7 @@ void Raycaster::cast(std::shared_ptr<Segment> segment) {
 
 		float d1 = intersection.distance(this->center.toInt());
 		if (d1 == 0) break;
+
 		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 

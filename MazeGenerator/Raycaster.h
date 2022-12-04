@@ -34,5 +34,6 @@ public:
 	void moveRightward(float distance);
 
 	std::vector<Coordinates> getFixedDistances();
+
 };
 

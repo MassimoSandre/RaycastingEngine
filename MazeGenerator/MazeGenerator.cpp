@@ -17,7 +17,6 @@
 
 #define GENERATION_TIME true
 
-
 int main(int argc, char *argv[]) {
     Renderer r(SQUARE_WINDOW_SIZE*2,SQUARE_WINDOW_SIZE,"Maze");
 

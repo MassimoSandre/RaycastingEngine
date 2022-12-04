@@ -133,7 +133,6 @@ void  Maze::generate() {
 
 	int nArcs = 0;
 	selected[0][0] = true;
-
 	Cell c1, c2;
 
 	while(nArcs < v-1) {

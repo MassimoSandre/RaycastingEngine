@@ -59,4 +59,5 @@ public:
 	void drawRect(Coordinates topLeft, Size size, RGB color);
 
 	void drawProjection(std::vector<Coordinates> distances);
+
 };

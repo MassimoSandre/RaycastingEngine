@@ -230,7 +230,6 @@ void Renderer::drawProjection(std::vector<Coordinates> distances) {
 	int minHeight = 100;
 	int rectHeight;
 	int grey;
-
 	Coordinates p;
 
 	for (int i = 0; i < len; i++) {
