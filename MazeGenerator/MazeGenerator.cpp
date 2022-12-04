@@ -12,13 +12,14 @@
 #include <chrono>
 
 #define SQUARE_WINDOW_SIZE 800
-#define DEFAULT_MAZE_SIZE 18
+#define N_SQUARES 2
+#define DEFAULT_MAZE_SIZE 40
 #define DEFAULT_MARGIN 100
 
 #define GENERATION_TIME true
 
 int main(int argc, char *argv[]) {
-    Renderer r(SQUARE_WINDOW_SIZE*2,SQUARE_WINDOW_SIZE,"Maze");
+    Renderer r(SQUARE_WINDOW_SIZE*N_SQUARES,SQUARE_WINDOW_SIZE,"Maze");
 
     int mazeSize = DEFAULT_MAZE_SIZE;
     int cellSize = -1;

@@ -27,14 +27,16 @@ public:
 	void cast(std::shared_ptr<Segment> segment);
 	void cast(std::vector<std::shared_ptr<Segment>> segments);
 
-	void move(Coordinates offsets);
-	void moveTo(Coordinates newPosition);
-	void follow(Coordinates target, float distance);
+	void applyMove(Segment& moveSegment);
 
-	void moveForward(float distance);
-	void moveBackward(float distance);
-	void moveLeftward(float distance);
-	void moveRightward(float distance);
+	Segment move(Coordinates offsets);
+	Segment moveTo(Coordinates newPosition);
+	Segment follow(Coordinates target, float distance);
+
+	Segment moveForward(float distance);
+	Segment moveBackward(float distance);
+	Segment moveLeftward(float distance);
+	Segment moveRightward(float distance);
 
 	std::vector<RenderInfo> getFixedDistances();
 

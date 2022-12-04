@@ -26,6 +26,9 @@ typedef struct Coordinates{
 	Coordinates toInt() {
 		return { float(int(x)), float(int(y)) };
 	}
+	Coordinates add(Coordinates coord) {
+		return { x + coord.x, y + coord.y };
+	}
 } Coordinates;
 
 

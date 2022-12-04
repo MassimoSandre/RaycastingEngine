@@ -98,44 +98,48 @@ void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
 	}*/
 }
 
-void Raycaster::move(Coordinates offsets) {
-	this->center.x += offsets.x;
-	this->center.y += offsets.y;
+void Raycaster::applyMove(Segment& moveSegment) {
+	this->center = moveSegment.p2;
 	for (int i = 0; i < this->nRays; i++) {
-		this->rays[i]->translate(offsets);
+		this->rays[i]->move(this->center);
 	}
 }
-void Raycaster::moveTo(Coordinates newPosition) {
+
+Segment Raycaster::move(Coordinates offsets) {
+	Segment s(this->center, this->center.add(offsets));
+	return s;
+}
+Segment Raycaster::moveTo(Coordinates newPosition) {
 	Coordinates o = { this->center.x - newPosition.x, this->center.y - newPosition.y };
-	this->move(o);
+	return this->move(o);
 }
 
-void Raycaster::follow(Coordinates target, float distance) {
-	if (target.distance(center) <= 2) return;
+Segment Raycaster::follow(Coordinates target, float distance) {
+	if (target.distance(center) <= 2) return Segment(this->center, this->center);
 	double angle = this->center.getAngle(target);
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
-	this->move(o);
+	return this->move(o);
 }
 
-void Raycaster::moveForward(float distance) {
+Segment Raycaster::moveForward(float distance) {
 	double angle = this->baseAngle;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
-	this->move(o);
+	return this->move(o);
 }
-void Raycaster::moveBackward(float distance) {
+Segment Raycaster::moveBackward(float distance) {
 	double angle = this->baseAngle + 3.1415;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
-	this->move(o);
+	return this->move(o);
 }
-void Raycaster::moveLeftward(float distance) {
+Segment Raycaster::moveLeftward(float distance) {
 	double angle = this->baseAngle + 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
-	this->move(o);
+	return this->move(o);
 }
-void Raycaster::moveRightward(float distance) {
+Segment Raycaster::moveRightward(float distance) {
 	double angle = this->baseAngle - 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
-	this->move(o);
+	return this->move(o);
 }
 
 std::vector<RenderInfo> Raycaster::getFixedDistances() {

@@ -3,8 +3,8 @@
 #include <cmath>
 
 void Segment::calculateP2() {
-	this->p2.x = int(p1.x + this->length * cos(this->angle));
-	this->p2.y = int(p1.y - this->length * sin(this->angle));
+	this->p2.x = (p1.x + this->length * cos(this->angle));
+	this->p2.y = (p1.y - this->length * sin(this->angle));
 }
 
 Segment::Segment() {
@@ -41,6 +41,11 @@ void Segment::changeP2(Coordinates p2) {
 	this->p2 = p2;
 	this->length = p1.distance(p2);
 	this->angle = p1.getAngle(p2);
+}
+
+void Segment::move(Coordinates p1) {
+	this->p1 = p1;
+	this->calculateP2();
 }
 
 void Segment::setLength(float length) {

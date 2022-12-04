@@ -1,14 +1,19 @@
 #include "Renderer.h"
 
+#include "Wall.h"
+
 #define DEFAULT_SCREEN_WIDTH_VALUE 120
 #define DEFAULT_SCREEN_HEIGHT_VALUE	120
 
-#define RAYS_LENGTH 100
-#define N_RAYS 40
+#define RAYS_LENGTH 200
+#define N_RAYS 200
 
 #define PI 3.1415
 
-#define FOV PI/3
+#define FOV PI/2
+
+#define MOVE_CHECK_DISTANCE 4
+#define MOVE_DISTANCE 1 
 
 void Renderer::init() {
 	if (!glfwInit())
@@ -20,7 +25,7 @@ void Renderer::init() {
 	}
 	glfwMakeContextCurrent(window);
 
-	Raycaster tCaster({ 400,400 }, FOV, N_RAYS, RAYS_LENGTH, 0);
+	Raycaster tCaster({ 410,410 }, FOV, N_RAYS, RAYS_LENGTH, 0);
 	caster = std::make_shared<Raycaster>(tCaster);
 
 	this->caster->pointTo(this->getMousePosition());
@@ -65,35 +70,151 @@ Coordinates Renderer::getMousePosition() {
 }
 
 bool Renderer::update() {
-	if (glfwGetKey(this->window,GLFW_KEY_W) == GLFW_PRESS) {
-		this->caster->moveForward(1);
+	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS) {
+		move = this->caster->moveForward(MOVE_CHECK_DISTANCE);
+		bool possible = true;
+		for (std::shared_ptr<Segment> w : this->walls) {
+			IntersectionInfo info = move.getIntersection(w);
+
+			if (info.intersection.x != -1 || info.intersection.y != -1) {
+				float d1 = info.intersection.distance(move.p1);
+
+				float d2 = info.intersection.distance(move.p2);
+
+				if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+				if (d2 > MOVE_CHECK_DISTANCE) continue;
+				possible = false;
+				break;
+			}
+
+		}
+		if (possible) {
+			move.setLength(MOVE_DISTANCE);
+			this->caster->applyMove(move);
+		}
 	}
 	if (glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS) {
-		this->caster->moveLeftward(1);
+		move = this->caster->moveLeftward(1);
+		bool possible = true;
+		for (std::shared_ptr<Segment> w : this->walls) {
+			IntersectionInfo info = move.getIntersection(w);
+
+			if (info.intersection.x != -1 || info.intersection.y != -1) {
+				float d1 = info.intersection.distance(move.p1);
+
+				float d2 = info.intersection.distance(move.p2);
+
+				if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+				if (d2 > MOVE_CHECK_DISTANCE) continue;
+				possible = false;
+				break;
+			}
+
+		}
+		if (possible) {
+			move.setLength(MOVE_DISTANCE);
+			this->caster->applyMove(move);
+		}
 	}
 	if (glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS) {
-		this->caster->moveBackward(1);
+		move = this->caster->moveBackward(1);
+		bool possible = true;
+		for (std::shared_ptr<Segment> w : this->walls) {
+			IntersectionInfo info = move.getIntersection(w);
+
+			if (info.intersection.x != -1 || info.intersection.y != -1) {
+				float d1 = info.intersection.distance(move.p1);
+
+				float d2 = info.intersection.distance(move.p2);
+
+				if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+				if (d2 > MOVE_CHECK_DISTANCE) continue;
+				possible = false;
+				break;
+			}
+
+		}
+		if (possible) {
+			move.setLength(MOVE_DISTANCE);
+			this->caster->applyMove(move);
+		}
 	}
 	if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS) {
-		this->caster->moveRightward(1);
+		move = this->caster->moveRightward(1);
+		bool possible = true;
+		for (std::shared_ptr<Segment> w : this->walls) {
+			IntersectionInfo info = move.getIntersection(w);
+
+			if (info.intersection.x != -1 || info.intersection.y != -1) {
+				float d1 = info.intersection.distance(move.p1);
+
+				float d2 = info.intersection.distance(move.p2);
+
+				if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+				if (d2 > MOVE_CHECK_DISTANCE) continue;
+				possible = false;
+				break;
+			}
+
+		}
+		if (possible) {
+			move.setLength(MOVE_DISTANCE);
+			this->caster->applyMove(move);
+		}
 	}
 	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		return false;
 	}
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
-		this->caster->follow(this->getMousePosition(), 2);
+		move = this->caster->follow(this->getMousePosition(), 2);
+		bool possible = true;
+		for (std::shared_ptr<Segment> w : this->walls) {
+			IntersectionInfo info = move.getIntersection(w);
+
+			if (info.intersection.x != -1 || info.intersection.y != -1) {
+				float d1 = info.intersection.distance(move.p1);
+
+				float d2 = info.intersection.distance(move.p2);
+
+				if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+				if (d2 > MOVE_CHECK_DISTANCE) continue;
+				possible = false;
+				break;
+			}
+
+		}
+		if (possible) {
+			move.setLength(MOVE_DISTANCE);
+			this->caster->applyMove(move);
+		}
+	}
+	if (glfwGetKey(this->window, GLFW_KEY_P) == GLFW_PRESS) {
+		this->pause = !this->pause;
+		glfwSetCursorPos(this->window, this->screenWidth / 4 * 3, this->screenHeight / 2);
 	}
 
-	int cursorXDelta = this->screenWidth / 4 * 3-this->getMousePosition().x;
-	glfwSetCursorPos(this->window, this->screenWidth / 4 * 3, this->screenHeight / 2);
+	if (!this->pause) {
+		int cursorXDelta = this->screenWidth / 4 * 3 - this->getMousePosition().x;
+		glfwSetCursorPos(this->window, this->screenWidth / 4 * 3, this->screenHeight / 2);
+		this->caster->rotate(0.003 * cursorXDelta);
+	}
 
 	// WALLS
 	this->drawSegments(this->walls, {255,0,0});
 
 	// RAYCASTER
 	//this->caster->pointTo(this->getMousePosition());
-	this->caster->rotate(0.003 * cursorXDelta);
 	this->caster->cast(this->walls);
 	this->drawView(this->caster);
 	this->drawProjection(this->caster->getFixedDistances());
@@ -235,8 +356,8 @@ void Renderer::drawProjection(std::vector<RenderInfo> distances) {
 	int len = distances.size();
 	float rectWidth = (this->screenWidth / 2) / len;
 
-	float minHeight = 100;
-	float maxHeight = this->screenHeight - 50;
+	float minHeight = 300;
+	float maxHeight = float(this->screenHeight) *1.0;
 	float rectHeight;
 	float grey;
 	Coordinates p;
@@ -252,8 +373,8 @@ void Renderer::drawProjection(std::vector<RenderInfo> distances) {
 
 		if (distances[i].distance == distances[i].maxLength) continue;
 
-		rectHeight = (this->map(pow(distances[i].distance,1), 0, pow(distances[i].maxLength,1), maxHeight, minHeight)); //this->screenHeight - distances[i].distance / float(RAYS_LENGTH) * float(this->screenHeight - minHeight);
-		grey = this->map(pow(distances[i].distance, 2), 0, pow(distances[i].maxLength, 2), 1, 0.9);
+		rectHeight =  maxHeight - distances[i].distance / float(RAYS_LENGTH) * float(maxHeight - minHeight);//(this->map(pow(distances[i].distance,1), 0, pow(distances[i].maxLength,1), maxHeight, minHeight));
+		grey = this->map(pow(distances[i].distance, 0.5), 0, pow(distances[i].maxLength, .5), 1, 0);
 
 		p.y = (this->screenHeight - rectHeight) / 2;
 
