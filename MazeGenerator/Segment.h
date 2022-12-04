@@ -27,6 +27,6 @@ public:
 	void translate(Coordinates offsets);
 
 
-	Coordinates getIntersection(std::shared_ptr<Segment> segment);
+	IntersectionInfo getIntersection(std::shared_ptr<Segment> segment);
 };
 

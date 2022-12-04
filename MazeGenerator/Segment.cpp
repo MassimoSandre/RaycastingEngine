@@ -66,8 +66,8 @@ void Segment::translate(Coordinates offsets) {
 	this->p2.y += offsets.y;
 }
 
-Coordinates Segment::getIntersection(std::shared_ptr<Segment> segment) {
-	
+IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
+
 	float a1, b1, c1, a2, b2, c2, den;
 
 	a1 = int(this->p2.y) - int(this->p1.y);
@@ -84,20 +84,22 @@ Coordinates Segment::getIntersection(std::shared_ptr<Segment> segment) {
 		return { -1,-1 };
 	}
 
-	Coordinates intersection = { int((b2 * c1 - b1 * c2) / den), int((a1 * c2 - a2 * c1) / den) };
+	IntersectionInfo intersection = { int((b2 * c1 - b1 * c2) / den), int((a1 * c2 - a2 * c1) / den), 0 };
 
 	if (segment->p1.x > segment->p2.x) {
-		if (intersection.x > segment->p1.x || intersection.x < segment->p2.x) return { -1,-1 };
+		if (intersection.intersection.x > segment->p1.x || intersection.intersection.x < segment->p2.x) return { -1,-1 };
 	}
 	else {
-		if (intersection.x < segment->p1.x || intersection.x > segment->p2.x) return { -1,-1 };
+		if (intersection.intersection.x < segment->p1.x || intersection.intersection.x > segment->p2.x) return { -1,-1 };
 	}
 	if (segment->p1.y > segment->p2.y) {
-		if (intersection.y > segment->p1.y || intersection.y < segment->p2.y) return { -1,-1 };
+		if (intersection.intersection.y > segment->p1.y || intersection.intersection.y < segment->p2.y) return { -1,-1 };
 	}
 	else {
-		if (intersection.y < segment->p1.y || intersection.y > segment->p2.y) return { -1,-1 };
+		if (intersection.intersection.y < segment->p1.y || intersection.intersection.y > segment->p2.y) return { -1,-1 };
 	}
+
+	intersection.colOffset = segment->p1.distance(intersection.intersection);
 
 	return intersection;
 }

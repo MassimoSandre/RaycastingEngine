@@ -3,8 +3,12 @@
 #define DEFAULT_SCREEN_WIDTH_VALUE 120
 #define DEFAULT_SCREEN_HEIGHT_VALUE	120
 
-#define RAYS_LENGTH 200
+#define RAYS_LENGTH 100
+#define N_RAYS 40
 
+#define PI 3.1415
+
+#define FOV PI/3
 
 void Renderer::init() {
 	if (!glfwInit())
@@ -16,12 +20,16 @@ void Renderer::init() {
 	}
 	glfwMakeContextCurrent(window);
 
-	Raycaster tCaster({ 400,400 }, 3.14 / 2, 30, RAYS_LENGTH, 0);
+	Raycaster tCaster({ 400,400 }, FOV, N_RAYS, RAYS_LENGTH, 0);
 	caster = std::make_shared<Raycaster>(tCaster);
 
 	this->caster->pointTo(this->getMousePosition());
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
+float Renderer::map(float value, float istart, float istop, float ostart, float ostop) {
+	return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
 
 Renderer::Renderer() {
@@ -196,11 +204,11 @@ void Renderer::drawView(std::shared_ptr<Raycaster> r, RGB color, bool connect) {
 	}
 }
 
-void Renderer::drawRect(Coordinates topLeft, Size size) {
+void Renderer::drawRect(Coordinates topLeft, Coordinates size) {
 	this->drawRect(topLeft, size, { 255,255,255 });
 
 }
-void Renderer::drawRect(Coordinates topLeft, Size size, RGB color) {
+void Renderer::drawRect(Coordinates topLeft, Coordinates size, RGB color) {
 	int x1 = topLeft.x,
 		x2 = topLeft.x + size.x;
 	int y1 = topLeft.y,
@@ -223,24 +231,48 @@ void Renderer::drawRect(Coordinates topLeft, Size size, RGB color) {
 	glEnd();
 }
 
-void Renderer::drawProjection(std::vector<Coordinates> distances) {
+void Renderer::drawProjection(std::vector<RenderInfo> distances) {
 	int len = distances.size();
-	int rectWidth = (this->screenWidth / 2) / len;
+	float rectWidth = (this->screenWidth / 2) / len;
 
-	int minHeight = 100;
-	int rectHeight;
-	int grey;
+	float minHeight = 100;
+	float maxHeight = this->screenHeight - 50;
+	float rectHeight;
+	float grey;
 	Coordinates p;
 
 	for (int i = 0; i < len; i++) {
-		if (distances[i].x == distances[i].y) continue;
+		p.x = this->screenWidth / 2 + rectWidth * i;
 
-		rectHeight = this->screenHeight - int(distances[i].x / float(RAYS_LENGTH) * float(this->screenHeight - minHeight));
-		grey = 255 - int(distances[i].x / float(RAYS_LENGTH) * 235);
+		const int CHUNK_SIZE = 4;
+		for (int j = 0; j < this->screenHeight/ CHUNK_SIZE; j++) {
+			grey = this->map(pow(abs(j * CHUNK_SIZE - this->screenHeight / 2),2), 0, pow(this->screenHeight / 2,2), 0, 100);
+			this->drawRect(Coordinates{p.x,(float)j*CHUNK_SIZE}, Coordinates{rectWidth, CHUNK_SIZE}, {int(grey),int(grey),int(grey)});
+		}
 
-		p.x = this->screenWidth/2 + rectWidth * i;
+		if (distances[i].distance == distances[i].maxLength) continue;
+
+		rectHeight = (this->map(pow(distances[i].distance,1), 0, pow(distances[i].maxLength,1), maxHeight, minHeight)); //this->screenHeight - distances[i].distance / float(RAYS_LENGTH) * float(this->screenHeight - minHeight);
+		grey = this->map(pow(distances[i].distance, 2), 0, pow(distances[i].maxLength, 2), 1, 0.9);
+
 		p.y = (this->screenHeight - rectHeight) / 2;
 
-		this->drawRect(p, { rectWidth, rectHeight }, { grey,grey,grey });
+		int c = (int(distances[i].colOffset) % 32);
+
+		const int IMAGE_HEIGHT = 64;
+
+		rectHeight = rectHeight / IMAGE_HEIGHT;
+
+		for (int j = 0; j < IMAGE_HEIGHT; j++) {
+			RGB color = this->wallTexture[c%16][j%16];
+			color.r = float(color.r)* grey;
+			color.g = float(color.g) * grey;
+			color.b = float(color.b) * grey;
+			this->drawRect(p, Coordinates{ rectWidth, rectHeight }, color);
+			
+			p.y += rectHeight;
+		}
+
+
 	}
 }

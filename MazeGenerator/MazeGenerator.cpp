@@ -12,7 +12,7 @@
 #include <chrono>
 
 #define SQUARE_WINDOW_SIZE 800
-#define DEFAULT_MAZE_SIZE 15
+#define DEFAULT_MAZE_SIZE 18
 #define DEFAULT_MARGIN 100
 
 #define GENERATION_TIME true

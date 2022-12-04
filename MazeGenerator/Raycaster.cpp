@@ -9,7 +9,9 @@ Raycaster::Raycaster(Coordinates center, double fov, int nRays, float raysLength
 	this->nRays = nRays;
 	this->raysLength = raysLength;
 	this->baseAngle = baseAngle;
+	this->colOffsets.resize(nRays);
 
+	this->focalLength = ((1.0f / tan(fov / 2.0f)) / 2.0f);
 
 	baseAngle -= fov / 2;
 	double angleDelta = (float)fov / float(nRays - 1);
@@ -24,14 +26,23 @@ Raycaster::Raycaster(Coordinates center, double fov, int nRays, float raysLength
 void Raycaster::pointTo(Coordinates p) {
 	this->baseAngle = this->center.getAngle(p);
 
-	double angleDelta = (float)this->fov / (this->nRays - 1);
+	double x = 0;
+	double angle;
+
+	for (int i = 0; i < this->nRays; i++) {
+		x = (float(i) / float(this->nRays)) - 0.5;
+		angle = atan2(x, this->focalLength);
+		this->rays[i]->setAngle(this->baseAngle + angle);
+	}
+
+	/*double angleDelta = (float)this->fov / (this->nRays - 1);
 
 	double startingAngle = this->baseAngle - fov / 2;
 
 	for (int i = 0; i < this->nRays; i++) {
 		this->rays[i]->setAngle(startingAngle);
 		startingAngle += angleDelta;
-	}
+	}*/
 }
 
 void Raycaster::rotate(double angle) {
@@ -40,18 +51,20 @@ void Raycaster::rotate(double angle) {
 
 void Raycaster::cast(std::shared_ptr<Segment> segment) {
 	for (int i = 0; i < this->nRays; i++) {
-		Coordinates intersection = this->rays[i]->getIntersection(segment);
+		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
 
-		float d1 = intersection.distance(this->center.toInt());
+		float d1 = intersection.intersection.distance(this->center.toInt());
 		if (d1 == 0) break;
 
 		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 
-		float d2 = intersection.distance(this->rays[i]->p2);
+		float d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 
-		this->rays[i]->changeP2(intersection);
+		this->colOffsets[i] = intersection.colOffset;
+
+		this->rays[i]->changeP2(intersection.intersection);
 	}
 }
 void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
@@ -66,14 +79,23 @@ void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
 		this->cast(segments[i]);
 	}
 
-	double angleDelta = (float)this->fov / (this->nRays - 1);
+	double x = 0;
+	double angle;
+
+	for (int i = 0; i < this->nRays; i++) {
+		x = (float(i) / float(this->nRays)) - 0.5;
+		angle = atan2(x, this->focalLength);
+		this->rays[i]->setAngle(this->baseAngle + angle);
+	}
+
+	/*double angleDelta = (float)this->fov / (this->nRays - 1);
 
 	double startingAngle = this->baseAngle - fov / 2;
 
 	for (int i = 0; i < this->nRays; i++) {
 		this->rays[i]->setAngle(startingAngle);
 		startingAngle += angleDelta;
-	}
+	}*/
 }
 
 void Raycaster::move(Coordinates offsets) {
@@ -116,17 +138,18 @@ void Raycaster::moveRightward(float distance) {
 	this->move(o);
 }
 
-std::vector<Coordinates> Raycaster::getFixedDistances() {
-	std::vector<Coordinates> d;
+std::vector<RenderInfo> Raycaster::getFixedDistances() {
+	std::vector<RenderInfo> d;
 
-	double startingAngle = this->fov / 2;
-	double angleDelta = (float)fov / (nRays - 1);
+	/*double startingAngle = this->fov / 2;
+	double angleDelta = (float)fov / (nRays - 1);*/
 
 	for (int i = this->nRays - 1; i >= 0; i--) {
-		d.push_back(Coordinates{ this->rays[i]->length * (float)cos(startingAngle) , this->raysLength * (float)cos(startingAngle) });
+		d.push_back(RenderInfo{ this->rays[i]->length * (float)cos(this->rays[i]->angle - this->baseAngle) , this->raysLength * (float)cos(this->rays[i]->angle - this->baseAngle), this->colOffsets[i]});
 
-		startingAngle -= angleDelta;
+		//startingAngle -= angleDelta;
 	}
+	
 
 	return d;
 }

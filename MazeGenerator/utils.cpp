@@ -54,3 +54,14 @@ typedef struct {
 } CellWeight;
 
 enum RayType {Generic, Obstacle, View};
+
+typedef struct {
+	Coordinates intersection;
+	float colOffset;
+} IntersectionInfo;
+
+typedef struct {
+	float distance;
+	float maxLength;
+	float colOffset;
+} RenderInfo;

@@ -12,8 +12,11 @@ private:
 	int nRays;
 	float raysLength;
 	double baseAngle;
+	float focalLength;
 public:
+
 	std::vector<std::shared_ptr<Segment>> rays;
+	std::vector<float> colOffsets;
 
 	Raycaster(Coordinates center, double fov, int nRays, float raysLength, double baseAngle);
 
@@ -33,7 +36,7 @@ public:
 	void moveLeftward(float distance);
 	void moveRightward(float distance);
 
-	std::vector<Coordinates> getFixedDistances();
+	std::vector<RenderInfo> getFixedDistances();
 
 };
 
