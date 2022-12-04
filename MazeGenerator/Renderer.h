@@ -54,4 +54,9 @@ public:
 
 	void drawView(std::shared_ptr<Raycaster> r, bool connect = true);
 	void drawView(std::shared_ptr<Raycaster> r, RGB color, bool connect = true);
+
+	void drawRect(Coordinates topLeft, Size size);
+	void drawRect(Coordinates topLeft, Size size, RGB color);
+
+	void drawProjection(std::vector<Coordinates> distances);
 };

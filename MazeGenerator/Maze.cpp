@@ -214,6 +214,11 @@ void  Maze::generate() {
 	}
 }
 
+void Maze::setSize(Size size) {
+	this->width = size.x;
+	this->height = size.y;
+}
+
 std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset) {
 	std::vector<std::shared_ptr<Segment>> walls;
 	Line t;
