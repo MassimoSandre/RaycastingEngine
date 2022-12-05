@@ -36,7 +36,10 @@
     <ClCompile Include="Wall.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Raycaster.cpp">
+    <ClCompile Include="Player.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +59,10 @@
     <ClInclude Include="Wall.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Raycaster.h">
+    <ClInclude Include="Player.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

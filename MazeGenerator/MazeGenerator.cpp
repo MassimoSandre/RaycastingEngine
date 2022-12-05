@@ -4,23 +4,33 @@
 #include "utils.cpp"
 #include "Segment.h"
 #include "Ray.h"
-#include "Raycaster.h"
+#include "Player.h"
+#include "Game.h"
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <thread>
 #include <chrono>
 
+#define WINDOW_TITLE "Maze"
+
 #define SQUARE_WINDOW_SIZE 800
 #define N_SQUARES 2
+
+#define RAYS_LENGTH 100
+#define N_RAYS 100
+
+#define PI 3.1415
+#define DEFAULT_FOV PI/2
+
 #define DEFAULT_MAZE_SIZE 16
 #define DEFAULT_MARGIN 100
 
 #define GENERATION_TIME true
 
 int main(int argc, char *argv[]) {
-    Renderer r(SQUARE_WINDOW_SIZE*N_SQUARES,SQUARE_WINDOW_SIZE,"Maze");
-
+    Game game(Size{SQUARE_WINDOW_SIZE*N_SQUARES, SQUARE_WINDOW_SIZE}, WINDOW_TITLE, Coordinates{10,10}, 0.0f, DEFAULT_FOV, N_RAYS, RAYS_LENGTH);
+    
     int mazeSize = DEFAULT_MAZE_SIZE;
     int cellSize = -1;
 
@@ -67,8 +77,8 @@ int main(int argc, char *argv[]) {
 #else
     m.generate();
 #endif
-
-    r.addWalls(m.getWalls({ cellSize,cellSize }, { margin, margin }));
+    
+    game.addWalls(m.getWalls({ cellSize,cellSize }, { margin, margin }));
 
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;
@@ -99,7 +109,8 @@ int main(int argc, char *argv[]) {
         }
 
         if (unprocessed >= 1.0) {
-            running = r.update();
+            running = game.update();
+            game.render();
             unprocessed = 0.0;
             frame++;
         }

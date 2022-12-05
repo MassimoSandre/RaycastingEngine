@@ -5,7 +5,7 @@
 #include "Ray.h"
 #include "Segment.h"
 
-class Raycaster {
+class Player {
 private:
 	Coordinates center;
 	double fov;
@@ -18,7 +18,7 @@ public:
 	std::vector<std::shared_ptr<Segment>> rays;
 	std::vector<float> colOffsets;
 
-	Raycaster(Coordinates center, double fov, int nRays, float raysLength, double baseAngle);
+	Player(Coordinates center, double fov, int nRays, float raysLength, double baseAngle);
 
 	void pointTo(Coordinates p);
 

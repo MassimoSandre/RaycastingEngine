@@ -1,9 +1,9 @@
-#include "Raycaster.h"
+#include "Player.h"
 #include "Ray.h"
 #include "utils.cpp"
 #include <cmath>
 
-Raycaster::Raycaster(Coordinates center, double fov, int nRays, float raysLength, double baseAngle) {
+Player::Player(Coordinates center, double fov, int nRays, float raysLength, double baseAngle) {
 	this->center = center;
 	this->fov = fov;
 	this->nRays = nRays;
@@ -23,7 +23,7 @@ Raycaster::Raycaster(Coordinates center, double fov, int nRays, float raysLength
 	}
 }
 
-void Raycaster::pointTo(Coordinates p) {
+void Player::pointTo(Coordinates p) {
 	this->baseAngle = this->center.getAngle(p);
 
 	double x = 0;
@@ -45,11 +45,11 @@ void Raycaster::pointTo(Coordinates p) {
 	}*/
 }
 
-void Raycaster::rotate(double angle) {
+void Player::rotate(double angle) {
 	this->baseAngle += angle;
 }
 
-void Raycaster::cast(std::shared_ptr<Segment> segment) {
+void Player::cast(std::shared_ptr<Segment> segment) {
 	for (int i = 0; i < this->nRays; i++) {
 		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
 
@@ -67,7 +67,7 @@ void Raycaster::cast(std::shared_ptr<Segment> segment) {
 		this->rays[i]->changeP2(intersection.intersection);
 	}
 }
-void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
+void Player::cast(std::vector<std::shared_ptr<Segment>> segments) {
 	for (int i = 0; i < this->nRays; i++) {
 		this->rays[i]->setLength(this->raysLength);
 	}
@@ -98,51 +98,51 @@ void Raycaster::cast(std::vector<std::shared_ptr<Segment>> segments) {
 	}*/
 }
 
-void Raycaster::applyMove(Segment& moveSegment) {
+void Player::applyMove(Segment& moveSegment) {
 	this->center = moveSegment.p2;
 	for (int i = 0; i < this->nRays; i++) {
 		this->rays[i]->move(this->center);
 	}
 }
 
-Segment Raycaster::move(Coordinates offsets) {
+Segment Player::move(Coordinates offsets) {
 	Segment s(this->center, this->center.add(offsets));
 	return s;
 }
-Segment Raycaster::moveTo(Coordinates newPosition) {
+Segment Player::moveTo(Coordinates newPosition) {
 	Coordinates o = { this->center.x - newPosition.x, this->center.y - newPosition.y };
 	return this->move(o);
 }
 
-Segment Raycaster::follow(Coordinates target, float distance) {
+Segment Player::follow(Coordinates target, float distance) {
 	if (target.distance(center) <= 2) return Segment(this->center, this->center);
 	double angle = this->center.getAngle(target);
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
 
-Segment Raycaster::moveForward(float distance) {
+Segment Player::moveForward(float distance) {
 	double angle = this->baseAngle;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Raycaster::moveBackward(float distance) {
+Segment Player::moveBackward(float distance) {
 	double angle = this->baseAngle + 3.1415;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Raycaster::moveLeftward(float distance) {
+Segment Player::moveLeftward(float distance) {
 	double angle = this->baseAngle + 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Raycaster::moveRightward(float distance) {
+Segment Player::moveRightward(float distance) {
 	double angle = this->baseAngle - 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
 
-std::vector<RenderInfo> Raycaster::getFixedDistances() {
+std::vector<RenderInfo> Player::getFixedDistances() {
 	std::vector<RenderInfo> d;
 
 	/*double startingAngle = this->fov / 2;

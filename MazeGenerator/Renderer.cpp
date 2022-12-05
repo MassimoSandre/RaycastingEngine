@@ -1,7 +1,5 @@
 #include "Renderer.h"
 
-#include "Wall.h"
-
 #define WALL_HEIGHT 8000.0
 
 #define DEFAULT_SCREEN_WIDTH_VALUE 120
@@ -18,8 +16,9 @@
 #define MOVE_DISTANCE 1 
 
 void Renderer::init() {
-	if (!glfwInit())
-		throw std::ios_base::failure("glfwInit failed");
+	if (!glfwInit()) {
+		throw std::ios_base::failure("glfw init failed");
+	}
 	this->window = glfwCreateWindow(this->screenWidth, this->screenHeight, this->windowTitle.c_str(), NULL, NULL);
 	if (!window) {
 		glfwTerminate();
@@ -27,12 +26,7 @@ void Renderer::init() {
 	}
 	glfwMakeContextCurrent(window);
 
-	Raycaster tCaster({ 410,410 }, FOV, N_RAYS, RAYS_LENGTH, 0);
-	caster = std::make_shared<Raycaster>(tCaster);
-
-	this->caster->pointTo(this->getMousePosition());
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN); 
 }
 
 float Renderer::map(float value, float istart, float istop, float ostart, float ostop) {
@@ -66,176 +60,28 @@ Renderer::~Renderer() {
 
 Coordinates Renderer::getMousePosition() {
 	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
+	glfwGetCursorPos(this->window, &xpos, &ypos);
 
 	return { float(xpos), float(ypos) };
 }
+void Renderer::setMousePosition(Coordinates position) {
+	glfwSetCursorPos(this->window, position.x, position.y);
+}
 
-bool Renderer::update() {
-	if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS) {
-		move = this->caster->moveForward(MOVE_CHECK_DISTANCE);
-		bool possible = true;
-		for (std::shared_ptr<Segment> w : this->walls) {
-			IntersectionInfo info = move.getIntersection(w);
+bool Renderer::isKeyPressed(int key) {
+	return glfwGetKey(this->window, key) == GLFW_PRESS;
+}
+bool Renderer::leftClick() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+}
+bool Renderer::closing() {
+	return glfwWindowShouldClose(this->window);
+}
 
-			if (info.intersection.x != -1 || info.intersection.y != -1) {
-				float d1 = info.intersection.distance(move.p1);
-
-				float d2 = info.intersection.distance(move.p2);
-
-				if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-				if (d2 > MOVE_CHECK_DISTANCE) continue;
-				possible = false;
-				break;
-			}
-
-		}
-		if (possible) {
-			move.setLength(MOVE_DISTANCE);
-			this->caster->applyMove(move);
-		}
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS) {
-		move = this->caster->moveLeftward(1);
-		bool possible = true;
-		for (std::shared_ptr<Segment> w : this->walls) {
-			IntersectionInfo info = move.getIntersection(w);
-
-			if (info.intersection.x != -1 || info.intersection.y != -1) {
-				float d1 = info.intersection.distance(move.p1);
-
-				float d2 = info.intersection.distance(move.p2);
-
-				if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-				if (d2 > MOVE_CHECK_DISTANCE) continue;
-				possible = false;
-				break;
-			}
-
-		}
-		if (possible) {
-			move.setLength(MOVE_DISTANCE);
-			this->caster->applyMove(move);
-		}
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS) {
-		move = this->caster->moveBackward(1);
-		bool possible = true;
-		for (std::shared_ptr<Segment> w : this->walls) {
-			IntersectionInfo info = move.getIntersection(w);
-
-			if (info.intersection.x != -1 || info.intersection.y != -1) {
-				float d1 = info.intersection.distance(move.p1);
-
-				float d2 = info.intersection.distance(move.p2);
-
-				if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-				if (d2 > MOVE_CHECK_DISTANCE) continue;
-				possible = false;
-				break;
-			}
-
-		}
-		if (possible) {
-			move.setLength(MOVE_DISTANCE);
-			this->caster->applyMove(move);
-		}
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS) {
-		move = this->caster->moveRightward(1);
-		bool possible = true;
-		for (std::shared_ptr<Segment> w : this->walls) {
-			IntersectionInfo info = move.getIntersection(w);
-
-			if (info.intersection.x != -1 || info.intersection.y != -1) {
-				float d1 = info.intersection.distance(move.p1);
-
-				float d2 = info.intersection.distance(move.p2);
-
-				if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-				if (d2 > MOVE_CHECK_DISTANCE) continue;
-				possible = false;
-				break;
-			}
-
-		}
-		if (possible) {
-			move.setLength(MOVE_DISTANCE);
-			this->caster->applyMove(move);
-		}
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		return false;
-	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-	{
-		move = this->caster->follow(this->getMousePosition(), 2);
-		bool possible = true;
-		for (std::shared_ptr<Segment> w : this->walls) {
-			IntersectionInfo info = move.getIntersection(w);
-
-			if (info.intersection.x != -1 || info.intersection.y != -1) {
-				float d1 = info.intersection.distance(move.p1);
-
-				float d2 = info.intersection.distance(move.p2);
-
-				if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-				if (d2 > MOVE_CHECK_DISTANCE) continue;
-				possible = false;
-				break;
-			}
-
-		}
-		if (possible) {
-			move.setLength(MOVE_DISTANCE);
-			this->caster->applyMove(move);
-		}
-	}
-	if (glfwGetKey(this->window, GLFW_KEY_P) == GLFW_PRESS) {
-		this->pause = !this->pause;
-		glfwSetCursorPos(this->window, this->screenWidth / 4 * 3, this->screenHeight / 2);
-	}
-
-	if (!this->pause) {
-		int cursorXDelta = this->screenWidth / 4 * 3 - this->getMousePosition().x;
-		glfwSetCursorPos(this->window, this->screenWidth / 4 * 3, this->screenHeight / 2);
-		this->caster->rotate(0.003 * cursorXDelta);
-	}
-
-	// WALLS
-	this->drawSegments(this->walls, {255,0,0});
-
-	// RAYCASTER
-	//this->caster->pointTo(this->getMousePosition());
-	this->caster->cast(this->walls);
-	this->drawView(this->caster);
-	this->drawProjection(this->caster->getFixedDistances());
-
+void Renderer::update() {
 	glfwSwapBuffers(this->window);
-
 	glfwPollEvents();
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	return !glfwWindowShouldClose(this->window);
-}
-
-void Renderer::addWall(std::shared_ptr<Segment> segment) {
-	this->walls.push_back(segment);
-}
-void Renderer::addWalls(std::vector<std::shared_ptr<Segment>> segments) {
-	for (int i = 0; i < segments.size(); i++) {
-		this->walls.push_back(segments[i]);
-	}
 }
 
 void Renderer::drawPixel(int x, int y) {
@@ -310,19 +156,19 @@ void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>> segments, RGB 
 	}
 }
 
-void Renderer::drawView(std::shared_ptr<Raycaster> r, bool connect) {
+void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, bool connect) {
 	this->drawView(r, { 255,255,255 }, connect);
 }
-void Renderer::drawView(std::shared_ptr<Raycaster> r, RGB color, bool connect) {
-	this->drawSegment(r->rays[0]);
-	this->drawSegment(r->rays[r->rays.size() - 1]);
+void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, RGB color, bool connect) {
+	this->drawSegment(r[0]);
+	this->drawSegment(r[r.size() - 1]);
 
-	for (int i = 0; i < r->rays.size() - 1; i++) {
+	for (int i = 0; i < r.size() - 1; i++) {
 		if (connect) {
-			this->drawLine(r->rays[i]->p2, r->rays[i + 1]->p2, color);
+			this->drawLine(r[i]->p2, r[i + 1]->p2, color);
 		}
 		else {
-			this->drawPixel(r->rays[i]->p2, color);
+			this->drawPixel(r[i]->p2, color);
 		}
 	}
 }
@@ -370,6 +216,16 @@ void Renderer::drawProjection(std::vector<RenderInfo> distances) {
 		const int CHUNK_SIZE = 4;
 		for (int j = 0; j < this->screenHeight/ CHUNK_SIZE; j++) {
 			grey = this->map(pow(abs(j * CHUNK_SIZE - this->screenHeight / 2),2), 0, pow(this->screenHeight / 2,2), 0, 100);
+			if (j < (this->screenHeight / CHUNK_SIZE)/2) {
+				rectHeight = this->screenHeight - (2 * (j * CHUNK_SIZE)) ;
+			}
+			else {
+				rectHeight = this->screenHeight - (2 * (this->screenHeight - (j * CHUNK_SIZE))) ;
+			}
+
+			double distance = std::min(WALL_HEIGHT / rectHeight, (double)distances[i].maxLength);
+			
+			grey = this->map(pow(distance, 0.5), 0, pow(distances[i].maxLength, .5), 160, 0);
 			this->drawRect(Coordinates{p.x,(float)j*CHUNK_SIZE}, Coordinates{rectWidth, CHUNK_SIZE}, {int(grey),int(grey),int(grey)});
 		}
 

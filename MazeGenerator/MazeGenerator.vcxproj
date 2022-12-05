@@ -133,9 +133,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MazeGenerator.cpp" />
-    <ClCompile Include="Raycaster.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -143,8 +144,9 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Maze.h" />
-    <ClInclude Include="Raycaster.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
