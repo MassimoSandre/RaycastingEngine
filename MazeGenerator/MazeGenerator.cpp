@@ -13,7 +13,7 @@
 
 #define SQUARE_WINDOW_SIZE 800
 #define N_SQUARES 2
-#define DEFAULT_MAZE_SIZE 40
+#define DEFAULT_MAZE_SIZE 16
 #define DEFAULT_MARGIN 100
 
 #define GENERATION_TIME true
@@ -70,8 +70,40 @@ int main(int argc, char *argv[]) {
 
     r.addWalls(m.getWalls({ cellSize,cellSize }, { margin, margin }));
 
-    
-    while (r.update());
+    double targetFPS = 60.0;
+    double nsPerFrame = 1000000000.0 / targetFPS;
+    auto lastTime = std::chrono::steady_clock::now();
+    double unprocessed = 0.0;
+    double timeElapsed = 0.0;
+    double totalSecondsElapsed = 0.0;
+
+    int frame = 0;
+
+    bool canUpdate = false;
+
+    bool running = true;
+
+
+
+    while (running) {
+        auto now = std::chrono::steady_clock::now();
+        timeElapsed = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(now - lastTime).count();
+        
+        unprocessed += timeElapsed / nsPerFrame;
+        totalSecondsElapsed += timeElapsed/1000000000.0;
+        lastTime = now;
+        if (totalSecondsElapsed  >= 1.0) {
+            std::cout << "FPS:" << double(frame)/ totalSecondsElapsed << std::endl;
+            totalSecondsElapsed = 0.0;
+            frame = 0;
+        }
+
+        if (unprocessed >= 1.0) {
+            running = r.update();
+            unprocessed = 0.0;
+            frame++;
+        }
+    }
 
     return 0;
 }
