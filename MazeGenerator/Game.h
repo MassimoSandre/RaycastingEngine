@@ -24,7 +24,7 @@ private:
 	void tryMove(Segment move);
 	void keyHandler();
 public:
-	Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, double noRays, double viewLength);
+	Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, double noRays, double viewLength);
 	~Game();
 
 	bool update();

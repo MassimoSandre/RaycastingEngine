@@ -23,36 +23,25 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 16
-#define DEFAULT_MARGIN 100
+#define DEFAULT_MAZE_SIZE 200
+#define DEFAULT_CELL_SIZE 36
 
 #define GENERATION_TIME true
 
 int main(int argc, char *argv[]) {
-    Game game(Size{SQUARE_WINDOW_SIZE*N_SQUARES, SQUARE_WINDOW_SIZE}, WINDOW_TITLE, Coordinates{10,10}, 0.0f, DEFAULT_FOV, N_RAYS, RAYS_LENGTH);
-    
-    int mazeSize = DEFAULT_MAZE_SIZE;
-    int cellSize = -1;
+    Game game(N_SQUARES, 
+        SQUARE_WINDOW_SIZE,
+        Size{(DEFAULT_MAZE_SIZE+2)*DEFAULT_CELL_SIZE,(DEFAULT_MAZE_SIZE + 2) * DEFAULT_CELL_SIZE },
+        WINDOW_TITLE, 
+        Coordinates{10,10}, 
+        0.0f, 
+        DEFAULT_FOV, 
+        N_RAYS, 
+        RAYS_LENGTH);
 
-    if (argc == 3) {
-        mazeSize = std::stoi(argv[1]);
-        cellSize = std::stoi(argv[2]);
-    }
-    else if (argc == 2) {
-        mazeSize = std::stoi(argv[1]);
-    }
-
-    if (cellSize == -1) {
-        cellSize = (SQUARE_WINDOW_SIZE - 2 * DEFAULT_MARGIN) / mazeSize;
-    }
-
-    float margin = (SQUARE_WINDOW_SIZE - mazeSize * cellSize)/2;
-
-    Maze m({ mazeSize, mazeSize });
+    Maze m({ DEFAULT_MAZE_SIZE, DEFAULT_MAZE_SIZE });
 
 #if GENERATION_TIME
-  
-    m.setSize({ mazeSize,mazeSize });
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     m.generate();
@@ -71,14 +60,14 @@ int main(int argc, char *argv[]) {
             seconds = ',' + seconds;
         }
     }
-    std::cout << mazeSize << "x" << mazeSize << " Maze generation took " << seconds << " seconds\n";
+    std::cout << DEFAULT_MAZE_SIZE << "x" << DEFAULT_MAZE_SIZE << " Maze generation took " << seconds << " seconds\n";
         
     
 #else
     m.generate();
 #endif
     
-    game.addWalls(m.getWalls({ cellSize,cellSize }, { margin, margin }));
+    game.addWalls(m.getWalls({ DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, { DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }));
 
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;

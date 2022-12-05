@@ -86,11 +86,11 @@ void Game::keyHandler() {
 	}
 }
 
-Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, double noRays, double viewLength) :
+Game::Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, double noRays, double viewLength) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
-	renderer(1600, 800, "Maze") {
+	renderer(mazeAreaSize, "Maze", Rect{ {0,0},{(float)windowSquareSize,(float)windowSquareSize} }, Rect{ {(float)windowSquareSize,0},{(float)windowSquareSize,(float)windowSquareSize} }) {
 	
-	this->screenSize = windowSize;
+	this->screenSize = { nSquare * windowSquareSize, windowSquareSize };
 }
 
 Game::~Game() {}
@@ -111,11 +111,9 @@ bool Game::update() {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
-	// WALLS
 	this->renderer.drawSegments(this->walls, { 255,0,0 });
-
-	// PLAYER
 	this->renderer.drawView(this->player.rays);
+
 	this->renderer.drawProjection(this->player.getFixedDistances());
 
 	this->renderer.update();

@@ -68,3 +68,8 @@ typedef struct {
 	float maxLength;
 	float colOffset;
 } RenderInfo;
+
+typedef struct {
+	Coordinates topLeft;
+	Coordinates size;
+} Rect;
