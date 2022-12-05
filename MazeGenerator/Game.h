@@ -20,6 +20,8 @@ private:
 
 	Segment move;
 
+
+	void tryMove(Segment move);
 	void keyHandler();
 public:
 	Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, double noRays, double viewLength);

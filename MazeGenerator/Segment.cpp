@@ -43,6 +43,10 @@ void Segment::changeP2(Coordinates p2) {
 	this->angle = p1.getAngle(p2);
 }
 
+void Segment::add(Segment s) {
+	this->changeP2({ this->p2.x + (s.p2.x - s.p1.x), this->p2.y + (s.p2.y - s.p1.y) });
+}
+
 void Segment::move(Coordinates p1) {
 	this->p1 = p1;
 	this->calculateP2();

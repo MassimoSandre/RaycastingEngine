@@ -7,13 +7,13 @@
 
 class Player {
 private:
-	Coordinates center;
 	double fov;
 	int nRays;
 	float raysLength;
 	double baseAngle;
 	float focalLength;
 public:
+	Coordinates center;
 
 	std::vector<std::shared_ptr<Segment>> rays;
 	std::vector<float> colOffsets;

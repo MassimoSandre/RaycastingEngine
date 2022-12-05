@@ -20,6 +20,8 @@ public:
 	void changeP1(Coordinates p1);
 	void changeP2(Coordinates p2);
 
+	void add(Segment s);
+
 	void move(Coordinates p1);
 
 	void setLength(float length);
