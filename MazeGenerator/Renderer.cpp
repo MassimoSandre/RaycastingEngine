@@ -2,11 +2,13 @@
 
 #include "Wall.h"
 
+#define WALL_HEIGHT 8000.0
+
 #define DEFAULT_SCREEN_WIDTH_VALUE 120
 #define DEFAULT_SCREEN_HEIGHT_VALUE	120
 
 #define RAYS_LENGTH 200
-#define N_RAYS 200
+#define N_RAYS 100
 
 #define PI 3.1415
 
@@ -373,7 +375,7 @@ void Renderer::drawProjection(std::vector<RenderInfo> distances) {
 
 		if (distances[i].distance == distances[i].maxLength) continue;
 
-		rectHeight =  maxHeight - distances[i].distance / float(RAYS_LENGTH) * float(maxHeight - minHeight);//(this->map(pow(distances[i].distance,1), 0, pow(distances[i].maxLength,1), maxHeight, minHeight));
+		rectHeight = WALL_HEIGHT / distances[i].distance; 
 		grey = this->map(pow(distances[i].distance, 0.5), 0, pow(distances[i].maxLength, .5), 1, 0);
 
 		p.y = (this->screenHeight - rectHeight) / 2;
