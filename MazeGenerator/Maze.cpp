@@ -136,23 +136,86 @@ void Maze::setSize(Size size) {
 	this->height = size.y;
 }
 
-std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset) {
+std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset, float wallThinkness) {
 	std::vector<std::shared_ptr<Segment>> walls;
+
 	Line t;
-	for (int i = 0; i < this->walls.size(); i++) {
-		t = this->walls[i];
-		t.p1.x *= cellSize.x;
-		t.p1.y *= cellSize.y;
-		t.p2.x *= cellSize.x;
-		t.p2.y *= cellSize.y;
 
-		t.p1.x += offset.x;
-		t.p1.y += offset.y;
-		t.p2.x += offset.x;
-		t.p2.y += offset.y;
+	if (wallThinkness == 1.0f) {
+		
+		for (int i = 0; i < this->walls.size(); i++) {
+			t = this->walls[i];
+			t.p1.x *= cellSize.x;
+			t.p1.y *= cellSize.y;
+			t.p2.x *= cellSize.x;
+			t.p2.y *= cellSize.y;
 
-		Wall w(t.p1, t.p2);
-		walls.push_back(std::make_shared<Segment>(w));
+			t.p1.x += offset.x;
+			t.p1.y += offset.y;
+			t.p2.x += offset.x;
+			t.p2.y += offset.y;
+
+			Wall w(t.p1, t.p2);
+			walls.push_back(std::make_shared<Segment>(w));
+		}
+	}
+	else {
+		Line t2;
+		wallThinkness /= 2.0f;
+		for (int i = 0; i < this->walls.size(); i++) {
+			t = this->walls[i];
+			t.p1.x *= cellSize.x;
+			t.p1.y *= cellSize.y;
+			t.p2.x *= cellSize.x;
+			t.p2.y *= cellSize.y;
+
+			t.p1.x += offset.x;
+			t.p1.y += offset.y;
+			t.p2.x += offset.x;
+			t.p2.y += offset.y;
+
+			if (t.p1.x == t.p2.x) {
+				if (t.p2.y < t.p1.y) {
+					Coordinates temp = t.p1;
+					t.p1 = t.p2;
+					t.p2 = temp;
+				}
+				t.p1.x -= wallThinkness;
+				t.p1.y -= wallThinkness;
+				t.p2.x -= wallThinkness;
+				t.p2.y += wallThinkness;
+
+				t2.p1.x = t.p1.x + wallThinkness*2;
+				t2.p1.y = t.p1.y;
+				t2.p2.x = t.p2.x + wallThinkness*2;
+				t2.p2.y = t.p2.y;
+			}
+			else {
+				if (t.p2.x < t.p1.x) {
+					Coordinates temp = t.p1;
+					t.p1 = t.p2;
+					t.p2 = temp;
+				}
+				t.p1.x -= wallThinkness;
+				t.p1.y -= wallThinkness;
+				t.p2.x += wallThinkness;
+				t.p2.y -= wallThinkness;
+
+				t2.p1.x = t.p1.x;
+				t2.p1.y = t.p1.y + wallThinkness * 2;
+				t2.p2.x = t.p2.x;
+				t2.p2.y = t.p2.y + wallThinkness * 2;
+			}
+
+			Wall w1(t.p1, t.p2);
+			walls.push_back(std::make_shared<Segment>(w1));
+			Wall w2(t2.p1, t2.p2);
+			walls.push_back(std::make_shared<Segment>(w2));
+			Wall w3(t.p1, t2.p1);
+			walls.push_back(std::make_shared<Segment>(w3));
+			Wall w4(t.p2, t2.p2);
+			walls.push_back(std::make_shared<Segment>(w4));
+		}
 	}
 	return walls;
 }

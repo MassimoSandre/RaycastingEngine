@@ -19,6 +19,6 @@ public:
 	
 	void setSize(Size size);
 
-	std::vector<std::shared_ptr<Segment>> getWalls(Size cellSize, Coordinates offset);
+	std::vector<std::shared_ptr<Segment>> getWalls(Size cellSize, Coordinates offset, float wallThinkness=1.0f);
 
 };

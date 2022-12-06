@@ -289,7 +289,7 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 	int len = info.size();
 
 	const int CHUNK_SIZE = 4;
-	const int WALL_PIXEL_HEIGHT = 128;
+	const int WALL_PIXEL_HEIGHT = 64;
 	const int IMAGE_HEIGHT = 16;
 	const int IMAGE_WIDTH = 16;
 

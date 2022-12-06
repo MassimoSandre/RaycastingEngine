@@ -24,7 +24,7 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 12
+#define DEFAULT_MAZE_SIZE 40
 #define DEFAULT_CELL_SIZE 36
 
 #define DEBUG_INFO false
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     m.generate();
 #endif
     
-    game.addWalls(m.getWalls({ DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, { DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }));
+    game.addWalls(m.getWalls({ DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, { DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, 4));
 
     Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
     game.addCollectible(std::make_shared<Entity>(s));
