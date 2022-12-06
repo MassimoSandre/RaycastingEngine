@@ -54,15 +54,19 @@ float Renderer::getHeight(RayType type) {
 }
 
 
-Renderer::Renderer(Size mazeRealSize, std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare) :
+Renderer::Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare) :
 	wallTexture("textures/brickwall.texture"), 
 	entityTexture("textures/collectible.texture") {
-	this->screenWidth = mazeRealSize.x;
-	this->screenHeight = mazeRealSize.y;
+	
 	this->windowTitle = windowTitle;
 	this->mazeDrawingSquare = mazeDrawingSquare;
 	this->projectionDrawingSquare = projectionDrawingSquare;
 	this->init();
+}
+
+void Renderer::setMazeSize(Size mazeRealSize) {
+	this->screenWidth = mazeRealSize.x;
+	this->screenHeight = mazeRealSize.y;
 }
 
 Renderer::~Renderer() {

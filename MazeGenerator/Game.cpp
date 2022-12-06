@@ -92,11 +92,30 @@ void Game::keyHandler(float multiplier) {
 	}
 }
 
-Game::Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, float viewLength) :
+bool Game::levelCompleted() {
+	return false;
+}
+
+void Game::newLevel() {
+	this->renderer.setMazeSize(Size{ (this->currentMazeSize.x + 2) * this->cellSize.x ,  (this->currentMazeSize.y + 2) * this->cellSize.y });
+	this->generator.setSize(this->currentMazeSize);
+	this->generator.generate();
+	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , 4));
+	this->currentMazeSize.x += this->mazeSizeIncrement;
+	this->currentMazeSize.y += this->mazeSizeIncrement;
+}
+
+Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, float viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, float wallThickness) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
-	renderer(mazeAreaSize, "Maze", Rect{ {0,0},{(float)windowSquareSize,(float)windowSquareSize} }, Rect{ {(float)windowSquareSize,0},{(float)windowSquareSize,(float)windowSquareSize} }) {
-	
+	renderer("Maze", Rect{ {0,0},{(float)windowSquareSize,(float)windowSquareSize} }, Rect{ {(float)windowSquareSize,0},{(float)windowSquareSize,(float)windowSquareSize} }),
+	generator() {
+	this->mazeSizeIncrement = mazeSizeIncrement;
 	this->screenSize = { nSquare * windowSquareSize, windowSquareSize };
+	this->cellSize = cellSize;
+	this->wallThickness = wallThickness;
+	this->currentMazeSize = firstMazeSize;
+
+	this->newLevel();
 }
 
 Game::~Game() {}
@@ -118,6 +137,10 @@ bool Game::update(float elapsedTime) {
 			this->jumping = false;
 			this->verticalOffset = 0;
 		}
+	}
+
+	if (this->levelCompleted()) {
+		this->newLevel();
 	}
 
 	for (int i = 0; i < this->collectibles.size(); i++) {

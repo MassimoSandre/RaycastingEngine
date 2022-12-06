@@ -24,51 +24,27 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 40
+#define DEFAULT_MAZE_SIZE 20
 #define DEFAULT_CELL_SIZE 36
+
+#define DEFAULT_WALL_THICKNESS 4
 
 #define DEBUG_INFO false
 
 int main(int argc, char *argv[]) {
     Game game(N_SQUARES, 
         SQUARE_WINDOW_SIZE,
-        Size{(DEFAULT_MAZE_SIZE+2)*DEFAULT_CELL_SIZE,(DEFAULT_MAZE_SIZE + 2) * DEFAULT_CELL_SIZE },
         WINDOW_TITLE, 
         Coordinates{10,10}, 
         0.0f, 
         DEFAULT_FOV, 
         N_RAYS, 
-        RAYS_LENGTH);
+        RAYS_LENGTH,
+        {DEFAULT_MAZE_SIZE, DEFAULT_MAZE_SIZE},
+        10,
+        { DEFAULT_CELL_SIZE , DEFAULT_CELL_SIZE},
+        DEFAULT_WALL_THICKNESS);
 
-    Maze m({ DEFAULT_MAZE_SIZE, DEFAULT_MAZE_SIZE });
-
-#if DEBUG_INFO
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-
-    m.generate();
-
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-    long long ns = std::chrono::duration_cast<std::chrono::microseconds> (end - begin).count();
-
-    std::string seconds = "";
-    char nextChar;
-    while (ns > 0 || seconds.length() < 8) {
-        nextChar = ns % 10 + 48;
-        seconds = nextChar + seconds;
-        ns /= 10;
-        if (seconds.length() == 6) {
-            seconds = ',' + seconds;
-        }
-    }
-    std::cout << DEFAULT_MAZE_SIZE << "x" << DEFAULT_MAZE_SIZE << " Maze generation took " << seconds << " seconds\n";
-        
-    
-#else
-    m.generate();
-#endif
-    
-    game.addWalls(m.getWalls({ DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, { DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, 4));
 
     Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
     game.addCollectible(std::make_shared<Entity>(s));

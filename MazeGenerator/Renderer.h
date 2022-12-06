@@ -34,8 +34,10 @@ private:
 	Texture* getTexture(RayType type);
 	float getHeight(RayType type);
 public:
-	Renderer(Size mazeRealSize, std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare);
+	Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare);
 	~Renderer();
+
+	void setMazeSize(Size mazeRealSize);
 
 	void init();
 

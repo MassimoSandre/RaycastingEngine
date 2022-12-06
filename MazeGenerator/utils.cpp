@@ -43,9 +43,13 @@ typedef struct Coordinates{
 } Coordinates;
 
 
-typedef struct {
+typedef struct Size {
 	int x;
 	int y;
+
+	Coordinates toCoordinates() {
+		return Coordinates{ (float)x, (float)y };
+	}
 }Size;
 
 typedef Size Cell;
