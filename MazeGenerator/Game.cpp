@@ -79,7 +79,13 @@ void Game::keyHandler(float multiplier) {
 	if (this->renderer.isKeyPressed(GLFW_KEY_P)) {
 		this->pause = !this->pause;		
 	}
-
+	if (this->renderer.isKeyPressed(GLFW_KEY_SPACE)) {
+		if (!this->jumping) {
+			this->jumping = true;
+			this->verticalOffset = 0.0f;
+			this->verticalVelocity = 400.0f;
+		}
+	}
 	if (move.length > 0) {
 		move.setLength(MOVE_CHECK_DISTANCE);
 		this->tryMove(move, multiplier);
@@ -105,6 +111,15 @@ bool Game::update(float elapsedTime) {
 		this->player.rotate(0.003 * cursorXDelta);
 	}
 
+	if (this->jumping) {
+		this->verticalOffset += this->verticalVelocity;
+		this->verticalVelocity -= 15;
+		if (this->verticalOffset <= 0) {
+			this->jumping = false;
+			this->verticalOffset = 0;
+		}
+	}
+
 	for (int i = 0; i < this->collectibles.size(); i++) {
 		this->collectibles[i]->faceTo(this->player.center);
 	}
@@ -119,7 +134,7 @@ void Game::render() {
 	//this->renderer.drawSegment(std::make_shared<Segment>(*this->collectibles[0]), {255,255,0});
 	this->renderer.drawView(this->player.rays);
 
-	this->renderer.drawProjection(this->player.getFixedDistances());
+	this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset);
 
 	this->renderer.update();
 }

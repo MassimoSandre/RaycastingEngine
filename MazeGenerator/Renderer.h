@@ -87,5 +87,5 @@ public:
 	void drawCircle(Coordinates center, float radius);
 	void drawCircle(Coordinates center, float radius, RGB color);
 
-	void drawProjection(RenderingInfo info);
+	void drawProjection(RenderingInfo info, float cameraVerticalOffset);
 };

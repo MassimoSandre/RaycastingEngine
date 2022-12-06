@@ -285,11 +285,11 @@ void Renderer::drawCircle(Coordinates center, float radius, RGB color) {
 	}
 }
 
-void Renderer::drawProjection(RenderingInfo info) {
+void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 	int len = info.size();
 
 	const int CHUNK_SIZE = 4;
-	const int WALL_PIXEL_HEIGHT = 64;
+	const int WALL_PIXEL_HEIGHT = 128;
 	const int IMAGE_HEIGHT = 16;
 	const int IMAGE_WIDTH = 16;
 
@@ -307,20 +307,33 @@ void Renderer::drawProjection(RenderingInfo info) {
 		
 		p.x = this->projectionDrawingSquare.topLeft.x + rectWidth * i;
 
-		for (int j = 0; j < this->projectionDrawingSquare.size.y / CHUNK_SIZE; j++) {
-			if (j < (this->projectionDrawingSquare.size.y / CHUNK_SIZE) / 2) {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * (j * CHUNK_SIZE));
+		float d = this->getHeight(Obstacle) / this->projectionDrawingSquare.size.y;
+		
+		wallHeight = (this->getHeight(Obstacle) + cameraVerticalOffset) / d;
+		
+		int j = - (wallHeight - this->projectionDrawingSquare.size.y)*2;
+		while (j < this->projectionDrawingSquare.size.y) {
+
+			if (j < this->projectionDrawingSquare.size.y / 2) {
+				rectHeight = this->projectionDrawingSquare.size.y - (2 * j);
 			}
 			else {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * (this->projectionDrawingSquare.size.y - (j * CHUNK_SIZE)));
+				rectHeight = this->projectionDrawingSquare.size.y - (2 * (this->projectionDrawingSquare.size.y - j));
 			}
 
-			double distance = std::min(this->getHeight(Obstacle) / rectHeight, 100.0f);
+			float distance = std::min((this->getHeight(Obstacle)) / rectHeight, 100.0f);
+			wallHeight = (this->getHeight(Obstacle) + cameraVerticalOffset) / distance;
 
-			grey = this->map(pow(distance, 0.5), 0, pow(100, 0.5), 160, 0);
+			offset = (wallHeight - rectHeight) / 2;
+
+			grey = this->map(pow(distance, 0.5), -10, pow(100, 0.5), 200, 0);
 
 			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
-			this->drawRect(Coordinates{ p.x,(float)j * CHUNK_SIZE }, Coordinates{ rectWidth, CHUNK_SIZE }, { int(grey),int(grey),int(grey) });
+
+			this->drawRect(Coordinates{ p.x,(float)j + int(offset) }, Coordinates{ rectWidth, float(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) });
+
+			j += CHUNK_SIZE;
+			
 		}
 
 		//if (distances[i].distance == distances[i].maxLength) continue;
@@ -328,7 +341,7 @@ void Renderer::drawProjection(RenderingInfo info) {
 		
 		for (int k = 0; k < info[i].size(); k++) {
 			rectHeight = this->getHeight(info[i][k].type) / info[i][k].distance;
-			wallHeight = this->getHeight(Obstacle) / info[i][k].distance;
+			wallHeight =  (this->getHeight(Obstacle) + cameraVerticalOffset) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
 
 

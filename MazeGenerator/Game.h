@@ -17,6 +17,10 @@ private:
 
 	bool pause = false;
 	bool closing = false;
+	
+	bool jumping = false;
+	float verticalOffset = 0.0f;
+	float verticalVelocity = 0.0f;
 
 	Size screenSize;
 
