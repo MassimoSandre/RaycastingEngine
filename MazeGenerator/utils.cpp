@@ -9,6 +9,17 @@ typedef struct {
 	int b;
 } RGB;
 
+typedef struct RGBA{
+	int r;
+	int g;
+	int b;
+	int a;
+
+	RGB toRGB() {
+		return RGB{ r,g,b };
+	}
+} RGBA;
+
 typedef struct Coordinates{
 	float x;
 	float y;
@@ -56,7 +67,7 @@ typedef struct {
 	int south;
 } CellWeight;
 
-enum RayType {Generic, Obstacle, View};
+enum RayType {Generic, Obstacle, View, EntitySegment};
 
 typedef struct {
 	Coordinates intersection;
@@ -64,10 +75,13 @@ typedef struct {
 } IntersectionInfo;
 
 typedef struct {
+	RayType type;
 	float distance;
-	float maxLength;
 	float colOffset;
 } RenderInfo;
+
+typedef std::vector<RenderInfo> RayInfo;
+typedef std::vector<RayInfo> RenderingInfo;
 
 typedef struct {
 	Coordinates topLeft;

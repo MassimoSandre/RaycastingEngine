@@ -1,12 +1,12 @@
 #include "Maze.h"
 #include <time.h>
 #include <queue>
-#include "Wall.h";
+#include "Wall.h"
 
 #define DEFAULT_MAZE_WIDTH 10
 #define DEFAULT_MAZE_HEIGHT 10
 
-#define MAX_WEIGHT 100
+#define MAX_WEIGHT 3
 
 //// operator overloading for priority queue
 //bool operator<(const QueueElement& qe1, const QueueElement& qe2) {
@@ -32,7 +32,7 @@ void  Maze::generate() {
 
 	std::vector<std::vector<CellWeight>> toKeep(this->width, std::vector<CellWeight>(this->height, { false,false }));
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	std::vector<std::vector<CellWeight>> weights(this->width, std::vector<CellWeight>(this->height, {1,1}));
 	for (int x = 0; x < this->width; x++) {
 		for (int y = 0; y < this->height; y++) {

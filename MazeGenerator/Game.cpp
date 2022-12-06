@@ -3,7 +3,7 @@
 #define MOVE_CHECK_DISTANCE 4
 #define MOVE_DISTANCE 1 
 
-void Game::tryMove(Segment move) {
+void Game::tryMove(Segment move, float multiplier) {
 	Segment moveX(move.p1, { move.p2.x, move.p1.y });
 	Segment moveY(move.p1, { move.p1.x, move.p2.y });
 
@@ -29,7 +29,7 @@ void Game::tryMove(Segment move) {
 
 	}
 	if (possible) {
-		moveX.setLength(MOVE_DISTANCE*moveXCoef);
+		moveX.setLength(MOVE_DISTANCE * moveXCoef * multiplier);
 		this->player.applyMove(moveX);
 		moveY.translate({ float(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
 	}
@@ -53,12 +53,12 @@ void Game::tryMove(Segment move) {
 
 	}
 	if (possible) {
-		moveY.setLength(MOVE_DISTANCE * moveYCoef);
+		moveY.setLength(MOVE_DISTANCE * moveYCoef * multiplier);
 		this->player.applyMove(moveY);
 	}
 }
 
-void Game::keyHandler() {
+void Game::keyHandler(float multiplier) {
 	Segment move(this->player.center, this->player.center);
 
 	if (this->renderer.isKeyPressed(GLFW_KEY_W)) {
@@ -82,11 +82,11 @@ void Game::keyHandler() {
 
 	if (move.length > 0) {
 		move.setLength(MOVE_CHECK_DISTANCE);
-		this->tryMove(move);
+		this->tryMove(move, multiplier);
 	}
 }
 
-Game::Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, double noRays, double viewLength) :
+Game::Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, float viewLength) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
 	renderer(mazeAreaSize, "Maze", Rect{ {0,0},{(float)windowSquareSize,(float)windowSquareSize} }, Rect{ {(float)windowSquareSize,0},{(float)windowSquareSize,(float)windowSquareSize} }) {
 	
@@ -96,22 +96,27 @@ Game::Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string win
 Game::~Game() {}
 
 
-bool Game::update() {
-	this->keyHandler();
+bool Game::update(float elapsedTime) {
+	this->keyHandler(elapsedTime);
 
 	if (!this->pause) {
-		int cursorXDelta = this->screenSize.x / 4 * 3 - this->renderer.getMousePosition().x;
+		float cursorXDelta = this->screenSize.x / 4 * 3 - this->renderer.getMousePosition().x;
 		this->renderer.setMousePosition({ (float)this->screenSize.x / 4 * 3, (float)this->screenSize.y / 2 });
 		this->player.rotate(0.003 * cursorXDelta);
 	}
 
-	// PLAYER
-	this->player.cast(this->walls);
+	for (int i = 0; i < this->collectibles.size(); i++) {
+		this->collectibles[i]->faceTo(this->player.center);
+	}
+
+	this->player.cast(this->walls, this->collectibles);
 
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
 	this->renderer.drawSegments(this->walls, { 255,0,0 });
+	this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 });
+	//this->renderer.drawSegment(std::make_shared<Segment>(*this->collectibles[0]), {255,255,0});
 	this->renderer.drawView(this->player.rays);
 
 	this->renderer.drawProjection(this->player.getFixedDistances());
@@ -125,5 +130,14 @@ void Game::addWall(std::shared_ptr<Segment> segment) {
 void Game::addWalls(std::vector<std::shared_ptr<Segment>> segments) {
 	for (int i = 0; i < segments.size(); i++) {
 		this->walls.push_back(segments[i]);
+	}
+}
+
+void Game::addCollectible(std::shared_ptr<Entity> collectible) {
+	this->collectibles.push_back(collectible);
+}
+void Game::addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles) {
+	for (int i = 0; i < collectibles.size(); i++) {
+		this->collectibles.push_back(collectibles[i]);
 	}
 }

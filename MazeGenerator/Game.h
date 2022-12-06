@@ -4,6 +4,7 @@
 #include "Segment.h"
 #include "Player.h"
 #include "Renderer.h"
+#include "Entity.h"
 
 class Game {
 private:
@@ -12,6 +13,7 @@ private:
 	Player player;
 
 	std::vector<std::shared_ptr<Segment>> walls;
+	std::vector<std::shared_ptr<Entity>> collectibles;
 
 	bool pause = false;
 	bool closing = false;
@@ -21,16 +23,18 @@ private:
 	Segment move;
 
 
-	void tryMove(Segment move);
-	void keyHandler();
+	void tryMove(Segment move, float multiplier);
+	void keyHandler(float multiplier);
 public:
-	Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, double noRays, double viewLength);
+	Game(int nSquare, int windowSquareSize, Size mazeAreaSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, float viewLength);
 	~Game();
 
-	bool update();
+	bool update(float elapsedTime);
 	void render();
 
 	void addWall(std::shared_ptr<Segment> segment);
 	void addWalls(std::vector<std::shared_ptr<Segment>> segments);
-};
 
+	void addCollectible(std::shared_ptr<Entity> collectible);
+	void addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles);
+};

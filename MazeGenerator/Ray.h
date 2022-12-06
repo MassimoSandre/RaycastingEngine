@@ -6,4 +6,3 @@ public:
 	Ray(Coordinates p1, Coordinates p2);
 	Ray(Coordinates p1, float length, double angle);
 };
-

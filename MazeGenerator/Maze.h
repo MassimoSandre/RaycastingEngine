@@ -22,4 +22,3 @@ public:
 	std::vector<std::shared_ptr<Segment>> getWalls(Size cellSize, Coordinates offset);
 
 };
-

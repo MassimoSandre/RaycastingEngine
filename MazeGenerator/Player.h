@@ -4,6 +4,7 @@
 #include <vector>
 #include "Ray.h"
 #include "Segment.h"
+#include "Entity.h"	
 
 class Player {
 private:
@@ -12,6 +13,12 @@ private:
 	float raysLength;
 	double baseAngle;
 	float focalLength;
+
+	RenderingInfo info;
+
+	void pointRaysToView();
+	void castWall(std::shared_ptr<Segment> segment);
+	void castEntity(std::shared_ptr<Entity> segment);
 public:
 	Coordinates center;
 
@@ -24,8 +31,7 @@ public:
 
 	void rotate(double angle);
 
-	void cast(std::shared_ptr<Segment> segment);
-	void cast(std::vector<std::shared_ptr<Segment>> segments);
+	void cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities);
 
 	void applyMove(Segment& moveSegment);
 
@@ -38,7 +44,6 @@ public:
 	Segment moveLeftward(float distance);
 	Segment moveRightward(float distance);
 
-	std::vector<RenderInfo> getFixedDistances();
+	RenderingInfo getFixedDistances();
 
 };
-

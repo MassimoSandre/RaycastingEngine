@@ -5,6 +5,7 @@
 #include "Segment.h"
 #include "Ray.h"
 #include "Player.h"
+#include "Entity.h"
 #include "Game.h"
 #include <iostream>
 #include <vector>
@@ -23,10 +24,10 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 200
+#define DEFAULT_MAZE_SIZE 12
 #define DEFAULT_CELL_SIZE 36
 
-#define GENERATION_TIME true
+#define DEBUG_INFO false
 
 int main(int argc, char *argv[]) {
     Game game(N_SQUARES, 
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
 
     Maze m({ DEFAULT_MAZE_SIZE, DEFAULT_MAZE_SIZE });
 
-#if GENERATION_TIME
+#if DEBUG_INFO
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
     m.generate();
@@ -69,15 +70,19 @@ int main(int argc, char *argv[]) {
     
     game.addWalls(m.getWalls({ DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }, { DEFAULT_CELL_SIZE, DEFAULT_CELL_SIZE }));
 
+    Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
+    game.addCollectible(std::make_shared<Entity>(s));
+
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;
     auto lastTime = std::chrono::steady_clock::now();
     double unprocessed = 0.0;
     double timeElapsed = 0.0;
+
+#if DEBUG_INFO
     double totalSecondsElapsed = 0.0;
-
     int frame = 0;
-
+#endif
     bool canUpdate = false;
 
     bool running = true;
@@ -89,19 +94,23 @@ int main(int argc, char *argv[]) {
         timeElapsed = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(now - lastTime).count();
         
         unprocessed += timeElapsed / nsPerFrame;
+#if DEBUG_INFO
         totalSecondsElapsed += timeElapsed/1000000000.0;
-        lastTime = now;
-        if (totalSecondsElapsed  >= 1.0) {
-            std::cout << "FPS:" << double(frame)/ totalSecondsElapsed << std::endl;
+        if (totalSecondsElapsed >= 1.0) {
+            std::cout << "FPS:" << double(frame) / totalSecondsElapsed << std::endl;
             totalSecondsElapsed = 0.0;
             frame = 0;
         }
+#endif
+        lastTime = now;
 
         if (unprocessed >= 1.0) {
-            running = game.update();
+            running = game.update(unprocessed*((float)DEFAULT_CELL_SIZE/36));
             game.render();
             unprocessed = 0.0;
+#if DEBUG_INFO
             frame++;
+#endif
         }
     }
 

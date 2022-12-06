@@ -10,6 +10,7 @@ public:
 	float length;
 	double angle;
 
+
 	void calculateP2();
 
 	Segment();
@@ -30,7 +31,7 @@ public:
 	void rotate(double angle);
 	void translate(Coordinates offsets);
 
+	void faceTo(Coordinates p);
 
 	IntersectionInfo getIntersection(std::shared_ptr<Segment> segment);
 };
-

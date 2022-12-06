@@ -1,4 +1,7 @@
 #include "Renderer.h"
+#include "Entity.h"
+
+#define TRIANGLES_IN_CIRCLE 6
 
 float Renderer::scaleX(int x) {
 	float result = x;
@@ -20,7 +23,40 @@ float Renderer::map(float value, float istart, float istop, float ostart, float 
 }
 
 
-Renderer::Renderer(Size mazeRealSize, std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare) {
+Texture* Renderer::getTexture(RayType type) {
+	switch (type) {
+	case Generic:
+		return NULL;
+	case Obstacle:
+		return &(this->wallTexture);
+	case View:
+		return NULL;
+	case EntitySegment:
+		return &(this->entityTexture);
+	default:
+		return NULL;
+	}
+}
+
+float Renderer::getHeight(RayType type) {
+	switch (type) {
+	case Generic:
+		return 0;
+	case Obstacle:
+		return 8000;
+	case View:
+		return 0;
+	case EntitySegment:
+		return 4000;
+	default:
+		return 0;
+	}
+}
+
+
+Renderer::Renderer(Size mazeRealSize, std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare) :
+	wallTexture("textures/brickwall.texture"), 
+	entityTexture("textures/collectible.texture") {
 	this->screenWidth = mazeRealSize.x;
 	this->screenHeight = mazeRealSize.y;
 	this->windowTitle = windowTitle;
@@ -145,6 +181,21 @@ void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>> segments, RGB 
 	}
 }
 
+void Renderer::drawCollectible(std::shared_ptr<Entity> collectible) {
+	this->drawCollectible(collectible, { 255,255,255 });
+}
+void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>> collectibles) {
+	this->drawCollectibles(collectibles, { 255,255,255 });
+}
+void Renderer::drawCollectible(std::shared_ptr<Entity> collectible, RGB color) {
+	this->drawCircle(collectible->center, collectible->length / 2, color);
+}
+void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>> collectibles, RGB color) {
+	for (int i = 0; i < collectibles.size(); i++) {
+		this->drawCircle(collectibles[i]->center, collectibles[i]->length / 2, color);
+	}
+}
+
 void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, bool connect) {
 	this->drawView(r, { 255,255,255 }, connect);
 }
@@ -160,6 +211,27 @@ void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, RGB color, bool
 			this->drawPixel(r[i]->p2, color);
 		}
 	}
+}
+
+void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3) {
+	this->drawTriangle(p1, p2, p3, { 255,255,255 });
+}
+void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, RGB color) {
+	float xf1 = this->scaleX(p1.x);
+	float yf1 = this->scaleY(p1.y);
+
+	float xf2 = this->scaleX(p2.x);
+	float yf2 = this->scaleY(p2.y);
+
+	float xf3 = this->scaleX(p3.x);
+	float yf3 = this->scaleY(p3.y);
+
+	glColor3ub(color.r, color.g, color.b);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(xf1, -yf1);
+	glVertex2f(xf2, -yf2);
+	glVertex2f(xf3, -yf3);
+	glEnd();
 }
 
 void Renderer::drawRect(Coordinates topLeft, Coordinates size) {
@@ -195,8 +267,26 @@ void Renderer::drawRect(Rect rect, RGB color) {
 	this->drawRect(rect.topLeft, rect.size, color);
 }
 
-void Renderer::drawProjection(std::vector<RenderInfo> distances, float wallHeight) {
-	int len = distances.size();
+void Renderer::drawCircle(Coordinates center, float radius) { 
+	this->drawCircle(center, radius, { 255,255,255 });
+}
+void Renderer::drawCircle(Coordinates center, float radius, RGB color) {
+	Coordinates last = center, next;
+	last.y -= radius;
+	double anglePerTriangle = (2 * 3.1415) / TRIANGLES_IN_CIRCLE;
+	for (int i = 0; i <= TRIANGLES_IN_CIRCLE; i++) {
+		next = center;
+		next.x += radius * cos(anglePerTriangle * i);
+		next.y -= radius * sin(anglePerTriangle * i);
+
+		this->drawTriangle(center, last, next, color);
+
+		last = next;
+	}
+}
+
+void Renderer::drawProjection(RenderingInfo info) {
+	int len = info.size();
 
 	const int CHUNK_SIZE = 4;
 	const int WALL_PIXEL_HEIGHT = 64;
@@ -206,50 +296,63 @@ void Renderer::drawProjection(std::vector<RenderInfo> distances, float wallHeigh
 
 	float rectWidth = this->projectionDrawingSquare.size.x / len;
 
-	float rectHeight;
+	float rectHeight, wallHeight;
+	float offset;
+	
 	float grey;
 	Coordinates p;
 
-	for (int i = 0; i < len; i++) {
-		p.x = this->projectionDrawingSquare.size.x + rectWidth * i;
 
+	for (int i = 0; i < len; i++) {
 		
-		for (int j = 0; j < this->projectionDrawingSquare.size.y/ CHUNK_SIZE; j++) {
-			grey = this->map(pow(abs(j * CHUNK_SIZE - this->projectionDrawingSquare.size.y / 2),2), 0, pow(this->projectionDrawingSquare.size.y / 2,2), 0, 100);
-			if (j < (this->projectionDrawingSquare.size.y / CHUNK_SIZE)/2) {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * (j * CHUNK_SIZE)) ;
+		p.x = this->projectionDrawingSquare.topLeft.x + rectWidth * i;
+
+		for (int j = 0; j < this->projectionDrawingSquare.size.y / CHUNK_SIZE; j++) {
+			if (j < (this->projectionDrawingSquare.size.y / CHUNK_SIZE) / 2) {
+				rectHeight = this->projectionDrawingSquare.size.y - (2 * (j * CHUNK_SIZE));
 			}
 			else {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * (this->projectionDrawingSquare.size.y - (j * CHUNK_SIZE))) ;
+				rectHeight = this->projectionDrawingSquare.size.y - (2 * (this->projectionDrawingSquare.size.y - (j * CHUNK_SIZE)));
 			}
 
-			double distance = std::min(wallHeight / rectHeight, distances[i].maxLength);
-			
-			grey = this->map(pow(distance, 0.5), 0, pow(distances[i].maxLength, .5), 160, 0);
-			this->drawRect(Coordinates{p.x,(float)j*CHUNK_SIZE}, Coordinates{rectWidth, CHUNK_SIZE}, {int(grey),int(grey),int(grey)});
+			double distance = std::min(this->getHeight(Obstacle) / rectHeight, 100.0f);
+
+			grey = this->map(pow(distance, 0.5), 0, pow(100, 0.5), 160, 0);
+
+			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
+			this->drawRect(Coordinates{ p.x,(float)j * CHUNK_SIZE }, Coordinates{ rectWidth, CHUNK_SIZE }, { int(grey),int(grey),int(grey) });
 		}
 
-		if (distances[i].distance == distances[i].maxLength) continue;
+		//if (distances[i].distance == distances[i].maxLength) continue;
 
-		rectHeight = wallHeight / distances[i].distance;
-		grey = this->map(pow(distances[i].distance, 0.5), 0, pow(distances[i].maxLength, .5), 1, 0);
-
-		p.y = (this->projectionDrawingSquare.size.y - rectHeight) / 2;
-
-		int c = int(distances[i].colOffset);
-
-		rectHeight = rectHeight / WALL_PIXEL_HEIGHT;
-
-		for (int j = 0; j < WALL_PIXEL_HEIGHT; j++) {
-			RGB color = this->wallTexture[c%IMAGE_WIDTH][j%IMAGE_HEIGHT];
-			color.r = float(color.r)* grey;
-			color.g = float(color.g) * grey;
-			color.b = float(color.b) * grey;
-			this->drawRect(p, Coordinates{ rectWidth, rectHeight }, color);
-			
-			p.y += rectHeight;
-		}
+		
+		for (int k = 0; k < info[i].size(); k++) {
+			rectHeight = this->getHeight(info[i][k].type) / info[i][k].distance;
+			wallHeight = this->getHeight(Obstacle) / info[i][k].distance;
+			offset = (wallHeight - rectHeight) / 2;
 
 
+			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
+
+			p.y = (this->projectionDrawingSquare.size.y - rectHeight) / 2 + offset;
+
+			int c = int(info[i][k].colOffset) % IMAGE_WIDTH;
+
+			rectHeight = rectHeight / WALL_PIXEL_HEIGHT;
+
+			for (int j = 0; j < WALL_PIXEL_HEIGHT; j++) {
+				
+				RGBA color =(this->getTexture(info[i][k].type))->texture[(c % IMAGE_WIDTH)*IMAGE_HEIGHT + j % IMAGE_HEIGHT];
+
+				if (color.a == 0) continue;
+
+				color.r = float(color.r) * grey;
+				color.g = float(color.g) * grey;
+				color.b = float(color.b) * grey;
+				this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB());
+
+				p.y += rectHeight;
+			}
+		}	
 	}
 }
