@@ -82,6 +82,7 @@ typedef struct {
 	RayType type;
 	float distance;
 	float colOffset;
+	int objectId;
 } RenderInfo;
 
 typedef std::vector<RenderInfo> RayInfo;
@@ -91,3 +92,8 @@ typedef struct {
 	Coordinates topLeft;
 	Coordinates size;
 } Rect;
+
+typedef struct {
+	Rect drawingRect;
+	Coordinates realSize;
+} Canvas;

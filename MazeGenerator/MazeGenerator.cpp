@@ -15,7 +15,7 @@
 
 #define WINDOW_TITLE "Maze"
 
-#define SQUARE_WINDOW_SIZE 800
+#define SQUARE_WINDOW_SIZE 860
 #define N_SQUARES 2
 
 #define RAYS_LENGTH 100
@@ -24,10 +24,10 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 20
+#define DEFAULT_MAZE_SIZE 2
 #define DEFAULT_CELL_SIZE 36
 
-#define DEFAULT_WALL_THICKNESS 4
+#define DEFAULT_WALL_THICKNESS 0
 
 #define DEBUG_INFO false
 
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
         DEFAULT_WALL_THICKNESS);
 
 
-    Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
-    game.addCollectible(std::make_shared<Entity>(s));
+   /* Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
+    game.addCollectible(std::make_shared<Entity>(s));*/
 
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;

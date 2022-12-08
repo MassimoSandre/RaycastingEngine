@@ -38,6 +38,7 @@ private:
 	void keyHandler(float multiplier);
 	bool levelCompleted();
 	void newLevel();
+	void placeCollectible(std::shared_ptr<Entity>& e);
 public:
 	Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, float viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, float wallThickness);
 	~Game();

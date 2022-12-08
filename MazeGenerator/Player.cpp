@@ -33,18 +33,13 @@ Player::Player(Coordinates center, double fov, int nRays, float raysLength, doub
 	this->pointRaysToView();
 }
 
+bool Player::collideWithEntity(std::shared_ptr<Entity> entity) {
+	return entity->center.distance(this->center) <= entity->length;
+}
+
 void Player::pointTo(Coordinates p) {
 	this->baseAngle = this->center.getAngle(p);
 	this->pointRaysToView();
-
-	/*double angleDelta = (float)this->fov / (this->nRays - 1);
-
-	double startingAngle = this->baseAngle - fov / 2;
-
-	for (int i = 0; i < this->nRays; i++) {
-		this->rays[i]->setAngle(startingAngle);
-		startingAngle += angleDelta;
-	}*/
 }
 
 void Player::rotate(double angle) {
@@ -56,7 +51,7 @@ void Player::rotate(double angle) {
 	}
 }
 
-void Player::castWall(std::shared_ptr<Segment> segment) {
+void Player::castWall(std::shared_ptr<Segment> segment, int wallId) {
 	for (int i = 0; i < this->nRays; i++) {
 		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
 
@@ -75,14 +70,14 @@ void Player::castWall(std::shared_ptr<Segment> segment) {
 
 		//this->colOffsets[i] = intersection.colOffset;
 		if (this->info[this->nRays - 1 - i].size() == 0)
-			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1* (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset });
+			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1* (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId});
 		else
-			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset };
+			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId};
 
 		this->rays[i]->changeP2(intersection.intersection);
 	}
 }
-void Player::castEntity(std::shared_ptr<Entity> entity) {
+void Player::castEntity(std::shared_ptr<Entity> entity, int entityId) {
 	for (int i = 0; i < this->nRays; i++) {
 		IntersectionInfo intersection = this->rays[i]->getIntersection(entity);
 
@@ -97,10 +92,11 @@ void Player::castEntity(std::shared_ptr<Entity> entity) {
 		float d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 
-		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1*(float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset });
+		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1*(float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId});
 	}
 }
 void Player::cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities) {
+	
 	for (int i = 0; i < this->nRays; i++) {
 		this->info[i].clear();
 		this->rays[i]->setLength(this->raysLength);
@@ -110,7 +106,7 @@ void Player::cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<st
 			segments[i]->p1.distance(this->center) >= 2*this->raysLength &&
 			segments[i]->p2.distance(this->center) >= 2*this->raysLength) continue;
 
-		this->castWall(segments[i]);
+		this->castWall(segments[i], i);
 	}
 	this->pointRaysToView();
 
@@ -119,7 +115,7 @@ void Player::cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<st
 			entities[i]->p1.distance(this->center) >= 2 * this->raysLength &&
 			entities[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
 
-		this->castEntity(entities[i]);
+		this->castEntity(entities[i], i);
 	}
 }
 
@@ -168,9 +164,5 @@ Segment Player::moveRightward(float distance) {
 }
 
 RenderingInfo Player::getFixedDistances() {
-	/*for (int i = this->nRays - 1; i >= 0; i--) {
-		d.push_back(RenderInfo{ this->rays[i]->length * (float)cos(this->rays[i]->angle - this->baseAngle) , this->raysLength * (float)cos(this->rays[i]->angle - this->baseAngle), this->colOffsets[i]});
-
-	}*/
 	return this->info;
 }

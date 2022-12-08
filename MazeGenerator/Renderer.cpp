@@ -3,18 +3,18 @@
 
 #define TRIANGLES_IN_CIRCLE 6
 
-float Renderer::scaleX(int x) {
+float Renderer::scaleX(float x, int canvas) {
 	float result = x;
-	result = result * (float(this->mazeDrawingSquare.size.x) / float(this->screenWidth));
-	result += this->mazeDrawingSquare.topLeft.x;
-	result = (float)2 * result / (this->mazeDrawingSquare.size.x + this->projectionDrawingSquare.size.x) - 1;
+	result = result * (this->drawingCanvas[canvas].drawingRect.size.x / this->drawingCanvas[canvas].realSize.x);
+	result += this->drawingCanvas[canvas].drawingRect.topLeft.x;
+	result = (float)2 * result / (this->drawingCanvas[0].drawingRect.size.x) - 1;
 	return result;
 }
-float Renderer::scaleY(int y) {
+float Renderer::scaleY(float y, int canvas) {
 	float result = y;
-	result = result * (float(this->mazeDrawingSquare.size.y) / float(this->screenHeight));
-	result += this->mazeDrawingSquare.topLeft.y;
-	result = (float)2 * result / (this->mazeDrawingSquare.size.y) - 1;
+	result = result * (this->drawingCanvas[canvas].drawingRect.size.y / this->drawingCanvas[canvas].realSize.y);
+	result += this->drawingCanvas[canvas].drawingRect.topLeft.y;
+	result = (float)2 * result / (this->drawingCanvas[0].drawingRect.size.y) - 1;
 	return result;
 }
 
@@ -58,15 +58,22 @@ Renderer::Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect project
 	wallTexture("textures/brickwall.texture"), 
 	entityTexture("textures/collectible.texture") {
 	
+	this->drawingCanvas.resize(3);
+	this->drawingCanvas[0] = { {mazeDrawingSquare.topLeft, {mazeDrawingSquare.size.x + projectionDrawingSquare.size.x, mazeDrawingSquare.size.y}},{mazeDrawingSquare.size.x + projectionDrawingSquare.size.x, mazeDrawingSquare.size.y} };
+
 	this->windowTitle = windowTitle;
-	this->mazeDrawingSquare = mazeDrawingSquare;
-	this->projectionDrawingSquare = projectionDrawingSquare;
+	
+	this->drawingCanvas[1].drawingRect = mazeDrawingSquare;
+	this->drawingCanvas[1].realSize = mazeDrawingSquare.size;
+	
+	this->drawingCanvas[2].drawingRect = projectionDrawingSquare;
+	this->drawingCanvas[2].realSize = projectionDrawingSquare.size;
+
 	this->init();
 }
 
-void Renderer::setMazeSize(Size mazeRealSize) {
-	this->screenWidth = mazeRealSize.x;
-	this->screenHeight = mazeRealSize.y;
+void Renderer::setMazeSize(Coordinates mazeRealSize) {
+	this->drawingCanvas[1].realSize = mazeRealSize;
 }
 
 Renderer::~Renderer() {
@@ -77,7 +84,7 @@ void Renderer::init() {
 	if (!glfwInit()) {
 		throw std::ios_base::failure("glfw init failed");
 	}
-	this->window = glfwCreateWindow(this->mazeDrawingSquare.size.x + this->projectionDrawingSquare.size.x, this->projectionDrawingSquare.size.y, this->windowTitle.c_str(), NULL, NULL);
+	this->window = glfwCreateWindow((int)this->drawingCanvas[0].realSize.x, (int)this->drawingCanvas[0].realSize.y, this->windowTitle.c_str(), NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		throw std::ios_base::failure("window creation failed");
@@ -113,34 +120,34 @@ void Renderer::update() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::drawPixel(int x, int y) {
-	this->drawPixel(x, y, { 255,255,255 });
+void Renderer::drawPixel(int x, int y, int canvas) {
+	this->drawPixel(x, y, { 255,255,255 }, canvas);
 }
-void Renderer::drawPixel(int x, int y, RGB color) {
-	float xf = this->scaleX(x);
-	float yf = this->scaleY(y);
+void Renderer::drawPixel(int x, int y, RGB color, int canvas) {
+	float xf = this->scaleX(x, canvas);
+	float yf = this->scaleY(y, canvas);
 
 	glColor3ub(color.r, color.g, color.b);
 	glBegin(GL_POINTS);
 	glVertex2f(xf, -yf);
 	glEnd();
 }
-void Renderer::drawPixel(Coordinates p) {
-	this->drawPixel(p.x, p.y, { 255,255,255 });
+void Renderer::drawPixel(Coordinates p, int canvas) {
+	this->drawPixel(p.x, p.y, { 255,255,255 }, canvas);
 }
-void Renderer::drawPixel(Coordinates p, RGB color) {
-	this->drawPixel(p.x, p.y, color);
+void Renderer::drawPixel(Coordinates p, RGB color, int canvas) {
+	this->drawPixel(p.x, p.y, color, canvas);
 }
 
-void Renderer::drawLine(int x1, int y1, int x2, int y2) {
-	this->drawLine(x1, y1, x2, y2, { 255,255,255 });
+void Renderer::drawLine(int x1, int y1, int x2, int y2, int canvas) {
+	this->drawLine(x1, y1, x2, y2, { 255,255,255 }, canvas);
 }
-void Renderer::drawLine(int x1, int y1, int x2, int y2, RGB color) {
-	float xf1 = this->scaleX(x1);
-	float yf1 = this->scaleY(y1);
+void Renderer::drawLine(int x1, int y1, int x2, int y2, RGB color, int canvas) {
+	float xf1 = this->scaleX(x1, canvas);
+	float yf1 = this->scaleY(y1, canvas);
 
-	float xf2 = this->scaleX(x2);
-	float yf2 = this->scaleY(y2);
+	float xf2 = this->scaleX(x2, canvas);
+	float yf2 = this->scaleY(y2, canvas);
 
 	glColor3ub(color.r, color.g, color.b);
 	glBegin(GL_LINES);
@@ -148,87 +155,87 @@ void Renderer::drawLine(int x1, int y1, int x2, int y2, RGB color) {
 	glVertex2f(xf2, -yf2);
 	glEnd();
 }
-void Renderer::drawLine(Coordinates p1, Coordinates p2) {
-	this->drawLine(p1.x, p1.y, p2.x, p2.y, { 255,255,255 });
+void Renderer::drawLine(Coordinates p1, Coordinates p2, int canvas) {
+	this->drawLine(p1.x, p1.y, p2.x, p2.y, { 255,255,255 }, canvas);
 }
-void Renderer::drawLine(Coordinates p1, Coordinates p2, RGB color) {
-	this->drawLine(p1.x, p1.y, p2.x, p2.y, color);
+void Renderer::drawLine(Coordinates p1, Coordinates p2, RGB color, int canvas) {
+	this->drawLine(p1.x, p1.y, p2.x, p2.y, color, canvas);
 }
-void Renderer::drawLine(Line l) {
-	this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, { 255,255,255 });
+void Renderer::drawLine(Line l, int canvas) {
+	this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, { 255,255,255 }, canvas);
 }
-void Renderer::drawLine(Line l, RGB color) {
-	this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, color);
+void Renderer::drawLine(Line l, RGB color, int canvas) {
+	this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, color, canvas);
 }
 
-void Renderer::drawLines(std::vector<Line> lines) {
-	this->drawLines(lines, { 255,255,255 });
+void Renderer::drawLines(std::vector<Line>& lines, int canvas) {
+	this->drawLines(lines, { 255,255,255 }, canvas);
 }
-void Renderer::drawLines(std::vector<Line> lines, RGB color) {
+void Renderer::drawLines(std::vector<Line>& lines, RGB color, int canvas) {
 	for (Line l : lines) {
-		this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, { 255,255,255 });
+		this->drawLine(l.p1.x, l.p1.y, l.p2.x, l.p2.y, { 255,255,255 }, canvas);
 	}
 }
 
-void Renderer::drawSegment(std::shared_ptr<Segment> segment) {
-	this->drawLine(segment->p1.x, segment->p1.y, segment->p2.x, segment->p2.y);
+void Renderer::drawSegment(std::shared_ptr<Segment>& segment, int canvas) {
+	this->drawLine(segment->p1.x, segment->p1.y, segment->p2.x, segment->p2.y, canvas);
 }
-void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>> segments) {
-	this->drawSegments(segments, { 255,255,255 });
+void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>>& segments, int canvas) {
+	this->drawSegments(segments, { 255,255,255 }, canvas);
 }
-void Renderer::drawSegment(std::shared_ptr<Segment> segment, RGB color) {
-	this->drawLine(segment->p1.x, segment->p1.y, segment->p2.x, segment->p2.y, color);
+void Renderer::drawSegment(std::shared_ptr<Segment>& segment, RGB color, int canvas) {
+	this->drawLine(segment->p1.x, segment->p1.y, segment->p2.x, segment->p2.y, color, canvas);
 }
-void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>> segments, RGB color) {
+void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>>& segments, RGB color, int canvas) {
 	for (std::shared_ptr<Segment> s : segments) {
-		this->drawLine(s->p1.x, s->p1.y, s->p2.x, s->p2.y, color);
+		this->drawLine(s->p1.x, s->p1.y, s->p2.x, s->p2.y, color, canvas);
 	}
 }
 
-void Renderer::drawCollectible(std::shared_ptr<Entity> collectible) {
-	this->drawCollectible(collectible, { 255,255,255 });
+void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, int canvas) {
+	this->drawCollectible(collectible, { 255,255,255 }, canvas);
 }
-void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>> collectibles) {
-	this->drawCollectibles(collectibles, { 255,255,255 });
+void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, int canvas) {
+	this->drawCollectibles(collectibles, { 255,255,255 }, canvas);
 }
-void Renderer::drawCollectible(std::shared_ptr<Entity> collectible, RGB color) {
-	this->drawCircle(collectible->center, collectible->length / 2, color);
+void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, RGB color, int canvas) {
+	this->drawCircle(collectible->center, collectible->length / 2, color, canvas);
 }
-void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>> collectibles, RGB color) {
+void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, RGB color, int canvas) {
 	for (int i = 0; i < collectibles.size(); i++) {
-		this->drawCircle(collectibles[i]->center, collectibles[i]->length / 2, color);
+		this->drawCircle(collectibles[i]->center, collectibles[i]->length / 2, color, canvas);
 	}
 }
 
-void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, bool connect) {
-	this->drawView(r, { 255,255,255 }, connect);
+void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, int canvas, bool connect) {
+	this->drawView(r, { 255,255,255 }, connect, canvas);
 }
-void Renderer::drawView(std::vector<std::shared_ptr<Segment>> r, RGB color, bool connect) {
-	this->drawSegment(r[0]);
-	this->drawSegment(r[r.size() - 1]);
+void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, int canvas, bool connect) {
+	this->drawSegment(r[0], canvas);
+	this->drawSegment(r[r.size() - 1], canvas);
 
 	for (int i = 0; i < r.size() - 1; i++) {
 		if (connect) {
-			this->drawLine(r[i]->p2, r[i + 1]->p2, color);
+			this->drawLine(r[i]->p2, r[i + 1]->p2, color, canvas);
 		}
 		else {
-			this->drawPixel(r[i]->p2, color);
+			this->drawPixel(r[i]->p2, color, canvas);
 		}
 	}
 }
 
-void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3) {
-	this->drawTriangle(p1, p2, p3, { 255,255,255 });
+void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, int canvas) {
+	this->drawTriangle(p1, p2, p3, { 255,255,255 }, canvas);
 }
-void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, RGB color) {
-	float xf1 = this->scaleX(p1.x);
-	float yf1 = this->scaleY(p1.y);
+void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, RGB color, int canvas) {
+	float xf1 = this->scaleX(p1.x, canvas);
+	float yf1 = this->scaleY(p1.y, canvas);
 
-	float xf2 = this->scaleX(p2.x);
-	float yf2 = this->scaleY(p2.y);
+	float xf2 = this->scaleX(p2.x, canvas);
+	float yf2 = this->scaleY(p2.y, canvas);
 
-	float xf3 = this->scaleX(p3.x);
-	float yf3 = this->scaleY(p3.y);
+	float xf3 = this->scaleX(p3.x, canvas);
+	float yf3 = this->scaleY(p3.y, canvas);
 
 	glColor3ub(color.r, color.g, color.b);
 	glBegin(GL_TRIANGLES);
@@ -238,21 +245,21 @@ void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, RGB 
 	glEnd();
 }
 
-void Renderer::drawRect(Coordinates topLeft, Coordinates size) {
-	this->drawRect(topLeft, size, { 255,255,255 });
+void Renderer::drawRect(Coordinates topLeft, Coordinates size, int canvas) {
+	this->drawRect(topLeft, size, { 255,255,255 }, canvas);
 
 }
-void Renderer::drawRect(Coordinates topLeft, Coordinates size, RGB color) {
-	int x1 = topLeft.x,
+void Renderer::drawRect(Coordinates topLeft, Coordinates size, RGB color, int canvas) {
+	float x1 = topLeft.x,
 		x2 = topLeft.x + size.x;
-	int y1 = topLeft.y,
+	float y1 = topLeft.y,
 		y2 = topLeft.y + size.y;
 
-	float x1f = (float)2 * x1 / (this->mazeDrawingSquare.size.x + this->projectionDrawingSquare.size.x) - 1;
-	float y1f = (float)2 * y1 / this->projectionDrawingSquare.size.y - 1;
+	float x1f = this->scaleX(x1, canvas);
+	float y1f = this->scaleY(y1, canvas);
 
-	float x2f = (float)2 * x2 / (this->mazeDrawingSquare.size.x + this->projectionDrawingSquare.size.x) - 1;
-	float y2f = (float)2 * y2 / this->projectionDrawingSquare.size.y - 1;
+	float x2f = this->scaleX(x2, canvas);
+	float y2f = this->scaleY(y2, canvas);
 
 	glColor3ub(color.r, color.g, color.b);
 	glBegin(GL_TRIANGLES);
@@ -264,17 +271,42 @@ void Renderer::drawRect(Coordinates topLeft, Coordinates size, RGB color) {
 	glVertex2f(x1f, -y1f);
 	glEnd();
 }
-void Renderer::drawRect(Rect rect) {
-	this->drawRect(rect.topLeft, rect.size, { 255,255,255 });
+void Renderer::drawRect(Rect rect, int canvas) {
+	this->drawRect(rect.topLeft, rect.size, { 255,255,255 }, canvas);
 }
-void Renderer::drawRect(Rect rect, RGB color) {
-	this->drawRect(rect.topLeft, rect.size, color);
+void Renderer::drawRect(Rect rect, RGB color, int canvas) {
+	this->drawRect(rect.topLeft, rect.size, color, canvas);
 }
 
-void Renderer::drawCircle(Coordinates center, float radius) { 
-	this->drawCircle(center, radius, { 255,255,255 });
+void Renderer::drawCircle(Coordinates center, float radius, int canvas) {
+	this->drawCircle(center, radius, { 255,255,255 }, canvas);
 }
-void Renderer::drawCircle(Coordinates center, float radius, RGB color) {
+
+void Renderer::drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, int canvas) {
+	this->drawQuadrilateral(p1, p2, p3, p4, { 255,255,255 }, canvas);
+}
+void Renderer::drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, RGB color, int canvas) {
+	p1.x = this->scaleX(p1.x, canvas);
+	p1.y = this->scaleY(p1.y, canvas);
+	p2.x = this->scaleX(p2.x, canvas);
+	p2.y = this->scaleY(p2.y, canvas);
+	p3.x = this->scaleX(p3.x, canvas);
+	p3.y = this->scaleY(p3.y, canvas);
+	p4.x = this->scaleX(p4.x, canvas);
+	p4.y = this->scaleY(p4.y, canvas);
+
+	glColor3ub(color.r, color.g, color.b);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(p1.x, -p1.y);
+	glVertex2f(p2.x, -p2.y);
+	glVertex2f(p3.x, -p3.y);
+	glVertex2f(p3.x, -p3.y);
+	glVertex2f(p4.x, -p4.y);
+	glVertex2f(p2.x, -p2.y);
+	glEnd();
+}
+
+void Renderer::drawCircle(Coordinates center, float radius, RGB color, int canvas) {
 	Coordinates last = center, next;
 	last.y -= radius;
 	double anglePerTriangle = (2 * 3.1415) / TRIANGLES_IN_CIRCLE;
@@ -283,13 +315,13 @@ void Renderer::drawCircle(Coordinates center, float radius, RGB color) {
 		next.x += radius * cos(anglePerTriangle * i);
 		next.y -= radius * sin(anglePerTriangle * i);
 
-		this->drawTriangle(center, last, next, color);
+		this->drawTriangle(center, last, next, color, canvas);
 
 		last = next;
 	}
 }
 
-void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
+void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset, int canvas) {
 	int len = info.size();
 
 	const int CHUNK_SIZE = 4;
@@ -298,7 +330,7 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 	const int IMAGE_WIDTH = 16;
 
 
-	float rectWidth = this->projectionDrawingSquare.size.x / len;
+	float rectWidth = this->drawingCanvas[canvas].realSize.x / len;
 
 	float rectHeight, wallHeight;
 	float offset;
@@ -309,20 +341,20 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 
 	for (int i = 0; i < len; i++) {
 		
-		p.x = this->projectionDrawingSquare.topLeft.x + rectWidth * i;
+		p.x =  rectWidth * i;
 
-		float d = this->getHeight(Obstacle) / this->projectionDrawingSquare.size.y;
+		float d = this->getHeight(Obstacle) / this->drawingCanvas[canvas].realSize.y;
 		
 		wallHeight = (this->getHeight(Obstacle) + cameraVerticalOffset) / d;
 		
-		int j = - (wallHeight - this->projectionDrawingSquare.size.y)*2;
-		while (j < this->projectionDrawingSquare.size.y) {
+		int j = - (wallHeight - this->drawingCanvas[canvas].realSize.y)*2;
+		while (j < this->drawingCanvas[canvas].realSize.y) {
 
-			if (j < this->projectionDrawingSquare.size.y / 2) {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * j);
+			if (j < this->drawingCanvas[canvas].realSize.y / 2) {
+				rectHeight = this->drawingCanvas[canvas].realSize.y - (2 * j);
 			}
 			else {
-				rectHeight = this->projectionDrawingSquare.size.y - (2 * (this->projectionDrawingSquare.size.y - j));
+				rectHeight = this->drawingCanvas[canvas].realSize.y - (2 * (this->drawingCanvas[canvas].realSize.y - j));
 			}
 
 			float distance = std::min((this->getHeight(Obstacle)) / rectHeight, 100.0f);
@@ -334,7 +366,7 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 
 			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
 
-			this->drawRect(Coordinates{ p.x,(float)j + int(offset) }, Coordinates{ rectWidth, float(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) });
+			this->drawRect(Coordinates{ p.x,(float)j + int(offset) }, Coordinates{ rectWidth, float(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) }, canvas);
 
 			j += CHUNK_SIZE;
 			
@@ -351,7 +383,7 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 
 			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
 
-			p.y = (this->projectionDrawingSquare.size.y - rectHeight) / 2 + offset;
+			p.y = (this->drawingCanvas[canvas].realSize.y - rectHeight) / 2 + offset;
 
 			int c = int(info[i][k].colOffset) % IMAGE_WIDTH;
 
@@ -366,10 +398,15 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset) {
 				color.r = float(color.r) * grey;
 				color.g = float(color.g) * grey;
 				color.b = float(color.b) * grey;
-				this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB());
+				this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), canvas);
 
 				p.y += rectHeight;
 			}
 		}	
+	
+
 	}
+
+	
+
 }

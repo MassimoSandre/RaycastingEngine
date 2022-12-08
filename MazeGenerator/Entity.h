@@ -8,5 +8,4 @@ public:
 	Entity(Coordinates center, float length, double angle);
 
 	void faceTo(Coordinates p);
-
 };

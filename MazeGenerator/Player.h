@@ -17,8 +17,8 @@ private:
 	RenderingInfo info;
 
 	void pointRaysToView();
-	void castWall(std::shared_ptr<Segment> segment);
-	void castEntity(std::shared_ptr<Entity> segment);
+	void castWall(std::shared_ptr<Segment> segment, int wallId);
+	void castEntity(std::shared_ptr<Entity> segment, int entityId);
 public:
 	Coordinates center;
 
@@ -26,6 +26,8 @@ public:
 	std::vector<float> colOffsets;
 
 	Player(Coordinates center, double fov, int nRays, float raysLength, double baseAngle);
+
+	bool collideWithEntity(std::shared_ptr<Entity> entity);
 
 	void pointTo(Coordinates p);
 

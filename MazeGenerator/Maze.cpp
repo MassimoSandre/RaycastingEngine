@@ -141,7 +141,7 @@ std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates 
 
 	Line t;
 
-	if (wallThinkness == 1.0f) {
+	if (wallThinkness == 0.0f) {
 		
 		for (int i = 0; i < this->walls.size(); i++) {
 			t = this->walls[i];

@@ -3,6 +3,9 @@
 #define MOVE_CHECK_DISTANCE 4
 #define MOVE_DISTANCE 1 
 
+#define MAZE_CANVAS 1
+#define PROJECTION_CANVAS 2
+
 void Game::tryMove(Segment move, float multiplier) {
 	Segment moveX(move.p1, { move.p2.x, move.p1.y });
 	Segment moveY(move.p1, { move.p1.x, move.p2.y });
@@ -34,8 +37,14 @@ void Game::tryMove(Segment move, float multiplier) {
 		moveY.translate({ float(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
 	}
 
+	for (std::shared_ptr<Entity>& e : this->collectibles) {
+		if (this->player.collideWithEntity(e)) {
+			this->placeCollectible(e);
+		}
+	}
+
 	possible = true;
-	for (std::shared_ptr<Segment> w : this->walls) {
+	for (std::shared_ptr<Segment>& w : this->walls) {
 		IntersectionInfo info = moveY.getIntersection(w);
 
 		if (info.intersection.x != -1 || info.intersection.y != -1) {
@@ -97,12 +106,19 @@ bool Game::levelCompleted() {
 }
 
 void Game::newLevel() {
-	this->renderer.setMazeSize(Size{ (this->currentMazeSize.x + 2) * this->cellSize.x ,  (this->currentMazeSize.y + 2) * this->cellSize.y });
+	this->renderer.setMazeSize(Coordinates{ (float)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (float)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
-	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , 4));
-	this->currentMazeSize.x += this->mazeSizeIncrement;
-	this->currentMazeSize.y += this->mazeSizeIncrement;
+	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
+}
+
+void Game::placeCollectible(std::shared_ptr<Entity>& e) {
+	srand((unsigned int)time(NULL));
+
+	int newx = rand() % (this->currentMazeSize.x - 1) + 1;
+	int newy = rand() % (this->currentMazeSize.y - 1) + 1;
+
+	e->center = {(float(newx)+0.5f)*this->cellSize.x,(float(newy) + 0.5f) * this->cellSize.y };
 }
 
 Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, float viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, float wallThickness) :
@@ -140,6 +156,8 @@ bool Game::update(float elapsedTime) {
 	}
 
 	if (this->levelCompleted()) {
+		this->currentMazeSize.x += this->mazeSizeIncrement;
+		this->currentMazeSize.y += this->mazeSizeIncrement;
 		this->newLevel();
 	}
 
@@ -152,12 +170,12 @@ bool Game::update(float elapsedTime) {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
-	this->renderer.drawSegments(this->walls, { 255,0,0 });
+	this->renderer.drawSegments(this->walls, { 255,0,0 }, MAZE_CANVAS);
 	this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 });
 	//this->renderer.drawSegment(std::make_shared<Segment>(*this->collectibles[0]), {255,255,0});
-	this->renderer.drawView(this->player.rays);
+	this->renderer.drawView(this->player.rays, MAZE_CANVAS);
 
-	this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset);
+	this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset, PROJECTION_CANVAS);
 
 	this->renderer.update();
 }
