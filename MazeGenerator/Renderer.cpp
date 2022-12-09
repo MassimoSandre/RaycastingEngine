@@ -325,7 +325,7 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset, in
 	int len = info.size();
 
 	const int CHUNK_SIZE = 4;
-	const int WALL_PIXEL_HEIGHT = 64;
+	const int WALL_PIXEL_HEIGHT = 32;
 	const int IMAGE_HEIGHT = 16;
 	const int IMAGE_WIDTH = 16;
 
@@ -385,20 +385,19 @@ void Renderer::drawProjection(RenderingInfo info, float cameraVerticalOffset, in
 
 			p.y = (this->drawingCanvas[canvas].realSize.y - rectHeight) / 2 + offset;
 
-			int c = int(info[i][k].colOffset) % IMAGE_WIDTH;
+			int c = int(info[i][k].colOffset + (info[i][k].type == EntitySegment ? 2.0 : 0)) % IMAGE_WIDTH;
 
-			rectHeight = rectHeight / WALL_PIXEL_HEIGHT;
+			rectHeight = rectHeight / (WALL_PIXEL_HEIGHT * (this->getHeight(info[i][k].type) / this->getHeight(Obstacle) ));
 
-			for (int j = 0; j < WALL_PIXEL_HEIGHT; j++) {
-				
+			for (int j = 0; j < (WALL_PIXEL_HEIGHT * (this->getHeight(info[i][k].type) / this->getHeight(Obstacle))); j++) {
 				RGBA color =(this->getTexture(info[i][k].type))->texture[(c % IMAGE_WIDTH)*IMAGE_HEIGHT + j % IMAGE_HEIGHT];
 
-				if (color.a == 0) continue;
-
-				color.r = float(color.r) * grey;
-				color.g = float(color.g) * grey;
-				color.b = float(color.b) * grey;
-				this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), canvas);
+				if (color.a != 0) {
+					color.r = float(color.r) * grey;
+					color.g = float(color.g) * grey;
+					color.b = float(color.b) * grey;
+					this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), canvas);
+				}
 
 				p.y += rectHeight;
 			}

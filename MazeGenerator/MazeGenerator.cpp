@@ -24,10 +24,10 @@
 #define PI 3.1415
 #define DEFAULT_FOV PI/2
 
-#define DEFAULT_MAZE_SIZE 2
+#define DEFAULT_MAZE_SIZE 10
 #define DEFAULT_CELL_SIZE 36
 
-#define DEFAULT_WALL_THICKNESS 0
+#define DEFAULT_WALL_THICKNESS 2
 
 #define DEBUG_INFO false
 
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
         DEFAULT_WALL_THICKNESS);
 
 
-   /* Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
-    game.addCollectible(std::make_shared<Entity>(s));*/
+    Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
+    game.addCollectible(std::make_shared<Entity>(s));
 
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;
@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
     bool canUpdate = false;
 
     bool running = true;
-
 
 
     while (running) {

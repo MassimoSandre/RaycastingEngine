@@ -101,13 +101,13 @@ IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 
 	IntersectionInfo intersection = { int((b2 * c1 - b1 * c2) / den), int((a1 * c2 - a2 * c1) / den), 0 };
 
-	if (segment->p1.x >= segment->p2.x) {
+	if (segment->p1.x > segment->p2.x) {
 		if (intersection.intersection.x > segment->p1.x || intersection.intersection.x < segment->p2.x) return { -2,-2 };
 	}
 	else {
 		if (intersection.intersection.x < segment->p1.x || intersection.intersection.x > segment->p2.x) return { -3,-3 };
 	}
-	if (segment->p1.y >= segment->p2.y) {
+	if (segment->p1.y > segment->p2.y) {
 		if (intersection.intersection.y > segment->p1.y || intersection.intersection.y < segment->p2.y) return { -4,-4 };
 	}
 	else {
@@ -115,7 +115,7 @@ IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 	}
 
 	intersection.colOffset = segment->p1.distance(intersection.intersection);
-	if (intersection.colOffset >= segment->length) return { -1,-1 };
+	if (intersection.colOffset > segment->length) return { -1,-1 };
 
 	return intersection;
 }

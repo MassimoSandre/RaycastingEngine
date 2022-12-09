@@ -171,7 +171,7 @@ bool Game::update(float elapsedTime) {
 }
 void Game::render() {
 	this->renderer.drawSegments(this->walls, { 255,0,0 }, MAZE_CANVAS);
-	this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 });
+	this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 }, MAZE_CANVAS);
 	//this->renderer.drawSegment(std::make_shared<Segment>(*this->collectibles[0]), {255,255,0});
 	this->renderer.drawView(this->player.rays, MAZE_CANVAS);
 
