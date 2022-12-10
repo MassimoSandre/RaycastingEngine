@@ -113,18 +113,18 @@ void  Maze::generate() {
 		nArcs++;
 	}
 
-	this->walls.push_back({ {0,0},{float(this->width),0} });
-	this->walls.push_back({ {0,float(this->height)},{float(this->width),float(this->height)} });
-	this->walls.push_back({ {0,1},{0,float(this->height)} });
-	this->walls.push_back({ {float(this->width),0},{float(this->width), float(this->height-1)} });
+	this->walls.push_back({ {0,0},{double(this->width),0} });
+	this->walls.push_back({ {0,double(this->height)},{double(this->width),double(this->height)} });
+	this->walls.push_back({ {0,1},{0,double(this->height)} });
+	this->walls.push_back({ {double(this->width),0},{double(this->width), double(this->height-1)} });
 
 	for (int x = 0; x < this->width; x++) {
 		for (int y = 0; y < this->height; y++) {
 			if (x < this->width - 1 && !toKeep[x][y].east) {
-				this->walls.push_back({ {float(x + 1),float(y)}, {float(x + 1),float(y + 1)}});
+				this->walls.push_back({ {double(x + 1),double(y)}, {double(x + 1),double(y + 1)}});
 			}
 			if (y < this->height - 1 && !toKeep[x][y].south) {
-				this->walls.push_back({ {float(x),float(y + 1)}, {float(x + 1),float(y + 1)} });
+				this->walls.push_back({ {double(x),double(y + 1)}, {double(x + 1),double(y + 1)} });
 				
 			}
 		}
@@ -136,7 +136,7 @@ void Maze::setSize(Size size) {
 	this->height = size.y;
 }
 
-std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset, float wallThinkness) {
+std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset, double wallThinkness) {
 	std::vector<std::shared_ptr<Segment>> walls;
 
 	Line t;

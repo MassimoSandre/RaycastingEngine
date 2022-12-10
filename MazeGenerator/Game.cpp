@@ -6,21 +6,21 @@
 #define MAZE_CANVAS 1
 #define PROJECTION_CANVAS 2
 
-void Game::tryMove(Segment move, float multiplier) {
+void Game::tryMove(Segment move, double multiplier) {
 	Segment moveX(move.p1, { move.p2.x, move.p1.y });
 	Segment moveY(move.p1, { move.p1.x, move.p2.y });
 
-	float moveXCoef = moveX.length / move.length;
-	float moveYCoef = moveY.length / move.length;
+	double moveXCoef = moveX.length / move.length;
+	double moveYCoef = moveY.length / move.length;
 
 	bool possible = true;
 	for (std::shared_ptr<Segment> w : this->walls) {
 		IntersectionInfo info = moveX.getIntersection(w);
 
 		if (info.intersection.x != -1 || info.intersection.y != -1) {
-			float d1 = info.intersection.distance(moveX.p1);
+			double d1 = info.intersection.distance(moveX.p1);
 
-			float d2 = info.intersection.distance(moveX.p2);
+			double d2 = info.intersection.distance(moveX.p2);
 
 			if (d1 > MOVE_CHECK_DISTANCE) continue;
 
@@ -34,7 +34,7 @@ void Game::tryMove(Segment move, float multiplier) {
 	if (possible) {
 		moveX.setLength(MOVE_DISTANCE * moveXCoef * multiplier);
 		this->player.applyMove(moveX);
-		moveY.translate({ float(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
+		moveY.translate({ double(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
 	}
 
 	for (std::shared_ptr<Entity>& e : this->collectibles) {
@@ -48,9 +48,9 @@ void Game::tryMove(Segment move, float multiplier) {
 		IntersectionInfo info = moveY.getIntersection(w);
 
 		if (info.intersection.x != -1 || info.intersection.y != -1) {
-			float d1 = info.intersection.distance(moveY.p1);
+			double d1 = info.intersection.distance(moveY.p1);
 
-			float d2 = info.intersection.distance(moveY.p2);
+			double d2 = info.intersection.distance(moveY.p2);
 
 			if (d1 > MOVE_CHECK_DISTANCE) continue;
 
@@ -67,7 +67,7 @@ void Game::tryMove(Segment move, float multiplier) {
 	}
 }
 
-void Game::keyHandler(float multiplier) {
+void Game::keyHandler(double multiplier) {
 	Segment move(this->player.center, this->player.center);
 
 	if (this->renderer.isKeyPressed(GLFW_KEY_W)) {
@@ -106,7 +106,7 @@ bool Game::levelCompleted() {
 }
 
 void Game::newLevel() {
-	this->renderer.setMazeSize(Coordinates{ (float)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (float)(this->currentMazeSize.y + 2) * this->cellSize.y });
+	this->renderer.setMazeSize(Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
 	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
@@ -118,12 +118,12 @@ void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 	int newx = rand() % (this->currentMazeSize.x - 1) + 1;
 	int newy = rand() % (this->currentMazeSize.y - 1) + 1;
 
-	e->center = {(float(newx)+0.5f)*this->cellSize.x,(float(newy) + 0.5f) * this->cellSize.y };
+	e->center = {(double(newx)+0.5f)*this->cellSize.x,(double(newy) + 0.5f) * this->cellSize.y };
 }
 
-Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, float viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, float wallThickness) :
+Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
-	renderer("Maze", Rect{ {0,0},{(float)windowSquareSize,(float)windowSquareSize} }, Rect{ {(float)windowSquareSize,0},{(float)windowSquareSize,(float)windowSquareSize} }),
+	renderer("Maze", Rect{ {0,0},{(double)windowSquareSize,(double)windowSquareSize} }, Rect{ {(double)windowSquareSize,0},{(double)windowSquareSize,(double)windowSquareSize} }),
 	generator() {
 	this->mazeSizeIncrement = mazeSizeIncrement;
 	this->screenSize = { nSquare * windowSquareSize, windowSquareSize };
@@ -137,12 +137,12 @@ Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinat
 Game::~Game() {}
 
 
-bool Game::update(float elapsedTime) {
+bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
 	if (!this->pause) {
-		float cursorXDelta = this->screenSize.x / 4 * 3 - this->renderer.getMousePosition().x;
-		this->renderer.setMousePosition({ (float)this->screenSize.x / 4 * 3, (float)this->screenSize.y / 2 });
+		double cursorXDelta = this->screenSize.x / 4 * 3 - this->renderer.getMousePosition().x;
+		this->renderer.setMousePosition({ (double)this->screenSize.x / 4 * 3, (double)this->screenSize.y / 2 });
 		this->player.rotate(0.003 * cursorXDelta);
 	}
 

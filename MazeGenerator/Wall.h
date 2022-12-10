@@ -5,5 +5,5 @@ class Wall : public Segment{
 public:
 	Wall();
 	Wall(Coordinates p1, Coordinates p2);
-	Wall(Coordinates p1, float length, double angle);
+	Wall(Coordinates p1, double length, double angle);
 };

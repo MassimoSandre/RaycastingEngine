@@ -24,11 +24,11 @@ private:
 	Texture wallTexture;
 	Texture entityTexture;
 
-	float scaleX(float x, int canvas);
-	float scaleY(float y, int canvas);
-	float map(float value, float istart, float istop, float ostart, float ostop);
+	double scaleX(double x, int canvas);
+	double scaleY(double y, int canvas);
+	double map(double value, double istart, double istop, double ostart, double ostop);
 	Texture* getTexture(RayType type);
-	float getHeight(RayType type);
+	double getHeight(RayType type);
 public:
 	Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare);
 	~Renderer();
@@ -46,13 +46,13 @@ public:
 
 	void update();
 
-	void drawPixel(int x, int y, int canvas=0);
-	void drawPixel(int x, int y, RGB color, int canvas = 0);
+	void drawPixel(double x, double y, int canvas=0);
+	void drawPixel(double x, double y, RGB color, int canvas = 0);
 	void drawPixel(Coordinates p, int canvas = 0);
 	void drawPixel(Coordinates p, RGB color, int canvas = 0);
 
-	void drawLine(int x1, int y1, int x2, int y2, int canvas = 0);
-	void drawLine(int x1, int y1, int x2, int y2, RGB color, int canvas = 0);
+	void drawLine(double x1, double y1, double x2, double y2, int canvas = 0);
+	void drawLine(double x1, double y1, double x2, double y2, RGB color, int canvas = 0);
 	void drawLine(Coordinates p1, Coordinates p2, int canvas = 0);
 	void drawLine(Coordinates p1, Coordinates p2, RGB color, int canvas = 0);
 	void drawLine(Line l, int canvas = 0);
@@ -85,8 +85,8 @@ public:
 	void drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, int canvas);
 	void drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, RGB color, int canvas);
 
-	void drawCircle(Coordinates center, float radius, int canvas = 0);
-	void drawCircle(Coordinates center, float radius, RGB color, int canvas = 0);
+	void drawCircle(Coordinates center, double radius, int canvas = 0);
+	void drawCircle(Coordinates center, double radius, RGB color, int canvas = 0);
 
-	void drawProjection(RenderingInfo info, float cameraVerticalOffset, int canvas = 0);
+	void drawProjection(RenderingInfo info, double cameraVerticalOffset, int canvas = 0);
 };

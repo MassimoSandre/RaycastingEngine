@@ -7,7 +7,7 @@ public:
 	RayType type;
 	Coordinates p1;
 	Coordinates p2;
-	float length;
+	double length;
 	double angle;
 
 
@@ -15,7 +15,7 @@ public:
 
 	Segment();
 	Segment(Coordinates p1, Coordinates p2);
-	Segment(Coordinates p1, float length, double angle);
+	Segment(Coordinates p1, double length, double angle);
 
 	void changePoints(Coordinates p1, Coordinates p2);
 	void changeP1(Coordinates p1);
@@ -25,8 +25,8 @@ public:
 
 	void move(Coordinates p1);
 
-	void setLength(float length);
-	void changeLength(float delta);
+	void setLength(double length);
+	void changeLength(double delta);
 	void setAngle(double angle);
 	void rotate(double angle);
 	void translate(Coordinates offsets);

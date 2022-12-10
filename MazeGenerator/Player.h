@@ -10,9 +10,9 @@ class Player {
 private:
 	double fov;
 	int nRays;
-	float raysLength;
+	double raysLength;
 	double baseAngle;
-	float focalLength;
+	double focalLength;
 
 	RenderingInfo info;
 
@@ -23,9 +23,9 @@ public:
 	Coordinates center;
 
 	std::vector<std::shared_ptr<Segment>> rays;
-	std::vector<float> colOffsets;
+	std::vector<double> colOffsets;
 
-	Player(Coordinates center, double fov, int nRays, float raysLength, double baseAngle);
+	Player(Coordinates center, double fov, int nRays, double raysLength, double baseAngle);
 
 	bool collideWithEntity(std::shared_ptr<Entity> entity);
 
@@ -39,12 +39,12 @@ public:
 
 	Segment move(Coordinates offsets);
 	Segment moveTo(Coordinates newPosition);
-	Segment follow(Coordinates target, float distance);
+	Segment follow(Coordinates target, double distance);
 
-	Segment moveForward(float distance);
-	Segment moveBackward(float distance);
-	Segment moveLeftward(float distance);
-	Segment moveRightward(float distance);
+	Segment moveForward(double distance);
+	Segment moveBackward(double distance);
+	Segment moveLeftward(double distance);
+	Segment moveRightward(double distance);
 
 	RenderingInfo getFixedDistances();
 

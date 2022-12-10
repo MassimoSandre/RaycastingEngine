@@ -20,11 +20,11 @@ private:
 	bool closing = false;	
 	bool jumping = false;
 
-	float verticalOffset = 0.0f;
-	float verticalVelocity = 0.0f;
+	double verticalOffset = 0.0f;
+	double verticalVelocity = 0.0f;
 
 	int mazeSizeIncrement; 
-	int wallThickness;
+	double wallThickness;
 
 	Size screenSize;
 	Size currentMazeSize;
@@ -34,16 +34,16 @@ private:
 	Segment move;
 
 
-	void tryMove(Segment move, float multiplier);
-	void keyHandler(float multiplier);
+	void tryMove(Segment move, double multiplier);
+	void keyHandler(double multiplier);
 	bool levelCompleted();
 	void newLevel();
 	void placeCollectible(std::shared_ptr<Entity>& e);
 public:
-	Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, float viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, float wallThickness);
+	Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness);
 	~Game();
 
-	bool update(float elapsedTime);
+	bool update(double elapsedTime);
 	void render();
 
 	void addWall(std::shared_ptr<Segment> segment);

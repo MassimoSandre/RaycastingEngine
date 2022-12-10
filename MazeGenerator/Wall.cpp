@@ -6,6 +6,6 @@ Wall::Wall() {
 Wall::Wall(Coordinates p1, Coordinates p2) : Segment(p1, p2) {
 	this->type = Obstacle;
 }
-Wall::Wall(Coordinates p1, float length, double angle) {
+Wall::Wall(Coordinates p1, double length, double angle) {
 	this->type = Obstacle;
 }

@@ -4,10 +4,10 @@ Entity::Entity() {
 	this->type = EntitySegment;
 }
 
-Entity::Entity(Coordinates center, float length, double angle) : Segment() {
+Entity::Entity(Coordinates center, double length, double angle) : Segment() {
 	this->center = center;
 	this->type = EntitySegment;
-	float distanceFromCenter = length / 2;
+	double distanceFromCenter = length / 2;
 
 	Coordinates newP1 = center, newP2 = center;
 
@@ -21,7 +21,7 @@ Entity::Entity(Coordinates center, float length, double angle) : Segment() {
 }
 
 void Entity::faceTo(Coordinates p) {
-	float angle = center.getAngle(p);
+	double angle = center.getAngle(p);
 
 	Coordinates newP1 = this->center, newP2 = this->center;
 

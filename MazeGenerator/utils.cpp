@@ -21,21 +21,21 @@ typedef struct RGBA{
 } RGBA;
 
 typedef struct Coordinates{
-	float x;
-	float y;
+	double x;
+	double y;
 
-	float distance(Coordinates coord) {
+	double distance(Coordinates coord) {
 		return sqrt((x - coord.x) * (x - coord.x) + (y - coord.y) * (y - coord.y));
 	}
 	double getAngle(Coordinates coord) {
-		float length = distance(coord);
+		double length = distance(coord);
 		if (length == 0) return 0;
 		double cx = (double)(coord.x - x)/length;
 		double sx = -(double)(coord.y - y)/length;
 		return atan2(sx, cx);
 	}
 	Coordinates toInt() {
-		return { float(int(x)), float(int(y)) };
+		return { double(int(x)), double(int(y)) };
 	}
 	Coordinates add(Coordinates coord) {
 		return { x + coord.x, y + coord.y };
@@ -48,7 +48,7 @@ typedef struct Size {
 	int y;
 
 	Coordinates toCoordinates() {
-		return Coordinates{ (float)x, (float)y };
+		return Coordinates{ (double)x, (double)y };
 	}
 }Size;
 
@@ -75,13 +75,13 @@ enum RayType {Generic, Obstacle, View, EntitySegment};
 
 typedef struct {
 	Coordinates intersection;
-	float colOffset;
+	double colOffset;
 } IntersectionInfo;
 
 typedef struct {
 	RayType type;
-	float distance;
-	float colOffset;
+	double distance;
+	double colOffset;
 	int objectId;
 } RenderInfo;
 

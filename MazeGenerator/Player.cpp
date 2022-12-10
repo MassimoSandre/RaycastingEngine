@@ -8,13 +8,13 @@ void Player::pointRaysToView() {
 	double angle;
 
 	for (int i = 0; i < this->nRays; i++) {
-		x = (float(i) / float(this->nRays)) - 0.5;
+		x = (double(i) / double(this->nRays)) - 0.5;
 		angle = atan2(x, this->focalLength);
 		this->rays[i]->setAngle(this->baseAngle + angle);
 	}
 }
 
-Player::Player(Coordinates center, double fov, int nRays, float raysLength, double baseAngle) {
+Player::Player(Coordinates center, double fov, int nRays, double raysLength, double baseAngle) {
 	this->center = center;
 	this->fov = fov;
 	this->nRays = nRays;
@@ -59,20 +59,20 @@ void Player::castWall(std::shared_ptr<Segment> segment, int wallId) {
 
 		if (intersection.intersection.x == 0 && intersection.intersection.y == 0) continue;
 
-		float d1 = intersection.intersection.distance(this->center.toInt());
+		double d1 = intersection.intersection.distance(this->center.toInt());
 		if (d1 == 0) break;
 
 		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 
-		float d2 = intersection.intersection.distance(this->rays[i]->p2);
+		double d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 
 		//this->colOffsets[i] = intersection.colOffset;
 		if (this->info[this->nRays - 1 - i].size() == 0)
-			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1* (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId});
+			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1* (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId});
 		else
-			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId};
+			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId};
 
 		this->rays[i]->changeP2(intersection.intersection);
 	}
@@ -83,16 +83,16 @@ void Player::castEntity(std::shared_ptr<Entity> entity, int entityId) {
 
 		if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
 
-		float d1 = intersection.intersection.distance(this->center);
+		double d1 = intersection.intersection.distance(this->center);
 		if (d1 == 0) break;
 
 		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 
-		float d2 = intersection.intersection.distance(this->rays[i]->p2);
+		double d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 
-		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1*(float)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId});
+		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1*(double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId});
 	}
 }
 void Player::cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities) {
@@ -135,29 +135,29 @@ Segment Player::moveTo(Coordinates newPosition) {
 	return this->move(o);
 }
 
-Segment Player::follow(Coordinates target, float distance) {
+Segment Player::follow(Coordinates target, double distance) {
 	if (target.distance(center) <= 2) return Segment(this->center, this->center);
 	double angle = this->center.getAngle(target);
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
 
-Segment Player::moveForward(float distance) {
+Segment Player::moveForward(double distance) {
 	double angle = this->baseAngle;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Player::moveBackward(float distance) {
+Segment Player::moveBackward(double distance) {
 	double angle = this->baseAngle + 3.1415;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Player::moveLeftward(float distance) {
+Segment Player::moveLeftward(double distance) {
 	double angle = this->baseAngle + 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);
 }
-Segment Player::moveRightward(float distance) {
+Segment Player::moveRightward(double distance) {
 	double angle = this->baseAngle - 3.1415/2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return this->move(o);

@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         lastTime = now;
 
         if (unprocessed >= 1.0) {
-            running = game.update(unprocessed*((float)DEFAULT_CELL_SIZE/36));
+            running = game.update(unprocessed*((double)DEFAULT_CELL_SIZE/36));
             game.render();
             unprocessed = 0.0;
 #if DEBUG_INFO

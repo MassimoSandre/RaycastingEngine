@@ -5,7 +5,7 @@ public:
 	Coordinates center;
 
 	Entity();
-	Entity(Coordinates center, float length, double angle);
+	Entity(Coordinates center, double length, double angle);
 
 	void faceTo(Coordinates p);
 };

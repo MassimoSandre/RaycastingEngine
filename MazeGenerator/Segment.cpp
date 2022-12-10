@@ -22,7 +22,7 @@ Segment::Segment(Coordinates p1, Coordinates p2) {
 	this->length = p1.distance(p2);
 	this->angle = p1.getAngle(p2);
 }
-Segment::Segment(Coordinates p1, float length, double angle) {
+Segment::Segment(Coordinates p1, double length, double angle) {
 	this->type = Generic;
 	this->p1 = p1;
 	this->length = length;
@@ -56,11 +56,11 @@ void Segment::move(Coordinates p1) {
 	this->calculateP2();
 }
 
-void Segment::setLength(float length) {
+void Segment::setLength(double length) {
 	this->length = length;
 	this->calculateP2();
 }
-void Segment::changeLength(float delta) {
+void Segment::changeLength(double delta) {
 	this->length+=delta;
 	this->calculateP2();
 }
@@ -83,15 +83,15 @@ void Segment::translate(Coordinates offsets) {
 
 IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 
-	float a1, b1, c1, a2, b2, c2, den;
+	double a1, b1, c1, a2, b2, c2, den;
 
-	a1 = int(this->p2.y) - int(this->p1.y);
-	b1 = int(this->p1.x) - int(this->p2.x);
-	c1 = a1 * int(this->p1.x) + b1 * int(this->p1.y);
+	a1 = (this->p2.y) - (this->p1.y);
+	b1 = (this->p1.x) - (this->p2.x);
+	c1 = a1 * (this->p1.x) + b1 * (this->p1.y);
 
-	a2 = int(segment->p2.y) - int(segment->p1.y);
-	b2 = int(segment->p1.x) - int(segment->p2.x);
-	c2 = a2 * int(segment->p1.x) + b2 * int(segment->p1.y);
+	a2 = (segment->p2.y) - (segment->p1.y);
+	b2 = (segment->p1.x) - (segment->p2.x);
+	c2 = a2 * (segment->p1.x) + b2 * (segment->p1.y);
 
 	den = a1 * b2 - a2 * b1;
 
@@ -99,23 +99,11 @@ IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 		return { -1,-1 };
 	}
 
-	IntersectionInfo intersection = { int((b2 * c1 - b1 * c2) / den), int((a1 * c2 - a2 * c1) / den), 0 };
-
-	if (segment->p1.x > segment->p2.x) {
-		if (intersection.intersection.x > segment->p1.x || intersection.intersection.x < segment->p2.x) return { -2,-2 };
-	}
-	else {
-		if (intersection.intersection.x < segment->p1.x || intersection.intersection.x > segment->p2.x) return { -3,-3 };
-	}
-	if (segment->p1.y > segment->p2.y) {
-		if (intersection.intersection.y > segment->p1.y || intersection.intersection.y < segment->p2.y) return { -4,-4 };
-	}
-	else {
-		if (intersection.intersection.y < segment->p1.y || intersection.intersection.y > segment->p2.y) return { -5,-5 };
-	}
+	IntersectionInfo intersection = { ((b2 * c1 - b1 * c2) / den), ((a1 * c2 - a2 * c1) / den), 0 };
 
 	intersection.colOffset = segment->p1.distance(intersection.intersection);
 	if (intersection.colOffset > segment->length) return { -1,-1 };
-
+	if (segment->p2.distance(intersection.intersection) > segment->length) return { -1,-1 };
+	intersection.colOffset -= segment->length/2.0;
 	return intersection;
 }
