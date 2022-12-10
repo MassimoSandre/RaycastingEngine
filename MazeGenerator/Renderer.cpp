@@ -1,8 +1,6 @@
 #include "Renderer.h"
 #include "Entity.h"
 
-#define TRIANGLES_IN_CIRCLE 6
-
 double Renderer::scaleX(double x, int canvas) {
 	double result = x;
 	result = result * (this->drawingCanvas[canvas].drawingRect.size.x / this->drawingCanvas[canvas].realSize.x);
@@ -54,26 +52,24 @@ double Renderer::getHeight(RayType type) {
 }
 
 
-Renderer::Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare) :
+Renderer::Renderer(Size windowSize, std::string windowTitle) :
 	wallTexture("textures/brickwall.texture"), 
 	entityTexture("textures/collectible.texture") {
 	
-	this->drawingCanvas.resize(3);
-	this->drawingCanvas[0] = { {mazeDrawingSquare.topLeft, {mazeDrawingSquare.size.x + projectionDrawingSquare.size.x, mazeDrawingSquare.size.y}},{mazeDrawingSquare.size.x + projectionDrawingSquare.size.x, mazeDrawingSquare.size.y} };
+	this->drawingCanvas.resize(1);
+	this->drawingCanvas[0] = { {{0,0}, windowSize.toCoordinates()}, windowSize.toCoordinates() };
 
 	this->windowTitle = windowTitle;
-	
-	this->drawingCanvas[1].drawingRect = mazeDrawingSquare;
-	this->drawingCanvas[1].realSize = mazeDrawingSquare.size;
-	
-	this->drawingCanvas[2].drawingRect = projectionDrawingSquare;
-	this->drawingCanvas[2].realSize = projectionDrawingSquare.size;
 
 	this->init();
 }
 
-void Renderer::setMazeSize(Coordinates mazeRealSize) {
-	this->drawingCanvas[1].realSize = mazeRealSize;
+void Renderer::addCanvas(Canvas canvas) {
+	this->drawingCanvas.push_back(canvas);
+}
+
+void Renderer::setCanvasRealSize(int canvasIndex, Coordinates realSize) {
+	this->drawingCanvas[canvasIndex].realSize = realSize;
 }
 
 Renderer::~Renderer() {

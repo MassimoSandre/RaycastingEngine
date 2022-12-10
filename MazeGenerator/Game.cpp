@@ -44,7 +44,7 @@ bool Game::levelCompleted() {
 }
 
 void Game::newLevel() {
-	this->renderer.setMazeSize(Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
+	this->renderer.setCanvasRealSize(MAZE_CANVAS,Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
 	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
@@ -61,13 +61,21 @@ void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 
 Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
-	renderer("Maze", Rect{ {0,0},{(double)windowSquareSize,(double)windowSquareSize} }, Rect{ {(double)windowSquareSize,0},{(double)windowSquareSize,(double)windowSquareSize} }),
+	renderer({windowSquareSize*nSquare, windowSquareSize}, "Maze"),
 	generator() {
 	this->mazeSizeIncrement = mazeSizeIncrement;
 	this->screenSize = { nSquare * windowSquareSize, windowSquareSize };
 	this->cellSize = cellSize;
 	this->wallThickness = wallThickness;
 	this->currentMazeSize = firstMazeSize;
+
+	Canvas mazeDrawingCanvas, projectionDrawingCanvas;
+	mazeDrawingCanvas.drawingRect = Rect{ {0,0}, {(double)windowSquareSize, (double)windowSquareSize} };
+	mazeDrawingCanvas.realSize = { (double)windowSquareSize, (double)windowSquareSize };
+	projectionDrawingCanvas.drawingRect = Rect{ {(double)windowSquareSize,0}, {(double)windowSquareSize, (double)windowSquareSize} };
+	projectionDrawingCanvas.realSize = { (double)windowSquareSize, (double)windowSquareSize };
+	this->renderer.addCanvas(mazeDrawingCanvas);
+	this->renderer.addCanvas(projectionDrawingCanvas);
 
 	this->newLevel();
 }

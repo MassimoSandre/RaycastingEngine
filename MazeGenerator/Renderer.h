@@ -10,15 +10,13 @@
 #include "Entity.h"
 #include "Texture.h"
 
+#define TRIANGLES_IN_CIRCLE 8
+
 class Renderer {
 private:
 	GLFWwindow* window;	
 	std::string windowTitle;
 
-	/*
-	Rect mazeDrawingSquare;
-	Rect projectionDrawingSquare;
-	*/
 	std::vector<Canvas> drawingCanvas;
 
 	Texture wallTexture;
@@ -30,10 +28,12 @@ private:
 	Texture* getTexture(RayType type);
 	double getHeight(RayType type);
 public:
-	Renderer(std::string windowTitle, Rect mazeDrawingSquare, Rect projectionDrawingSquare);
+	Renderer(Size windowSize, std::string windowTitle="Window");
 	~Renderer();
 
-	void setMazeSize(Coordinates mazeRealSize);
+	void addCanvas(Canvas canvas);
+
+	void setCanvasRealSize(int canvasIndex, Coordinates realSize);
 
 	void init();
 
