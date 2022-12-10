@@ -8,4 +8,6 @@ public:
 	Entity(Coordinates center, double length, double angle);
 
 	void faceTo(Coordinates p);
+
+	bool collideWithEntity(std::shared_ptr<Entity> entity);
 };

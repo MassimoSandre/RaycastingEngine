@@ -15,11 +15,11 @@
 
 #define WINDOW_TITLE "Maze"
 
-#define SQUARE_WINDOW_SIZE 860
+#define SQUARE_WINDOW_SIZE 800
 #define N_SQUARES 2
 
 #define RAYS_LENGTH 100
-#define N_RAYS 100
+#define N_RAYS 150
 
 #define PI 3.1415
 #define DEFAULT_FOV PI/2

@@ -6,67 +6,6 @@
 #define MAZE_CANVAS 1
 #define PROJECTION_CANVAS 2
 
-void Game::tryMove(Segment move, double multiplier) {
-	Segment moveX(move.p1, { move.p2.x, move.p1.y });
-	Segment moveY(move.p1, { move.p1.x, move.p2.y });
-
-	double moveXCoef = moveX.length / move.length;
-	double moveYCoef = moveY.length / move.length;
-
-	bool possible = true;
-	for (std::shared_ptr<Segment> w : this->walls) {
-		IntersectionInfo info = moveX.getIntersection(w);
-
-		if (info.intersection.x != -1 || info.intersection.y != -1) {
-			double d1 = info.intersection.distance(moveX.p1);
-
-			double d2 = info.intersection.distance(moveX.p2);
-
-			if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-			if (d2 > MOVE_CHECK_DISTANCE) continue;
-			possible = false;
-			break;
-		}
-
-	}
-	if (possible) {
-		moveX.setLength(MOVE_DISTANCE * moveXCoef * multiplier);
-		this->player.applyMove(moveX);
-		moveY.translate({ double(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
-	}
-
-	for (std::shared_ptr<Entity>& e : this->collectibles) {
-		if (this->player.collideWithEntity(e)) {
-			this->placeCollectible(e);
-		}
-	}
-
-	possible = true;
-	for (std::shared_ptr<Segment>& w : this->walls) {
-		IntersectionInfo info = moveY.getIntersection(w);
-
-		if (info.intersection.x != -1 || info.intersection.y != -1) {
-			double d1 = info.intersection.distance(moveY.p1);
-
-			double d2 = info.intersection.distance(moveY.p2);
-
-			if (d1 > MOVE_CHECK_DISTANCE) continue;
-
-
-			if (d2 > MOVE_CHECK_DISTANCE) continue;
-			possible = false;
-			break;
-		}
-
-	}
-	if (possible) {
-		moveY.setLength(MOVE_DISTANCE * moveYCoef * multiplier);
-		this->player.applyMove(moveY);
-	}
-}
-
 void Game::keyHandler(double multiplier) {
 	Segment move(this->player.center, this->player.center);
 
@@ -96,8 +35,7 @@ void Game::keyHandler(double multiplier) {
 		}
 	}
 	if (move.length > 0) {
-		move.setLength(MOVE_CHECK_DISTANCE);
-		this->tryMove(move, multiplier);
+		this->player.tryMove(move, this->walls, multiplier);
 	}
 }
 
@@ -165,6 +103,13 @@ bool Game::update(double elapsedTime) {
 		this->collectibles[i]->faceTo(this->player.center);
 	}
 
+	for (std::shared_ptr<Entity>& e : this->collectibles) {
+		if (this->player.collideWithEntity(e)) {
+			this->placeCollectible(e);
+		}
+	}
+
+	this->player.update();
 	this->player.cast(this->walls, this->collectibles);
 
 	return !this->closing && !this->renderer.closing();

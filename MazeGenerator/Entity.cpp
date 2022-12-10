@@ -36,3 +36,7 @@ void Entity::faceTo(Coordinates p) {
 	this->p2 = newP2;
 	this->angle = angle - 3.1415f / 2.0f;
 }
+
+bool Entity::collideWithEntity(std::shared_ptr<Entity> entity) {
+	return entity->center.distance(this->center) <= entity->length;
+}

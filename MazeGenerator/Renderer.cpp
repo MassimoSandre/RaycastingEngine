@@ -371,9 +371,6 @@ void Renderer::drawProjection(RenderingInfo info, double cameraVerticalOffset, i
 			j += CHUNK_SIZE;
 			
 		}
-
-		//if (distances[i].distance == distances[i].maxLength) continue;
-
 		
 		for (int k = 0; k < info[i].size(); k++) {
 			rectHeight = this->getHeight(info[i][k].type) / info[i][k].distance;

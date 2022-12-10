@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="File di intestazione\Segments">
+      <UniqueIdentifier>{7f4851c7-fda1-412d-b4a7-849036b330a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Segments">
+      <UniqueIdentifier>{a77bc33c-4a0b-46f3-a3d5-1d9075b35fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Segments\Entities">
+      <UniqueIdentifier>{2683e1de-5993-4041-b926-f5978f7de246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Segments\Entities">
+      <UniqueIdentifier>{8cc13b35-fd92-4d16-9c3e-0c8aaa66a463}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MazeGenerator.cpp">
@@ -27,26 +39,32 @@
     <ClCompile Include="Maze.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Segment.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>File di origine\Segments\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>File di origine\Segments</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>File di origine\Segments</Filter>
+    </ClCompile>
+    <ClCompile Include="Segment.cpp">
+      <Filter>File di origine\Segments</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingEntity.cpp">
+      <Filter>File di origine\Segments\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SmartEntity.cpp">
+      <Filter>File di origine\Segments\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>File di origine\Segments\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,26 +74,32 @@
     <ClInclude Include="Maze.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Segment.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>File di intestazione\Segments\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Segment.h">
+      <Filter>File di intestazione\Segments</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>File di intestazione\Segments</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>File di intestazione\Segments</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingEntity.h">
+      <Filter>File di intestazione\Segments\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartEntity.h">
+      <Filter>File di intestazione\Segments\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>File di intestazione\Segments\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
