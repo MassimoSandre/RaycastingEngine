@@ -40,6 +40,13 @@ typedef struct Coordinates{
 	Coordinates add(Coordinates coord) {
 		return { x + coord.x, y + coord.y };
 	}
+
+	Coordinates operator + (Coordinates const& coord) {
+		return { x + coord.x, y + coord.y };
+	}
+	Coordinates operator - (Coordinates const& coord) {
+		return { x - coord.x, y - coord.y };
+	}
 } Coordinates;
 
 
@@ -58,13 +65,6 @@ typedef struct {
 	Coordinates p1;
 	Coordinates p2;
 } Line;
-
-//class QueueElement {
-//public:
-//	long long distance;
-//	Cell cell;
-//	Cell father;
-//};
 
 typedef struct {
 	int east;

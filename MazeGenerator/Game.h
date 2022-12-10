@@ -7,6 +7,15 @@
 #include "Entity.h"
 #include "Maze.h"
 
+
+#define MOVE_DISTANCE 1 
+
+#define MAZE_CANVAS 1
+#define PROJECTION_CANVAS 2
+
+#define MINIMAP_SIZE 200
+#define MINIMAP_RANGE 200
+
 class Game {
 private:
 	Renderer renderer;
@@ -30,17 +39,17 @@ private:
 	Size currentMazeSize;
 	Size cellSize;
 
-
 	Segment move;
 
+	Canvas mazeDrawingCanvas, projectionDrawingCanvas;
 
-	void tryMove(Segment move, double multiplier);
 	void keyHandler(double multiplier);
 	bool levelCompleted();
 	void newLevel();
 	void placeCollectible(std::shared_ptr<Entity>& e);
+	void renderMinimap();
 public:
-	Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness);
+	Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness);
 	~Game();
 
 	bool update(double elapsedTime);

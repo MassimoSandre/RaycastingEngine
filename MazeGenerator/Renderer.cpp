@@ -220,6 +220,20 @@ void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, int
 	}
 }
 
+void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, Coordinates center, int canvas, bool connect) {
+	this->drawLine(r[0]->p1-center, r[0]->p2-center, canvas);
+	this->drawLine(r[r.size() - 1]->p1 - center, r[r.size() - 1]->p2 - center, canvas);
+
+	for (int i = 0; i < r.size() - 1; i++) {
+		if (connect) {
+			this->drawLine(r[i]->p2-center, r[i + 1]->p2-center, color, canvas);
+		}
+		else {
+			this->drawPixel(r[i]->p2-center, color, canvas);
+		}
+	}
+}
+
 void Renderer::drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, int canvas) {
 	this->drawTriangle(p1, p2, p3, { 255,255,255 }, canvas);
 }
@@ -396,10 +410,5 @@ void Renderer::drawProjection(RenderingInfo info, double cameraVerticalOffset, i
 				p.y += rectHeight;
 			}
 		}	
-	
-
 	}
-
-	
-
 }

@@ -1,10 +1,5 @@
 #include "Game.h"
 
-#define MOVE_CHECK_DISTANCE 4
-#define MOVE_DISTANCE 1 
-
-#define MAZE_CANVAS 1
-#define PROJECTION_CANVAS 2
 
 void Game::keyHandler(double multiplier) {
 	Segment move(this->player.center, this->player.center);
@@ -59,21 +54,78 @@ void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 	e->center = {(double(newx)+0.5f)*this->cellSize.x,(double(newy) + 0.5f) * this->cellSize.y };
 }
 
-Game::Game(int nSquare, int windowSquareSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
+void Game::renderMinimap() {
+	double angle;
+	double step = 1;
+	Coordinates p;
+	this->renderer.drawCircle(Coordinates{ MINIMAP_RANGE, MINIMAP_RANGE }, MINIMAP_RANGE, RGB{0,0,0}, MAZE_CANVAS);
+	for (std::shared_ptr<Segment> const& w : this->walls) {
+		if (w->p1.distance(this->player.center) <= MINIMAP_RANGE) {
+			if (w->p2.distance(this->player.center) <= MINIMAP_RANGE) {
+				// both p1 and p2 are in range
+				this->renderer.drawLine(
+					w->p1.x - this->player.center.x + MINIMAP_RANGE, w->p1.y - this->player.center.y + MINIMAP_RANGE,
+					w->p2.x - this->player.center.x + MINIMAP_RANGE, w->p2.y - this->player.center.y + MINIMAP_RANGE, 
+					{255,0,0},
+					MAZE_CANVAS);
+			}
+			else {
+				// p1 is in range, p2 isn't
+				angle = w->p1.getAngle(w->p2);
+				p = w->p1;
+				while (p.distance(this->player.center) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
+					this->renderer.drawPixel(p - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+					p.x += step * cos(angle);
+					p.y -= step * sin(angle);
+				}
+			}
+		}
+		else if (w->p2.distance(this->player.center) <= MINIMAP_RANGE) {
+			// p2 is in range, p1 isn't
+			angle = w->p2.getAngle(w->p1);
+			p = w->p2;
+			while (p.distance(this->player.center) <= MINIMAP_RANGE && p.distance(w->p2) < w->length) {
+				this->renderer.drawPixel(p - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+				p.x += step * cos(angle);
+				p.y -= step * sin(angle);
+			}
+			
+		}
+		else if (!(w->length <= MINIMAP_RANGE &&
+			w->p1.distance(this->player.center) >= 2 * MINIMAP_RANGE &&
+			w->p2.distance(this->player.center) >= 2 * MINIMAP_RANGE)) {
+			angle = w->p1.getAngle(w->p2);
+			p = w->p1;
+			while (p.distance(this->player.center) > MINIMAP_RANGE && p.distance(w->p1) < w->length) {
+				p.x += step * cos(angle);
+				p.y -= step * sin(angle);
+			}
+			while (p.distance(this->player.center) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
+				this->renderer.drawPixel(p - this->player.center - Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+				p.x += step * cos(angle);
+				p.y -= step * sin(angle);
+			}
+		}
+	}
+
+	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.center - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
+}
+
+Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
 	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
-	renderer({windowSquareSize*nSquare, windowSquareSize}, "Maze"),
+	renderer(windowSize, "Maze"),
 	generator() {
 	this->mazeSizeIncrement = mazeSizeIncrement;
-	this->screenSize = { nSquare * windowSquareSize, windowSquareSize };
+	this->screenSize = windowSize;
 	this->cellSize = cellSize;
 	this->wallThickness = wallThickness;
 	this->currentMazeSize = firstMazeSize;
 
-	Canvas mazeDrawingCanvas, projectionDrawingCanvas;
-	mazeDrawingCanvas.drawingRect = Rect{ {0,0}, {(double)windowSquareSize, (double)windowSquareSize} };
-	mazeDrawingCanvas.realSize = { (double)windowSquareSize, (double)windowSquareSize };
-	projectionDrawingCanvas.drawingRect = Rect{ {(double)windowSquareSize,0}, {(double)windowSquareSize, (double)windowSquareSize} };
-	projectionDrawingCanvas.realSize = { (double)windowSquareSize, (double)windowSquareSize };
+	mazeDrawingCanvas.drawingRect = Rect{ {20,20}, {MINIMAP_SIZE, MINIMAP_SIZE} };
+	mazeDrawingCanvas.realSize = { MINIMAP_RANGE*2, MINIMAP_RANGE*2};
+	projectionDrawingCanvas.drawingRect = Rect{ {0,0}, windowSize.toCoordinates()};
+	projectionDrawingCanvas.realSize = windowSize.toCoordinates();
+	
 	this->renderer.addCanvas(mazeDrawingCanvas);
 	this->renderer.addCanvas(projectionDrawingCanvas);
 
@@ -123,12 +175,10 @@ bool Game::update(double elapsedTime) {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
-	this->renderer.drawSegments(this->walls, { 255,0,0 }, MAZE_CANVAS);
-	this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 }, MAZE_CANVAS);
-	//this->renderer.drawSegment(std::make_shared<Segment>(*this->collectibles[0]), {255,255,0});
-	this->renderer.drawView(this->player.rays, MAZE_CANVAS);
-
 	this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset, PROJECTION_CANVAS);
+	this->renderMinimap();
+
+	//this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 }, MAZE_CANVAS);
 
 	this->renderer.update();
 }

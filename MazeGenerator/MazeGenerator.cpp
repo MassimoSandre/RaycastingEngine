@@ -15,8 +15,8 @@
 
 #define WINDOW_TITLE "Maze"
 
-#define SQUARE_WINDOW_SIZE 800
-#define N_SQUARES 2
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 576
 
 #define RAYS_LENGTH 100
 #define N_RAYS 150
@@ -29,11 +29,10 @@
 
 #define DEFAULT_WALL_THICKNESS 2
 
-#define DEBUG_INFO false
+#define DEBUG_INFO true
 
 int main(int argc, char *argv[]) {
-    Game game(N_SQUARES, 
-        SQUARE_WINDOW_SIZE,
+    Game game({WINDOW_WIDTH, WINDOW_HEIGHT},
         WINDOW_TITLE, 
         Coordinates{10,10}, 
         0.0f, 

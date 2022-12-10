@@ -10,7 +10,7 @@
 #include "Entity.h"
 #include "Texture.h"
 
-#define TRIANGLES_IN_CIRCLE 8
+#define TRIANGLES_IN_CIRCLE 20
 
 class Renderer {
 private:
@@ -73,6 +73,7 @@ public:
 
 	void drawView(std::vector<std::shared_ptr<Segment>>& r, int canvas = 0, bool connect = true);
 	void drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, int canvas = 0,bool connect = true);
+	void drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, Coordinates center, int canvas = 0, bool connect = true);
 
 	void drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, int canvas = 0);
 	void drawTriangle(Coordinates p1, Coordinates p2, Coordinates p3, RGB color, int canvas = 0);
