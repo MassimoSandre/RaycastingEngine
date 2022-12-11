@@ -291,6 +291,20 @@ void Renderer::drawRect(Rect rect, RGB color, int canvas) {
 void Renderer::drawCircle(Coordinates center, double radius, int canvas) {
 	this->drawCircle(center, radius, { 255,255,255 }, canvas);
 }
+void Renderer::drawCircle(Coordinates center, double radius, RGB color, int canvas) {
+	Coordinates last = center, next;
+	last.y -= radius;
+	double anglePerTriangle = (2 * 3.1415) / TRIANGLES_IN_CIRCLE;
+	for (int i = 0; i <= TRIANGLES_IN_CIRCLE; i++) {
+		next = center;
+		next.x += radius * cos(anglePerTriangle * i);
+		next.y -= radius * sin(anglePerTriangle * i);
+
+		this->drawTriangle(center, last, next, color, canvas);
+
+		last = next;
+	}
+}
 
 void Renderer::drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, int canvas) {
 	this->drawQuadrilateral(p1, p2, p3, p4, { 255,255,255 }, canvas);
@@ -314,21 +328,6 @@ void Renderer::drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3,
 	glVertex2d(p4.x, -p4.y);
 	glVertex2d(p2.x, -p2.y);
 	glEnd();
-}
-
-void Renderer::drawCircle(Coordinates center, double radius, RGB color, int canvas) {
-	Coordinates last = center, next;
-	last.y -= radius;
-	double anglePerTriangle = (2 * 3.1415) / TRIANGLES_IN_CIRCLE;
-	for (int i = 0; i <= TRIANGLES_IN_CIRCLE; i++) {
-		next = center;
-		next.x += radius * cos(anglePerTriangle * i);
-		next.y -= radius * sin(anglePerTriangle * i);
-
-		this->drawTriangle(center, last, next, color, canvas);
-
-		last = next;
-	}
 }
 
 void Renderer::drawProjection(RenderingInfo info, double cameraVerticalOffset, int canvas) {

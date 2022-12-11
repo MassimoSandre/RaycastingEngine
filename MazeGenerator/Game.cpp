@@ -39,10 +39,11 @@ bool Game::levelCompleted() {
 }
 
 void Game::newLevel() {
-	this->renderer.setCanvasRealSize(MAZE_CANVAS,Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
+	//this->renderer.setCanvasRealSize(MAZE_CANVAS,Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
 	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
+	this->player.center = { double(this->cellSize.x) / 2,3 * double(this->cellSize.y) / 2 };
 }
 
 void Game::placeCollectible(std::shared_ptr<Entity>& e) {
@@ -56,7 +57,7 @@ void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 
 void Game::renderMinimap() {
 	double angle;
-	double step = 1;
+	double step = double(MINIMAP_RANGE) / double(MINIMAP_SIZE/2);
 	Coordinates p;
 	this->renderer.drawCircle(Coordinates{ MINIMAP_RANGE, MINIMAP_RANGE }, MINIMAP_RANGE, RGB{0,0,0}, MAZE_CANVAS);
 	for (std::shared_ptr<Segment> const& w : this->walls) {
@@ -99,9 +100,10 @@ void Game::renderMinimap() {
 			while (p.distance(this->player.center) > MINIMAP_RANGE && p.distance(w->p1) < w->length) {
 				p.x += step * cos(angle);
 				p.y -= step * sin(angle);
+				
 			}
-			while (p.distance(this->player.center) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
-				this->renderer.drawPixel(p - this->player.center - Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+			while (p.distance(this->player.center) <= MINIMAP_RANGE &&  p.distance(w->p1) < w->length) {
+				this->renderer.drawPixel(p - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
 				p.x += step * cos(angle);
 				p.y -= step * sin(angle);
 			}

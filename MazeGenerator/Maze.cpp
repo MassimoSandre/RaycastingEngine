@@ -118,6 +118,14 @@ void  Maze::generate() {
 	this->walls.push_back({ {0,1},{0,double(this->height)} });
 	this->walls.push_back({ {double(this->width),0},{double(this->width), double(this->height-1)} });
 
+	this->walls.push_back({ {-1,0}, {0,0} });
+	this->walls.push_back({ {-1,0}, {-1,1} });
+	this->walls.push_back({ {-1,1}, {0,1} });
+
+	this->walls.push_back({ {double(this->width),double(this->height)}, {double(this->width+1),double(this->height)} });
+	this->walls.push_back({ {double(this->width + 1),double(this->height)}, {double(this->width + 1),double(this->height-1)} });
+	this->walls.push_back({ {double(this->width + 1),double(this->height - 1)}, {double(this->width),double(this->height - 1)} });
+
 	for (int x = 0; x < this->width; x++) {
 		for (int y = 0; y < this->height; y++) {
 			if (x < this->width - 1 && !toKeep[x][y].east) {

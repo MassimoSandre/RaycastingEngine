@@ -24,6 +24,7 @@ private:
 
 	double scaleX(double x, int canvas);
 	double scaleY(double y, int canvas);
+	
 	double map(double value, double istart, double istop, double ostart, double ostop);
 	Texture* getTexture(RayType type);
 	double getHeight(RayType type);

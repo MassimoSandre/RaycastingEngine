@@ -13,8 +13,8 @@
 #define MAZE_CANVAS 1
 #define PROJECTION_CANVAS 2
 
-#define MINIMAP_SIZE 200
-#define MINIMAP_RANGE 200
+#define MINIMAP_SIZE 300
+#define MINIMAP_RANGE 100
 
 class Game {
 private:
