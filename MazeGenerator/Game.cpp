@@ -173,19 +173,20 @@ void Game::renderProjection() {
 			rectHeight = info[i][k].height / info[i][k].distance;
 			wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
-
+			Size textureSize = this->textures[info[i][k].textureId]->size;
+			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
 
 			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
 
 			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
 
 
-			int c = int(info[i][k].colOffset) % (IMAGE_WIDTH / 2) + IMAGE_WIDTH / 2;
+			int c = int(info[i][k].colOffset) % (textureSize.x / 2) + textureSize.x / 2;
 
-			rectHeight = rectHeight / (WALL_PIXEL_HEIGHT * (info[i][k].height / DEFAULT_WALL_HEIGHT));
+			rectHeight = rectHeight / pixelHeight;
 
-			for (int j = 0; j < (WALL_PIXEL_HEIGHT * (info[i][k].height / DEFAULT_WALL_HEIGHT)); j++) {
-				RGBA color = this->textures[info[i][k].textureId]->texture[(c % IMAGE_WIDTH) * IMAGE_HEIGHT + j % IMAGE_HEIGHT];
+			for (int j = 0; j < pixelHeight; j++) {
+				RGBA color = this->textures[info[i][k].textureId]->texture[(c % textureSize.x) * textureSize.y + j % textureSize.y];
 
 				if (color.a != 0) {
 					color.r = int(double(color.r) * grey);
@@ -201,7 +202,7 @@ void Game::renderProjection() {
 }
 
 void Game::loadTextures() {
-	this->textures.push_back(std::make_shared<Texture>("textures/brickwall.texture"));
+	this->textures.push_back(std::make_shared<Texture>("textures/wallAlt.texture"));
 	this->textures.push_back(std::make_shared<Texture>("textures/collectible.texture"));
 }
 

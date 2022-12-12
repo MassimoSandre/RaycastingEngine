@@ -128,7 +128,7 @@ void SmartEntity::cast(std::vector<std::shared_ptr<Segment>> segments, std::vect
 
 		this->castWall(segments[i], i);
 	}
-	this->pointRaysToView();
+	//this->pointRaysToView();
 
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->length <= this->raysLength &&

@@ -13,23 +13,22 @@
 #include <thread>
 #include <chrono>
 
+// WINDOW 
 #define WINDOW_TITLE "Maze"
-
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 576
 
+// RAYCASTER
 #define RAYS_LENGTH 100
-#define N_RAYS 150
+#define N_RAYS 200
+#define DEFAULT_FOV 3.1415/2
 
-#define PI 3.1415
-#define DEFAULT_FOV PI/2
-
+// MAZE
 #define DEFAULT_MAZE_SIZE 10
 #define DEFAULT_CELL_SIZE 36
-
 #define DEFAULT_WALL_THICKNESS 2
 
-#define DEBUG_INFO true
+#define DEBUG_INFO false
 
 int main(int argc, char *argv[]) {
     Game game({WINDOW_WIDTH, WINDOW_HEIGHT},
@@ -48,6 +47,7 @@ int main(int argc, char *argv[]) {
     Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
     game.addCollectible(std::make_shared<Entity>(s));
 
+    // game loop info
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;
     auto lastTime = std::chrono::steady_clock::now();
