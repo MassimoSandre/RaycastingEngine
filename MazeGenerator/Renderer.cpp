@@ -49,8 +49,6 @@ void Renderer::init() {
 		throw std::ios_base::failure("window creation failed");
 	}
 	glfwMakeContextCurrent(window);
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 Coordinates Renderer::getMousePosition() {
@@ -66,11 +64,21 @@ void Renderer::setMousePosition(Coordinates position) {
 bool Renderer::isKeyPressed(int key) {
 	return glfwGetKey(this->window, key) == GLFW_PRESS;
 }
+bool Renderer::isKeyReleased(int key) {
+	return glfwGetKey(this->window, key) == GLFW_RELEASE;
+}
 bool Renderer::leftClick() {
 	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 }
 bool Renderer::closing() {
 	return glfwWindowShouldClose(this->window);
+}
+
+void Renderer::hideCursor() {
+	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+void Renderer::showCursor() {
+	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Renderer::update() {

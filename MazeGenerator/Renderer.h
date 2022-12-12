@@ -35,8 +35,12 @@ public:
 	void setMousePosition(Coordinates position);
 
 	bool isKeyPressed(int key);
+	bool isKeyReleased(int key);
 	bool leftClick();
 	bool closing();
+	
+	void hideCursor();
+	void showCursor();
 
 	void update();
 

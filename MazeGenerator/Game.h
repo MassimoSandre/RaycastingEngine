@@ -35,6 +35,7 @@ private:
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	bool pause = false;
+	bool canTogglePause = true;
 	bool closing = false;	
 	bool jumping = false;
 
@@ -57,11 +58,12 @@ private:
 	bool levelCompleted();
 	void newLevel();
 	void placeCollectible(std::shared_ptr<Entity>& e);
+	void placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities);
 	void renderMinimap();
 	void renderProjection();
 	void loadTextures();
 public:
-	Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness);
+	Game(Size windowSize, std::string windowTitle, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount);
 	~Game();
 
 	bool update(double elapsedTime);
@@ -70,6 +72,8 @@ public:
 	void addWall(std::shared_ptr<Segment> segment);
 	void addWalls(std::vector<std::shared_ptr<Segment>> segments);
 
+	void generateCollectible();
+	void generateCollectibles(int amount);
 	void addCollectible(std::shared_ptr<Entity> collectible);
 	void addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles);
 };

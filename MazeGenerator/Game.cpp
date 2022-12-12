@@ -24,8 +24,12 @@ void Game::keyHandler(double multiplier) {
 	if (this->renderer.isKeyPressed(GLFW_KEY_ESCAPE)) {
 		this->closing = true;
 	}
-	if (this->renderer.isKeyPressed(GLFW_KEY_P)) {
+	if (this->renderer.isKeyPressed(GLFW_KEY_P) && this->canTogglePause) {
 		this->pause = !this->pause;		
+		this->canTogglePause = false;
+	}
+	if (this->renderer.isKeyReleased(GLFW_KEY_P)) {
+		this->canTogglePause = true;
 	}
 	if (this->renderer.isKeyPressed(GLFW_KEY_SPACE)) {
 		if (!this->jumping) {
@@ -40,26 +44,38 @@ void Game::keyHandler(double multiplier) {
 }
 
 bool Game::levelCompleted() {
-	return false;
+	return (this->player.center.x > double(this->currentMazeSize.x + 1) * this->cellSize.x &&
+		this->player.center.y > double(this->currentMazeSize.y) * this->cellSize.y);
 }
 
 void Game::newLevel() {
 	//this->renderer.setCanvasRealSize(MAZE_CANVAS,Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
+	this->walls.clear();
 	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
 	this->player.center = { double(this->cellSize.x) / 2,3 * double(this->cellSize.y) / 2 };
+
+	this->placeCollectibles(this->collectibles);
 }
 
 void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 	srand((unsigned int)time(NULL));
+	
+	int newx = rand() % this->currentMazeSize.x + 1;
+	int newy = rand() % this->currentMazeSize.y + 1;
 
-	int newx = rand() % (this->currentMazeSize.x - 1) + 1;
-	int newy = rand() % (this->currentMazeSize.y - 1) + 1;
-
-	e->center = {(double(newx)+0.5)*double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y) };
+	e->center = { (double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y) };
 }
+void Game::placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities) {
+	srand((unsigned int)time(NULL));
+	for (int i = 0; i < entities.size(); i++) {
+		int newx = rand() % this->currentMazeSize.x + 1;
+		int newy = rand() % this->currentMazeSize.y + 1;
 
+		entities[i]->center = {(double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y)};
+	}
+}
 void Game::renderMinimap() {
 	double angle;
 	double step = double(MINIMAP_RANGE) / double(MINIMAP_SIZE/2);
@@ -176,7 +192,7 @@ void Game::renderProjection() {
 			Size textureSize = this->textures[info[i][k].textureId]->size;
 			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
 
-			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
+			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100 /*TO DE-HARDCODE*/, .5), 1, 0);
 
 			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
 
@@ -206,8 +222,8 @@ void Game::loadTextures() {
 	this->textures.push_back(std::make_shared<Texture>("textures/collectible.texture"));
 }
 
-Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
-	player(playerStartingPosition, fov, noRays, viewLength, playerStartingAngle),
+Game::Game(Size windowSize, std::string windowTitle, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount) :
+	player({0,0}, fov, noRays, viewLength, playerStartingAngle),
 	renderer(windowSize, "Maze"),
 	generator() {
 	this->mazeSizeIncrement = mazeSizeIncrement;
@@ -225,7 +241,9 @@ Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingP
 	this->renderer.addCanvas(projectionDrawingCanvas);
 
 	this->loadTextures();
+	this->generateCollectibles(collectiblesAmount);
 	this->newLevel();
+
 }
 
 Game::~Game() {}
@@ -235,9 +253,13 @@ bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
 	if (!this->pause) {
-		double cursorXDelta = this->screenSize.x / 4 * 3 - this->renderer.getMousePosition().x;
-		this->renderer.setMousePosition({ (double)this->screenSize.x / 4 * 3, (double)this->screenSize.y / 2 });
+		double cursorXDelta = this->screenSize.x / 2 - this->renderer.getMousePosition().x;
+		this->renderer.setMousePosition({ (double)this->screenSize.x / 2, (double)this->screenSize.y / 2 });
 		this->player.rotate(0.003 * cursorXDelta);
+		this->renderer.hideCursor();
+	}
+	else {
+		this->renderer.showCursor();
 	}
 
 	if (this->jumping) {
@@ -286,6 +308,14 @@ void Game::addWalls(std::vector<std::shared_ptr<Segment>> segments) {
 	}
 }
 
+void Game::generateCollectible() {
+	this->collectibles.push_back(std::make_shared<Entity>(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
+}
+void Game::generateCollectibles(int amount) {
+	for (int i = 0; i < amount; i++) {
+		this->collectibles.push_back(std::make_shared<Entity>(Coordinates{ 0,0 }, this->cellSize.x / 3, 0.0));
+	}
+}
 void Game::addCollectible(std::shared_ptr<Entity> collectible) {
 	this->collectibles.push_back(collectible);
 }

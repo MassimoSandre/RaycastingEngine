@@ -24,7 +24,7 @@
 #define DEFAULT_FOV 3.1415/2
 
 // MAZE
-#define DEFAULT_MAZE_SIZE 10
+#define DEFAULT_MAZE_SIZE 1
 #define DEFAULT_CELL_SIZE 36
 #define DEFAULT_WALL_THICKNESS 2
 
@@ -32,20 +32,20 @@
 
 int main(int argc, char *argv[]) {
     Game game({WINDOW_WIDTH, WINDOW_HEIGHT},
-        WINDOW_TITLE, 
-        Coordinates{10,10}, 
+        WINDOW_TITLE,
         0.0f, 
         DEFAULT_FOV, 
         N_RAYS, 
         RAYS_LENGTH,
         {DEFAULT_MAZE_SIZE, DEFAULT_MAZE_SIZE},
-        10,
+        2,
         { DEFAULT_CELL_SIZE , DEFAULT_CELL_SIZE},
-        DEFAULT_WALL_THICKNESS);
+        DEFAULT_WALL_THICKNESS,
+        1);
 
 
-    Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
-    game.addCollectible(std::make_shared<Entity>(s));
+    /*Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
+    game.addCollectible(std::make_shared<Entity>(s));*/
 
     // game loop info
     double targetFPS = 60.0;
