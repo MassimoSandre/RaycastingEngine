@@ -9,7 +9,8 @@ public:
 	Coordinates p2;
 	double length;
 	double angle;
-
+	int textureId;
+	double height;
 
 	void calculateP2();
 

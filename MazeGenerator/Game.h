@@ -13,8 +13,15 @@
 #define MAZE_CANVAS 1
 #define PROJECTION_CANVAS 2
 
-#define MINIMAP_SIZE 300
+#define MINIMAP_SIZE 150
 #define MINIMAP_RANGE 100
+
+#define DEFAULT_WALL_HEIGHT 8000
+
+#define CHUNK_SIZE 4
+#define WALL_PIXEL_HEIGHT 32
+#define IMAGE_HEIGHT 16
+#define IMAGE_WIDTH 16
 
 class Game {
 private:
@@ -24,6 +31,8 @@ private:
 
 	std::vector<std::shared_ptr<Segment>> walls;
 	std::vector<std::shared_ptr<Entity>> collectibles;
+
+	std::vector<std::shared_ptr<Texture>> textures;
 
 	bool pause = false;
 	bool closing = false;	
@@ -43,11 +52,14 @@ private:
 
 	Canvas mazeDrawingCanvas, projectionDrawingCanvas;
 
+	double map(double value, double istart, double istop, double ostart, double ostop);
 	void keyHandler(double multiplier);
 	bool levelCompleted();
 	void newLevel();
 	void placeCollectible(std::shared_ptr<Entity>& e);
 	void renderMinimap();
+	void renderProjection();
+	void loadTextures();
 public:
 	Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness);
 	~Game();

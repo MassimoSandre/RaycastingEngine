@@ -16,45 +16,8 @@ double Renderer::scaleY(double y, int canvas) {
 	return result;
 }
 
-double Renderer::map(double value, double istart, double istop, double ostart, double ostop) {
-	return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-}
 
-
-Texture* Renderer::getTexture(RayType type) {
-	switch (type) {
-	case Generic:
-		return NULL;
-	case Obstacle:
-		return &(this->wallTexture);
-	case View:
-		return NULL;
-	case EntitySegment:
-		return &(this->entityTexture);
-	default:
-		return NULL;
-	}
-}
-
-double Renderer::getHeight(RayType type) {
-	switch (type) {
-	case Generic:
-		return 0;
-	case Obstacle:
-		return 8000;
-	case View:
-		return 0;
-	case EntitySegment:
-		return 4000;
-	default:
-		return 0;
-	}
-}
-
-
-Renderer::Renderer(Size windowSize, std::string windowTitle) :
-	wallTexture("textures/brickwall.texture"), 
-	entityTexture("textures/collectible.texture") {
+Renderer::Renderer(Size windowSize, std::string windowTitle) {
 	
 	this->drawingCanvas.resize(1);
 	this->drawingCanvas[0] = { {{0,0}, windowSize.toCoordinates()}, windowSize.toCoordinates() };
@@ -219,7 +182,6 @@ void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, int
 		}
 	}
 }
-
 void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, Coordinates center, int canvas, bool connect) {
 	this->drawLine(r[0]->p1-center, r[0]->p2-center, canvas);
 	this->drawLine(r[r.size() - 1]->p1 - center, r[r.size() - 1]->p2 - center, canvas);
@@ -330,84 +292,3 @@ void Renderer::drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3,
 	glEnd();
 }
 
-void Renderer::drawProjection(RenderingInfo info, double cameraVerticalOffset, int canvas) {
-	size_t len = info.size();
-
-	const int CHUNK_SIZE = 4;
-	const int WALL_PIXEL_HEIGHT = 32;
-	const int IMAGE_HEIGHT = 16;
-	const int IMAGE_WIDTH = 16;
-
-
-	double rectWidth = this->drawingCanvas[canvas].realSize.x / len;
-
-	double rectHeight, wallHeight;
-	double offset;
-	
-	double grey;
-	Coordinates p;
-
-
-	for (int i = 0; i < len; i++) {
-		
-		p.x =  rectWidth * i;
-
-		double d = this->getHeight(Obstacle) / this->drawingCanvas[canvas].realSize.y;
-		
-		wallHeight = (this->getHeight(Obstacle) + cameraVerticalOffset) / d;
-		
-		int j = - int((wallHeight - this->drawingCanvas[canvas].realSize.y)*2);
-		while (j < this->drawingCanvas[canvas].realSize.y) {
-
-			if (j < this->drawingCanvas[canvas].realSize.y / 2) {
-				rectHeight = this->drawingCanvas[canvas].realSize.y - (2 * j);
-			}
-			else {
-				rectHeight = this->drawingCanvas[canvas].realSize.y - (2 * (this->drawingCanvas[canvas].realSize.y - j));
-			}
-
-			double distance = std::min((this->getHeight(Obstacle)) / rectHeight, 100.0);
-			wallHeight = (this->getHeight(Obstacle) + cameraVerticalOffset) / distance;
-
-			offset = (wallHeight - rectHeight) / 2;
-
-			grey = this->map(pow(distance, 0.5), -10, pow(100, 0.5), 200, 0);
-
-			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
-
-			this->drawRect(Coordinates{ p.x,(double)j + int(offset) }, Coordinates{ rectWidth, double(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) }, canvas);
-
-			j += CHUNK_SIZE;
-			
-		}
-		
-		for (int k = 0; k < info[i].size(); k++) {
-			rectHeight = this->getHeight(info[i][k].type) / info[i][k].distance;
-			wallHeight =  (this->getHeight(Obstacle) + cameraVerticalOffset) / info[i][k].distance;
-			offset = (wallHeight - rectHeight) / 2;
-
-
-			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
-
-			p.y = (this->drawingCanvas[canvas].realSize.y - rectHeight) / 2 + offset;
-
-
-			int c = int(info[i][k].colOffset) % (IMAGE_WIDTH/2) + IMAGE_WIDTH/2;
-
-			rectHeight = rectHeight / (WALL_PIXEL_HEIGHT * (this->getHeight(info[i][k].type) / this->getHeight(Obstacle) ));
-
-			for (int j = 0; j < (WALL_PIXEL_HEIGHT * (this->getHeight(info[i][k].type) / this->getHeight(Obstacle))); j++) {
-				RGBA color =(this->getTexture(info[i][k].type))->texture[(c % IMAGE_WIDTH)*IMAGE_HEIGHT + j % IMAGE_HEIGHT];
-
-				if (color.a != 0) {
-					color.r = int(double(color.r) * grey);
-					color.g = int(double(color.g) * grey);
-					color.b = int(double(color.b) * grey);
-					this->drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), canvas);
-				}
-
-				p.y += rectHeight;
-			}
-		}	
-	}
-}

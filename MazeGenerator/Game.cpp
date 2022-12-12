@@ -1,6 +1,11 @@
 #include "Game.h"
 
 
+double Game::map(double value, double istart, double istop, double ostart, double ostop) {
+	return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}
+
+
 void Game::keyHandler(double multiplier) {
 	Segment move(this->player.center, this->player.center);
 
@@ -52,7 +57,7 @@ void Game::placeCollectible(std::shared_ptr<Entity>& e) {
 	int newx = rand() % (this->currentMazeSize.x - 1) + 1;
 	int newy = rand() % (this->currentMazeSize.y - 1) + 1;
 
-	e->center = {(double(newx)+0.5f)*this->cellSize.x,(double(newy) + 0.5f) * this->cellSize.y };
+	e->center = {(double(newx)+0.5)*double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y) };
 }
 
 void Game::renderMinimap() {
@@ -109,8 +114,95 @@ void Game::renderMinimap() {
 			}
 		}
 	}
-
+	for (std::shared_ptr<Entity> const& e : this->collectibles) {
+		if (e->center.distance(this->player.center) <= MINIMAP_RANGE - e->length/2 ) {
+			this->renderer.drawCircle(e->center - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, e->length/2 , { 255,255,0 }, MAZE_CANVAS);
+		}
+	}
+	
 	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.center - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
+}
+void Game::renderProjection() {
+	//this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset, PROJECTION_CANVAS);
+	RenderingInfo info = this->player.getFixedDistances();
+	size_t len = info.size();
+
+	double rectWidth = this->projectionDrawingCanvas.realSize.x / len;
+
+	double rectHeight, wallHeight;
+	double offset;
+
+	double grey;
+	Coordinates p;
+
+
+	for (int i = 0; i < len; i++) {
+
+		p.x = rectWidth * i;
+
+		double d = DEFAULT_WALL_HEIGHT / this->projectionDrawingCanvas.realSize.y;
+
+		wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / d;
+
+		int j = -int((wallHeight - this->projectionDrawingCanvas.realSize.y) * 2);
+		while (j < this->projectionDrawingCanvas.realSize.y) {
+
+			if (j < this->projectionDrawingCanvas.realSize.y / 2) {
+				rectHeight = this->projectionDrawingCanvas.realSize.y - (2 * j);
+			}
+			else {
+				rectHeight = this->projectionDrawingCanvas.realSize.y - (2 * (this->projectionDrawingCanvas.realSize.y - j));
+			}
+
+			double distance = std::min(double(DEFAULT_WALL_HEIGHT) / rectHeight, 100.0);
+			wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / distance;
+
+			offset = (wallHeight - rectHeight) / 2;
+
+			grey = this->map(pow(distance, 0.5), -10, pow(100, 0.5), 200, 0);
+
+			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
+
+			this->renderer.drawRect(Coordinates{ p.x,(double)j + int(offset) }, Coordinates{ rectWidth, double(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) }, PROJECTION_CANVAS);
+
+			j += CHUNK_SIZE;
+
+		}
+
+		for (int k = 0; k < info[i].size(); k++) {
+			rectHeight = info[i][k].height / info[i][k].distance;
+			wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / info[i][k].distance;
+			offset = (wallHeight - rectHeight) / 2;
+
+
+			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100, .5), 1, 0);
+
+			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
+
+
+			int c = int(info[i][k].colOffset) % (IMAGE_WIDTH / 2) + IMAGE_WIDTH / 2;
+
+			rectHeight = rectHeight / (WALL_PIXEL_HEIGHT * (info[i][k].height / DEFAULT_WALL_HEIGHT));
+
+			for (int j = 0; j < (WALL_PIXEL_HEIGHT * (info[i][k].height / DEFAULT_WALL_HEIGHT)); j++) {
+				RGBA color = this->textures[info[i][k].textureId]->texture[(c % IMAGE_WIDTH) * IMAGE_HEIGHT + j % IMAGE_HEIGHT];
+
+				if (color.a != 0) {
+					color.r = int(double(color.r) * grey);
+					color.g = int(double(color.g) * grey);
+					color.b = int(double(color.b) * grey);
+					this->renderer.drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), PROJECTION_CANVAS);
+				}
+
+				p.y += rectHeight;
+			}
+		}
+	}
+}
+
+void Game::loadTextures() {
+	this->textures.push_back(std::make_shared<Texture>("textures/brickwall.texture"));
+	this->textures.push_back(std::make_shared<Texture>("textures/collectible.texture"));
 }
 
 Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingPosition, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness) :
@@ -131,6 +223,7 @@ Game::Game(Size windowSize, std::string windowTitle, Coordinates playerStartingP
 	this->renderer.addCanvas(mazeDrawingCanvas);
 	this->renderer.addCanvas(projectionDrawingCanvas);
 
+	this->loadTextures();
 	this->newLevel();
 }
 
@@ -177,10 +270,8 @@ bool Game::update(double elapsedTime) {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
-	this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset, PROJECTION_CANVAS);
+	this->renderProjection();
 	this->renderMinimap();
-
-	//this->renderer.drawCollectibles(this->collectibles, RGB{ 255,255,0 }, MAZE_CANVAS);
 
 	this->renderer.update();
 }

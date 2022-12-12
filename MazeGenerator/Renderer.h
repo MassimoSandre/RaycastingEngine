@@ -19,15 +19,8 @@ private:
 
 	std::vector<Canvas> drawingCanvas;
 
-	Texture wallTexture;
-	Texture entityTexture;
-
 	double scaleX(double x, int canvas);
 	double scaleY(double y, int canvas);
-	
-	double map(double value, double istart, double istop, double ostart, double ostop);
-	Texture* getTexture(RayType type);
-	double getHeight(RayType type);
 public:
 	Renderer(Size windowSize, std::string windowTitle="Window");
 	~Renderer();
@@ -89,6 +82,4 @@ public:
 
 	void drawCircle(Coordinates center, double radius, int canvas = 0);
 	void drawCircle(Coordinates center, double radius, RGB color, int canvas = 0);
-
-	void drawProjection(RenderingInfo info, double cameraVerticalOffset, int canvas = 0);
 };

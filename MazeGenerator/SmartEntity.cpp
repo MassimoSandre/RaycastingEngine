@@ -29,9 +29,9 @@ void SmartEntity::castWall(std::shared_ptr<Segment> segment, int wallId) {
 
 		//this->colOffsets[i] = intersection.colOffset;
 		if (this->info[this->nRays - 1 - i].size() == 0)
-			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId });
+			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height });
 		else
-			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId };
+			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height };
 
 		this->rays[i]->changeP2(intersection.intersection);
 	}
@@ -51,7 +51,7 @@ void SmartEntity::castEntity(std::shared_ptr<Entity> segment, int entityId) {
 		double d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 
-		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId });
+		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId, segment->textureId, segment->height });
 	}
 }
 

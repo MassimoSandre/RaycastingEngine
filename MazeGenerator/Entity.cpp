@@ -2,10 +2,14 @@
 
 Entity::Entity() {
 	this->type = EntitySegment;
+	this->textureId = 1;
+	this->height = 4000;
 }
 
 Entity::Entity(Coordinates center, double length, double angle) : Segment() {
 	this->center = center;
+	this->textureId = 1;
+	this->height = 4000;
 	this->type = EntitySegment;
 	double distanceFromCenter = length / 2;
 

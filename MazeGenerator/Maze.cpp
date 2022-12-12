@@ -8,13 +8,6 @@
 
 #define MAX_WEIGHT 3
 
-//// operator overloading for priority queue
-//bool operator<(const QueueElement& qe1, const QueueElement& qe2) {
-//	return qe1.distance < qe1.distance;
-//}
-//bool operator>(const QueueElement& qe1, const QueueElement& qe2) {
-//	return qe1.distance > qe1.distance;
-//}
 
 Maze::Maze() {
 	this->width = DEFAULT_MAZE_WIDTH;
