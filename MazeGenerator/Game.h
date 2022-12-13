@@ -39,8 +39,12 @@ private:
 	bool closing = false;	
 	bool jumping = false;
 
-	double verticalOffset = 0.0f;
-	double verticalVelocity = 0.0f;
+	double cameraVerticalOffset = 0.0;
+	double cameraVerticalVelocity = 0.0;
+
+	double currentVerticalOffset = 0.0;
+
+	double viewLength;
 
 	int mazeSizeIncrement; 
 	double wallThickness;

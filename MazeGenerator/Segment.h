@@ -11,6 +11,7 @@ public:
 	double angle;
 	int textureId;
 	double height;
+	double verticalOffset;
 
 	void calculateP2();
 

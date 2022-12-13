@@ -85,6 +85,7 @@ typedef struct {
 	int objectId;
 	int textureId;
 	double height;
+	double verticalOffset;
 } RenderInfo;
 
 typedef std::vector<RenderInfo> RayInfo;

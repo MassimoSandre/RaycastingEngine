@@ -34,8 +34,8 @@ void Game::keyHandler(double multiplier) {
 	if (this->renderer.isKeyPressed(GLFW_KEY_SPACE)) {
 		if (!this->jumping) {
 			this->jumping = true;
-			this->verticalOffset = 0.0f;
-			this->verticalVelocity = 400.0f;
+			this->cameraVerticalOffset = 0.0f;
+			this->cameraVerticalVelocity = 400.0f;
 		}
 	}
 	if (move.length > 0) {
@@ -139,7 +139,7 @@ void Game::renderMinimap() {
 	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.center - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
 }
 void Game::renderProjection() {
-	//this->renderer.drawProjection(this->player.getFixedDistances(), this->verticalOffset, PROJECTION_CANVAS);
+	//this->renderer.drawProjection(this->player.getFixedDistances(), this->cameraVerticalOffset, PROJECTION_CANVAS);
 	RenderingInfo info = this->player.getFixedDistances();
 	size_t len = info.size();
 
@@ -158,7 +158,7 @@ void Game::renderProjection() {
 
 		double d = DEFAULT_WALL_HEIGHT / this->projectionDrawingCanvas.realSize.y;
 
-		wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / d;
+		wallHeight = (DEFAULT_WALL_HEIGHT + 2*this->cameraVerticalOffset) / d;
 
 		int j = -int((wallHeight - this->projectionDrawingCanvas.realSize.y) * 2);
 		while (j < this->projectionDrawingCanvas.realSize.y) {
@@ -171,11 +171,11 @@ void Game::renderProjection() {
 			}
 
 			double distance = std::min(double(DEFAULT_WALL_HEIGHT) / rectHeight, 100.0);
-			wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / distance;
+			wallHeight = (DEFAULT_WALL_HEIGHT + 2*this->cameraVerticalOffset) / distance;
 
 			offset = (wallHeight - rectHeight) / 2;
 
-			grey = this->map(pow(distance, 0.5), -10, pow(100, 0.5), 200, 0);
+			grey = this->map(pow(distance, 0.5), -10, pow(this->viewLength, 0.5), 200, 0);
 
 			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
 
@@ -186,13 +186,18 @@ void Game::renderProjection() {
 		}
 
 		for (int k = 0; k < info[i].size(); k++) {
-			rectHeight = info[i][k].height / info[i][k].distance;
-			wallHeight = (DEFAULT_WALL_HEIGHT + this->verticalOffset) / info[i][k].distance;
+			rectHeight = (info[i][k].height - info[i][k].verticalOffset) / info[i][k].distance;
+			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset - info[i][k].verticalOffset)) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
 			Size textureSize = this->textures[info[i][k].textureId]->size;
-			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
 
-			grey = this->map(pow(info[i][k].distance, 0.5), 0, pow(100 /*TO DE-HARDCODE*/, .5), 1, 0);
+			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
+			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].height)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
+			double firstPixelOffset = 1-(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset)));
+			
+			// STILL NEED TO FIGURE THIS OUT
+
+			grey = this->map(pow(info[i][k].distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
 
 			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
 
@@ -201,17 +206,18 @@ void Game::renderProjection() {
 
 			rectHeight = rectHeight / pixelHeight;
 
-			for (int j = 0; j < pixelHeight; j++) {
+			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
 				RGBA color = this->textures[info[i][k].textureId]->texture[(c % textureSize.x) * textureSize.y + j % textureSize.y];
 
 				if (color.a != 0) {
 					color.r = int(double(color.r) * grey);
 					color.g = int(double(color.g) * grey);
 					color.b = int(double(color.b) * grey);
-					this->renderer.drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), PROJECTION_CANVAS);
+					this->renderer.drawRect(p, Coordinates{ rectWidth , rectHeight* firstPixelOffset }, color.toRGB(), PROJECTION_CANVAS);
 				}
 
-				p.y += rectHeight;
+				p.y += rectHeight* firstPixelOffset;
+				firstPixelOffset = 1;
 			}
 		}
 	}
@@ -231,6 +237,7 @@ Game::Game(Size windowSize, std::string windowTitle, double playerStartingAngle,
 	this->cellSize = cellSize;
 	this->wallThickness = wallThickness;
 	this->currentMazeSize = firstMazeSize;
+	this->viewLength = viewLength;
 
 	mazeDrawingCanvas.drawingRect = Rect{ {20,20}, {MINIMAP_SIZE, MINIMAP_SIZE} };
 	mazeDrawingCanvas.realSize = { MINIMAP_RANGE*2, MINIMAP_RANGE*2};
@@ -252,6 +259,15 @@ Game::~Game() {}
 bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
+	this->currentVerticalOffset += 10;
+	if (this->currentVerticalOffset< 8000) {
+		for (int i = 0; i < this->walls.size() / 2; i++)
+			this->walls[i]->verticalOffset = this->currentVerticalOffset;
+	}
+	else {
+		this->currentVerticalOffset = 0;
+	}
+
 	if (!this->pause) {
 		double cursorXDelta = this->screenSize.x / 2 - this->renderer.getMousePosition().x;
 		this->renderer.setMousePosition({ (double)this->screenSize.x / 2, (double)this->screenSize.y / 2 });
@@ -263,11 +279,11 @@ bool Game::update(double elapsedTime) {
 	}
 
 	if (this->jumping) {
-		this->verticalOffset += this->verticalVelocity;
-		this->verticalVelocity -= 15;
-		if (this->verticalOffset <= 0) {
+		this->cameraVerticalOffset += this->cameraVerticalVelocity;
+		this->cameraVerticalVelocity -= 30;
+		if (this->cameraVerticalOffset <= 0) {
 			this->jumping = false;
-			this->verticalOffset = 0;
+			this->cameraVerticalOffset = 0;
 		}
 	}
 
