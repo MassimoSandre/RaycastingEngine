@@ -186,25 +186,23 @@ void Game::renderProjection() {
 		}
 
 		for (int k = 0; k < info[i].size(); k++) {
-			rectHeight = (info[i][k].height - info[i][k].verticalOffset) / info[i][k].distance;
-			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset - info[i][k].verticalOffset)) / info[i][k].distance;
+			rectHeight = (info[i][k].height) / info[i][k].distance;
+			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset)) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
 			Size textureSize = this->textures[info[i][k].textureId]->size;
 
 			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
 			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].height)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
-			double firstPixelOffset = 1-(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset)));
-			
-			// STILL NEED TO FIGURE THIS OUT
+
 
 			grey = this->map(pow(info[i][k].distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
 
-			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
+			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight ) / 2 + offset;
 
 
 			int c = int(info[i][k].colOffset) % (textureSize.x / 2) + textureSize.x / 2;
 
-			rectHeight = rectHeight / pixelHeight;
+			rectHeight = rectHeight / normalPixelHeight;
 
 			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
 				RGBA color = this->textures[info[i][k].textureId]->texture[(c % textureSize.x) * textureSize.y + j % textureSize.y];
@@ -213,11 +211,10 @@ void Game::renderProjection() {
 					color.r = int(double(color.r) * grey);
 					color.g = int(double(color.g) * grey);
 					color.b = int(double(color.b) * grey);
-					this->renderer.drawRect(p, Coordinates{ rectWidth , rectHeight* firstPixelOffset }, color.toRGB(), PROJECTION_CANVAS);
+					this->renderer.drawRect(p, Coordinates{ rectWidth , rectHeight }, color.toRGB(), PROJECTION_CANVAS);
 				}
 
-				p.y += rectHeight* firstPixelOffset;
-				firstPixelOffset = 1;
+				p.y += rectHeight;
 			}
 		}
 	}
@@ -259,7 +256,7 @@ Game::~Game() {}
 bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
-	this->currentVerticalOffset += 10;
+	this->currentVerticalOffset += 40;
 	if (this->currentVerticalOffset< 8000) {
 		for (int i = 0; i < this->walls.size() / 2; i++)
 			this->walls[i]->verticalOffset = this->currentVerticalOffset;
