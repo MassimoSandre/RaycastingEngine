@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils.cpp"
+#include "utils/utils.cpp"
 
 class Segment {
 public:
@@ -35,5 +35,5 @@ public:
 
 	//void faceTo(Coordinates p);
 
-	IntersectionInfo getIntersection(std::shared_ptr<Segment> segment);
+	IntersectionInfo getIntersection(Segment& segment);
 };

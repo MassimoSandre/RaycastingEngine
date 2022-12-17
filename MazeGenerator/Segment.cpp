@@ -84,7 +84,7 @@ void Segment::translate(Coordinates offsets) {
 
 
 
-IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
+IntersectionInfo Segment::getIntersection(Segment& segment) {
 
 	double a1, b1, c1, a2, b2, c2, den;
 
@@ -92,9 +92,9 @@ IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 	b1 = (this->p1.x) - (this->p2.x);
 	c1 = a1 * (this->p1.x) + b1 * (this->p1.y);
 
-	a2 = (segment->p2.y) - (segment->p1.y);
-	b2 = (segment->p1.x) - (segment->p2.x);
-	c2 = a2 * (segment->p1.x) + b2 * (segment->p1.y);
+	a2 = (segment.p2.y) - (segment.p1.y);
+	b2 = (segment.p1.x) - (segment.p2.x);
+	c2 = a2 * (segment.p1.x) + b2 * (segment.p1.y);
 
 	den = a1 * b2 - a2 * b1;
 
@@ -104,9 +104,9 @@ IntersectionInfo Segment::getIntersection(std::shared_ptr<Segment> segment) {
 
 	IntersectionInfo intersection = { ((b2 * c1 - b1 * c2) / den), ((a1 * c2 - a2 * c1) / den), 0 };
 
-	intersection.colOffset = segment->p1.distance(intersection.intersection);
-	if (intersection.colOffset > segment->length) return { -1,-1 };
-	if (segment->p2.distance(intersection.intersection) > segment->length) return { -1,-1 };
-	intersection.colOffset -= segment->length/2.0;
+	intersection.colOffset = segment.p1.distance(intersection.intersection);
+	if (intersection.colOffset > segment.length) return { -1,-1 };
+	if (segment.p2.distance(intersection.intersection) > segment.length) return { -1,-1 };
+	intersection.colOffset -= segment.length/2.0;
 	return intersection;
 }

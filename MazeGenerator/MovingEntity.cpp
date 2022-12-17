@@ -18,7 +18,7 @@ void MovingEntity::tryMove(Segment& move, std::vector<std::shared_ptr<Segment>>&
 
 	bool possible = true;
 	for (std::shared_ptr<Segment> w : walls) {
-		IntersectionInfo info = moveX.getIntersection(w);
+		IntersectionInfo info = moveX.getIntersection(*w);
 
 		if (info.intersection.x != -1 || info.intersection.y != -1) {
 			double d1 = info.intersection.distance(moveX.p1);
@@ -42,7 +42,7 @@ void MovingEntity::tryMove(Segment& move, std::vector<std::shared_ptr<Segment>>&
 
 	possible = true;
 	for (std::shared_ptr<Segment>& w : walls) {
-		IntersectionInfo info = moveY.getIntersection(w);
+		IntersectionInfo info = moveY.getIntersection(*w);
 
 		if (info.intersection.x != -1 || info.intersection.y != -1) {
 			double d1 = info.intersection.distance(moveY.p1);

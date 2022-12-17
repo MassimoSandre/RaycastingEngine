@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
-#include "utils.cpp"
+#include "utils/utils.cpp"
 #include "Segment.h"
 #include "Entity.h"
 

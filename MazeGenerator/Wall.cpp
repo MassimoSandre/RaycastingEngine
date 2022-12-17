@@ -10,6 +10,7 @@ ElementState Wall::getDefaultState() {
 	ElementState state;
 	state.height = this->HEIGHT;
 	state.verticalOffset = this->VERTICAL_OFFSET;
+	state.owner = this->self;
 
 	return state;
 }

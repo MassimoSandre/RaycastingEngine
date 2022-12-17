@@ -139,7 +139,7 @@ void Game::renderMinimap() {
 }
 void Game::renderProjection() {
 	//this->renderer.drawProjection(this->player.getFixedDistances(), this->cameraVerticalOffset, PROJECTION_CANVAS);
-	RenderingInfo info = this->player.getFixedDistances();
+	ViewInfo info = this->player.getFixedDistances();
 	size_t len = info.size();
 
 	double rectWidth = this->projectionDrawingCanvas.realSize.x / len;
@@ -185,14 +185,13 @@ void Game::renderProjection() {
 		}
 
 		for (int k = 0; k < info[i].size(); k++) {
-			// TOFIX
-			rectHeight = (/*info[i][k].height*/8000) / info[i][k].distance;
+			rectHeight = (info[i][k].height) / info[i][k].distance;
 			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset)) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
-			Size textureSize = this->textures[/*info[i][k].textureId*/ 0]->size;
+			Size textureSize = info[i][k].element->texture.size;
 
-			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * /*info[i][k].height*/8000);
-			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (/*info[i][k].height*/8000)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (0*info[i][k].verticalOffset));
+			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
+			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].height)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
 
 
 			grey = this->map(pow(info[i][k].distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
@@ -212,7 +211,7 @@ void Game::renderProjection() {
 			rectHeight = rectHeight / normalPixelHeight;
 
 			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
-				RGBA color = this->textures[0/*info[i][k].textureId*/]->texture[c * textureSize.y + j % textureSize.y];
+				RGBA color = info[i][k].element->texture.texture[c * textureSize.y + j % textureSize.y];
 
 				if (color.a != 0) {
 					color.r = int(double(color.r) * grey);

@@ -145,11 +145,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SmartEntity.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="utils\utils.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Segment.cpp" />
-    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ElementProperties.h" />
@@ -162,6 +162,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SmartEntity.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="utils\ViewInfo.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />

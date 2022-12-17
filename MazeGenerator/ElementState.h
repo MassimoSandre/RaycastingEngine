@@ -3,8 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Segment.h"
-#include "utils.cpp"
-
+#include "utils/utils.cpp"
 
 class MapElement; 
 class ElementState {	

@@ -2,49 +2,6 @@
 #include "Game.h"
 #include <chrono>
 
-//#include "utils.cpp"
-//#include <GLFW/glfw3.h>
-//#include "Renderer.h"
-//#include "Maze.h"
-//#include "Segment.h"
-//#include "Ray.h"
-//#include "Player.h"
-//#include "Entity.h"
-//#include "Game.h"
-//#include <iostream>
-//#include <vector>
-//#include <memory>
-//#include <thread>
-//#include <chrono>
-
-//class Entity;
-//class MovingEntity;
-//class Player;
-//class SmartEntity;
-//class Ray;
-//class Segment;
-//class Wall;
-//class ElementProperties;
-//class ElementState;
-//class Game;
-//class MapElement;
-//class Maze;
-//class Renderer;
-//class Texture;
-//#include "Entity.h"
-//#include "MovingEntity.h"
-//#include "Player.h"
-//#include "SmartEntity.h"
-//#include "Ray.h"
-//#include "Segment.h"
-//#include "Wall.h"
-//#include "ElementProperties.h"
-//#include "ElementState.h"
-//#include "Game.h"
-//#include "MapElement.h"
-//#include "Maze.h"
-//#include "Renderer.h"
-//#include "Texture.h"
 
 // WINDOW 
 #define WINDOW_TITLE "Maze"
@@ -75,12 +32,6 @@ int main(int argc, char *argv[]) {
         { DEFAULT_CELL_SIZE , DEFAULT_CELL_SIZE},
         DEFAULT_WALL_THICKNESS,
         1);
-
-
-    /*Entity s({DEFAULT_CELL_SIZE*3.5, DEFAULT_CELL_SIZE*3.5}, DEFAULT_CELL_SIZE/3, 0.0);
-    game.addCollectible(std::make_shared<Entity>(s));*/
-
-    // game loop info
 
 
     double targetFPS = 60.0;

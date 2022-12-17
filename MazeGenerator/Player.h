@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SmartEntity.h"
-#include "utils.cpp"
+#include "utils/utils.cpp"
 
 class Player : public SmartEntity {
 public:

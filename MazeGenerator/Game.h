@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include "ElementState.h"
 #include "Wall.h"
+#include "utils/ViewInfo.h"
 
 #define MOVE_DISTANCE 1 
 

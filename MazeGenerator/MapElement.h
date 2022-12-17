@@ -14,7 +14,10 @@ public:
 	Texture texture;
 
 	MapElement() {}
-	MapElement(ElementProperties* properties, std::string textureFileName) : texture(textureFileName) {}
+	MapElement(ElementProperties* properties, std::string textureFileName) : texture(textureFileName) {
+		this->HEIGHT = properties->height;
+		this->VERTICAL_OFFSET = properties->verticalOffset;
+	}
 
 	int a() { return 0; }
 

@@ -33,9 +33,6 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Maze.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Wall.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +114,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="ElementProperties.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ViewInfo.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

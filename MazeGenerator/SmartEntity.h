@@ -4,10 +4,11 @@
 #include "MovingEntity.h"
 #include "Ray.h"
 #include "ElementState.h"
+#include "utils/ViewInfo.h"
 
 class SmartEntity : public MovingEntity {
 protected:
-	RenderingInfo info;
+	ViewInfo info;
 
 	double fov;
 	int nRays;
@@ -16,7 +17,7 @@ protected:
 	double focalLength;
 
 	void pointRaysToView();
-	void castWall(std::shared_ptr<Segment> segment, int wallId);
+	void castWall(ElementState& wall, int wallFace);
 	void castEntity(std::shared_ptr<Entity> segment, int entityId);
 
 public:
@@ -37,8 +38,8 @@ public:
 
 
 	void cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities);
-	void betterCast(std::vector<ElementState> states, std::vector<std::shared_ptr<Entity>> entities);
+	void betterCast(std::vector<ElementState>& states, std::vector<std::shared_ptr<Entity>>& entities);
 
-	RenderingInfo getFixedDistances();
+	ViewInfo getFixedDistances();
 };
 

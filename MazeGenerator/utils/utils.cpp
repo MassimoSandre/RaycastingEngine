@@ -2,8 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-//#include "Wall.h"
-//#include "MapElement.h"
 
 typedef struct RGB {
 	int r;

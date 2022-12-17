@@ -11,9 +11,36 @@ void SmartEntity::pointRaysToView() {
 		this->rays[i]->setAngle(this->baseAngle + angle);
 	}
 }
-void SmartEntity::castWall(std::shared_ptr<Segment> segment, int wallId) {
+//void SmartEntity::castWall(std::shared_ptr<Segment> segment, int wallId) {
+//	for (int i = 0; i < this->nRays; i++) {
+//		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
+//
+//		if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
+//
+//		if (intersection.intersection.x == 0 && intersection.intersection.y == 0) continue;
+//
+//		double d1 = intersection.intersection.distance(this->center.toInt());
+//		if (d1 == 0) break;
+//
+//		//if (d1 > this->raysLength) continue;
+//		if (d1 > this->rays[i]->length) continue;
+//
+//		double d2 = intersection.intersection.distance(this->rays[i]->p2);
+//		if (d2 > this->rays[i]->length) continue;
+//
+//		//this->colOffsets[i] = intersection.colOffset;
+//		if (this->info[this->nRays - 1 - i].size() == 0)
+//			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height, segment->verticalOffset });
+//		else
+//			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height, segment->verticalOffset };
+//
+//		this->rays[i]->changeP2(intersection.intersection);
+//	}
+//}
+
+void SmartEntity::castWall(ElementState& wall, int wallFace) {
 	for (int i = 0; i < this->nRays; i++) {
-		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
+		IntersectionInfo intersection = this->rays[i]->getIntersection(wall.segments[wallFace]);
 
 		if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
 
@@ -27,33 +54,30 @@ void SmartEntity::castWall(std::shared_ptr<Segment> segment, int wallId) {
 
 		double d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
-
-		//this->colOffsets[i] = intersection.colOffset;
-		if (this->info[this->nRays - 1 - i].size() == 0)
-			this->info[this->nRays - 1 - i].push_back({ Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height, segment->verticalOffset });
-		else
-			this->info[this->nRays - 1 - i][0] = { Obstacle, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wallId, segment->textureId, segment->height, segment->verticalOffset };
+		
+		this->info[this->nRays - 1 - i].push_back({  d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wall.height, wall.verticalOffset, wall.owner });
 
 		this->rays[i]->changeP2(intersection.intersection);
 	}
 }
+
 void SmartEntity::castEntity(std::shared_ptr<Entity> segment, int entityId) {
-	for (int i = 0; i < this->nRays; i++) {
-		IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
+	//for (int i = 0; i < this->nRays; i++) {
+	//	IntersectionInfo intersection = this->rays[i]->getIntersection(segment);
 
-		if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
+	//	if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
 
-		double d1 = intersection.intersection.distance(this->center);
-		if (d1 == 0) break;
+	//	double d1 = intersection.intersection.distance(this->center);
+	//	if (d1 == 0) break;
 
-		//if (d1 > this->raysLength) continue;
-		if (d1 > this->rays[i]->length) continue;
+	//	//if (d1 > this->raysLength) continue;
+	//	if (d1 > this->rays[i]->length) continue;
 
-		double d2 = intersection.intersection.distance(this->rays[i]->p2);
-		if (d2 > this->rays[i]->length) continue;
+	//	double d2 = intersection.intersection.distance(this->rays[i]->p2);
+	//	if (d2 > this->rays[i]->length) continue;
 
-		this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId, segment->textureId, segment->height, segment->verticalOffset });
-	}
+	//	this->info[this->nRays - 1 - i].push_back({ EntitySegment, d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset , entityId, segment->textureId, segment->height, segment->verticalOffset });
+	//}
 }
 
 SmartEntity::SmartEntity() : MovingEntity() {}
@@ -118,29 +142,30 @@ Segment SmartEntity::moveRightward(double distance) {
 }
 
 void SmartEntity::cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities) {
-	for (int i = 0; i < this->nRays; i++) {
-		this->info[i].clear();
-		this->rays[i]->setLength(this->raysLength);
-	}
-	for (int i = 0; i < segments.size(); i++) {
-		if (segments[i]->length <= this->raysLength &&
-			segments[i]->p1.distance(this->center) >= 2 * this->raysLength &&
-			segments[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
+	//for (int i = 0; i < this->nRays; i++) {
+	//	this->info[i].clear();
+	//	this->rays[i]->setLength(this->raysLength);
+	//}
+	//for (int i = 0; i < segments.size(); i++) {
+	//	if (segments[i]->length <= this->raysLength &&
+	//		segments[i]->p1.distance(this->center) >= 2 * this->raysLength &&
+	//		segments[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
 
-		this->castWall(segments[i], i);
-	}
-	//this->pointRaysToView();
+	//	this->castWall(segments[i], i);
+	//}
+	////this->pointRaysToView();
 
-	for (int i = 0; i < entities.size(); i++) {
-		if (entities[i]->length <= this->raysLength &&
-			entities[i]->p1.distance(this->center) >= 2 * this->raysLength &&
-			entities[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
+	//return;
+	//for (int i = 0; i < entities.size(); i++) {
+	//	if (entities[i]->length <= this->raysLength &&
+	//		entities[i]->p1.distance(this->center) >= 2 * this->raysLength &&
+	//		entities[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
 
-		this->castEntity(entities[i], i);
-	}
+	//	this->castEntity(entities[i], i);
+	//}
 }
 
-void SmartEntity::betterCast(std::vector<ElementState> states, std::vector<std::shared_ptr<Entity>> entities) {
+void SmartEntity::betterCast(std::vector<ElementState>& states, std::vector<std::shared_ptr<Entity>>& entities) {
 	for (int i = 0; i < this->nRays; i++) {
 		this->info[i].clear();
 		this->rays[i]->setLength(this->raysLength);
@@ -152,7 +177,7 @@ void SmartEntity::betterCast(std::vector<ElementState> states, std::vector<std::
 				e.segments[i].p1.distance(this->center) >= 2 * this->raysLength &&
 				e.segments[i].p2.distance(this->center) >= 2 * this->raysLength) continue;
 
-			this->castWall(std::make_shared<Segment>(e.segments[i]), i);
+			this->castWall(e, i);
 		}
 	}
 
@@ -165,6 +190,6 @@ void SmartEntity::betterCast(std::vector<ElementState> states, std::vector<std::
 	}
 }
 
-RenderingInfo SmartEntity::getFixedDistances() {
+ViewInfo SmartEntity::getFixedDistances() {
 	return this->info;
 }
