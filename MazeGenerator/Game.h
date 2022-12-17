@@ -1,12 +1,15 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include "Segment.h"
-#include "Player.h"
 #include "Renderer.h"
-#include "Entity.h"
+#include "Player.h"
 #include "Maze.h"
-
+#include <vector>
+#include <memory>
+#include "Entity.h"
+#include "Segment.h"
+#include "Texture.h"
+#include <GLFW/glfw3.h>
+#include "ElementState.h"
+#include "Wall.h"
 
 #define MOVE_DISTANCE 1 
 
@@ -33,6 +36,8 @@ private:
 	std::vector<std::shared_ptr<Entity>> collectibles;
 
 	std::vector<std::shared_ptr<Texture>> textures;
+
+	std::vector<ElementState> betterWalls;
 
 	bool pause = false;
 	bool canTogglePause = true;
@@ -66,6 +71,8 @@ private:
 	void renderMinimap();
 	void renderProjection();
 	void loadTextures();
+
+	void init();
 public:
 	Game(Size windowSize, std::string windowTitle, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount);
 	~Game();

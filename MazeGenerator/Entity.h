@@ -1,5 +1,6 @@
 #pragma once
 #include "Segment.h"
+
 class Entity : public Segment {
 public:
 	Coordinates center;

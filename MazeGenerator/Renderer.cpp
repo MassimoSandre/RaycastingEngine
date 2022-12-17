@@ -1,5 +1,4 @@
 #include "Renderer.h"
-#include "Entity.h"
 
 double Renderer::scaleX(double x, int canvas) {
 	double result = x;

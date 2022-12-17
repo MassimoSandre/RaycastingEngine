@@ -1,5 +1,7 @@
 #include "Texture.h"
+#include <fstream>
 
+Texture::Texture() {}
 
 Texture::Texture(std::string file) {
 	std::ifstream rf(file, std::ios::out | std::ios::binary);

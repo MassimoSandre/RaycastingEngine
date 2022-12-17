@@ -1,5 +1,6 @@
 #include "SmartEntity.h"
 
+
 void SmartEntity::pointRaysToView() {
 	double x = 0;
 	double angle;
@@ -129,6 +130,31 @@ void SmartEntity::cast(std::vector<std::shared_ptr<Segment>> segments, std::vect
 		this->castWall(segments[i], i);
 	}
 	//this->pointRaysToView();
+
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->length <= this->raysLength &&
+			entities[i]->p1.distance(this->center) >= 2 * this->raysLength &&
+			entities[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
+
+		this->castEntity(entities[i], i);
+	}
+}
+
+void SmartEntity::betterCast(std::vector<ElementState> states, std::vector<std::shared_ptr<Entity>> entities) {
+	for (int i = 0; i < this->nRays; i++) {
+		this->info[i].clear();
+		this->rays[i]->setLength(this->raysLength);
+	}
+
+	for (ElementState& e : states) {	
+		for (int i = 0; i < e.segments.size(); i++) {
+			if (e.segments[i].length <= this->raysLength &&
+				e.segments[i].p1.distance(this->center) >= 2 * this->raysLength &&
+				e.segments[i].p2.distance(this->center) >= 2 * this->raysLength) continue;
+
+			this->castWall(std::make_shared<Segment>(e.segments[i]), i);
+		}
+	}
 
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->length <= this->raysLength &&

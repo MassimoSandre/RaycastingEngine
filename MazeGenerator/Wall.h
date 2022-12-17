@@ -1,9 +1,14 @@
 #pragma once
-#include "Segment.h"
 
-class Wall : public Segment{
+#include "MapElement.h"
+#include "ElementProperties.h"
+#include "ElementState.h"
+#include <string>
+
+class Wall : public MapElement{
 public:
-	Wall();
-	Wall(Coordinates p1, Coordinates p2);
-	Wall(Coordinates p1, double length, double angle);
+	Wall() ;
+	Wall(ElementProperties* properties, std::string textureFileName);
+
+	ElementState getDefaultState() override;
 };

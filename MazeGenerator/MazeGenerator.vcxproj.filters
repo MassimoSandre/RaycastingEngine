@@ -51,9 +51,6 @@
     <ClCompile Include="Ray.cpp">
       <Filter>File di origine\Segments</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>File di origine\Segments</Filter>
-    </ClCompile>
     <ClCompile Include="Segment.cpp">
       <Filter>File di origine\Segments</Filter>
     </ClCompile>
@@ -65,6 +62,15 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>File di origine\Segments\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ElementState.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="ElementProperties.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>File di intestazione\Segments\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="MapElement.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="ElementState.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="ElementProperties.h">
+      <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

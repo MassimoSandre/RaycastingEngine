@@ -1,6 +1,9 @@
 #pragma once
+
+#include <cmath>
 #include "MovingEntity.h"
 #include "Ray.h"
+#include "ElementState.h"
 
 class SmartEntity : public MovingEntity {
 protected:
@@ -34,6 +37,7 @@ public:
 
 
 	void cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities);
+	void betterCast(std::vector<ElementState> states, std::vector<std::shared_ptr<Entity>> entities);
 
 	RenderingInfo getFixedDistances();
 };

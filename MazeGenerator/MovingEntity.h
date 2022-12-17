@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Entity.h"
 
 #define MOVE_CHECK_DISTANCE 3

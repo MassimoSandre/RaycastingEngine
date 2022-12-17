@@ -1,14 +1,10 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <string>
-#include "utils.cpp"
 #include <vector>
-#include <memory>
+#include "utils.cpp"
 #include "Segment.h"
-#include "Player.h"
 #include "Entity.h"
-#include "Texture.h"
 
 #define TRIANGLES_IN_CIRCLE 20
 

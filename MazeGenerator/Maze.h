@@ -1,8 +1,8 @@
 #pragma once
-#include "utils.cpp"
-#include <iostream>
 #include <vector>
+#include "utils.cpp"
 #include "Segment.h"
+#include <queue>
 
 class Maze {
 private:

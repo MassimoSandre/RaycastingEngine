@@ -2,8 +2,10 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+//#include "Wall.h"
+//#include "MapElement.h"
 
-typedef struct {
+typedef struct RGB {
 	int r;
 	int g;
 	int b;
@@ -61,42 +63,43 @@ typedef struct Size {
 
 typedef Size Cell;
 
-typedef struct {
+typedef struct Line {
 	Coordinates p1;
 	Coordinates p2;
 } Line;
 
-typedef struct {
+typedef struct CellWeight {
 	int east;
 	int south;
 } CellWeight;
 
 enum RayType {Generic, Obstacle, View, EntitySegment};
 
-typedef struct {
+typedef struct IntersectionInfo {
 	Coordinates intersection;
 	double colOffset;
 } IntersectionInfo;
 
-typedef struct {
-	RayType type;
-	double distance;
-	double colOffset;
-	int objectId;
-	int textureId;
-	double height;
-	double verticalOffset;
-} RenderInfo;
-
-typedef std::vector<RenderInfo> RayInfo;
-typedef std::vector<RayInfo> RenderingInfo;
-
-typedef struct {
+typedef struct Rect {
 	Coordinates topLeft;
 	Coordinates size;
 } Rect;
 
-typedef struct {
+typedef struct Canvas {
 	Rect drawingRect;
 	Coordinates realSize;
 } Canvas;
+
+typedef struct RenderInfo {
+	RayType type;
+	double distance;
+	double colOffset;
+	int id;
+	int textureId;
+	double height;
+	double verticalOffset;
+	//std::shared_ptr<MapElement> element;
+} RenderInfo;
+
+typedef std::vector<RenderInfo> RayInfo;
+typedef std::vector<RayInfo> RenderingInfo;

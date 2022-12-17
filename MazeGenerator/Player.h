@@ -1,11 +1,7 @@
 #pragma once
-#include "utils.cpp"
-#include <iostream>
-#include <vector>
-#include "Ray.h"
-#include "Segment.h"
-#include "Entity.h"	
+
 #include "SmartEntity.h"
+#include "utils.cpp"
 
 class Player : public SmartEntity {
 public:

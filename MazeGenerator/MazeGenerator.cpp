@@ -1,17 +1,50 @@
-#include <GLFW/glfw3.h>
-#include "Renderer.h"
-#include "Maze.h"
-#include "utils.cpp"
-#include "Segment.h"
-#include "Ray.h"
-#include "Player.h"
-#include "Entity.h"
+#pragma once
 #include "Game.h"
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <thread>
 #include <chrono>
+
+//#include "utils.cpp"
+//#include <GLFW/glfw3.h>
+//#include "Renderer.h"
+//#include "Maze.h"
+//#include "Segment.h"
+//#include "Ray.h"
+//#include "Player.h"
+//#include "Entity.h"
+//#include "Game.h"
+//#include <iostream>
+//#include <vector>
+//#include <memory>
+//#include <thread>
+//#include <chrono>
+
+//class Entity;
+//class MovingEntity;
+//class Player;
+//class SmartEntity;
+//class Ray;
+//class Segment;
+//class Wall;
+//class ElementProperties;
+//class ElementState;
+//class Game;
+//class MapElement;
+//class Maze;
+//class Renderer;
+//class Texture;
+//#include "Entity.h"
+//#include "MovingEntity.h"
+//#include "Player.h"
+//#include "SmartEntity.h"
+//#include "Ray.h"
+//#include "Segment.h"
+//#include "Wall.h"
+//#include "ElementProperties.h"
+//#include "ElementState.h"
+//#include "Game.h"
+//#include "MapElement.h"
+//#include "Maze.h"
+//#include "Renderer.h"
+//#include "Texture.h"
 
 // WINDOW 
 #define WINDOW_TITLE "Maze"
@@ -48,6 +81,8 @@ int main(int argc, char *argv[]) {
     game.addCollectible(std::make_shared<Entity>(s));*/
 
     // game loop info
+
+
     double targetFPS = 60.0;
     double nsPerFrame = 1000000000.0 / targetFPS;
     auto lastTime = std::chrono::steady_clock::now();

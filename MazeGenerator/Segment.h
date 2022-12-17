@@ -1,7 +1,7 @@
 #pragma once
+
 #include "utils.cpp"
-#include <iostream>
-#include <memory>
+
 class Segment {
 public:
 	RayType type;
@@ -33,7 +33,7 @@ public:
 	void rotate(double angle);
 	void translate(Coordinates offsets);
 
-	void faceTo(Coordinates p);
+	//void faceTo(Coordinates p);
 
 	IntersectionInfo getIntersection(std::shared_ptr<Segment> segment);
 };

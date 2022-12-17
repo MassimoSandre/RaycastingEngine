@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Segment.h"
+
 class Ray : public Segment {
 public:
 	Ray();

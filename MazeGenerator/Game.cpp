@@ -39,7 +39,7 @@ void Game::keyHandler(double multiplier) {
 		}
 	}
 	if (move.length > 0) {
-		this->player.tryMove(move, this->walls, multiplier);
+		this->player.applyMove(move/*, this->walls, multiplier*/);
 	}
 }
 
@@ -49,7 +49,6 @@ bool Game::levelCompleted() {
 }
 
 void Game::newLevel() {
-	//this->renderer.setCanvasRealSize(MAZE_CANVAS,Coordinates{ (double)(this->currentMazeSize.x + 2) * this->cellSize.x ,  (double)(this->currentMazeSize.y + 2) * this->cellSize.y });
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
 	this->walls.clear();
@@ -186,13 +185,14 @@ void Game::renderProjection() {
 		}
 
 		for (int k = 0; k < info[i].size(); k++) {
-			rectHeight = (info[i][k].height) / info[i][k].distance;
+			// TOFIX
+			rectHeight = (/*info[i][k].height*/8000) / info[i][k].distance;
 			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset)) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
-			Size textureSize = this->textures[info[i][k].textureId]->size;
+			Size textureSize = this->textures[/*info[i][k].textureId*/ 0]->size;
 
-			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
-			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].height)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
+			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * /*info[i][k].height*/8000);
+			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (/*info[i][k].height*/8000)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (0*info[i][k].verticalOffset));
 
 
 			grey = this->map(pow(info[i][k].distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
@@ -200,12 +200,19 @@ void Game::renderProjection() {
 			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight ) / 2 + offset;
 
 
-			int c = int(info[i][k].colOffset) % (textureSize.x / 2) + textureSize.x / 2;
+			int c = int(info[i][k].colOffset) - textureSize.x/2;
+			if (c >= 0) {
+				c = c % textureSize.x;
+			}
+			else {
+				c = (textureSize.x - c % textureSize.x) % textureSize.x;
 
+			}
+			
 			rectHeight = rectHeight / normalPixelHeight;
 
 			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
-				RGBA color = this->textures[info[i][k].textureId]->texture[(c % textureSize.x) * textureSize.y + j % textureSize.y];
+				RGBA color = this->textures[0/*info[i][k].textureId*/]->texture[c * textureSize.y + j % textureSize.y];
 
 				if (color.a != 0) {
 					color.r = int(double(color.r) * grey);
@@ -221,8 +228,19 @@ void Game::renderProjection() {
 }
 
 void Game::loadTextures() {
-	this->textures.push_back(std::make_shared<Texture>("textures/wallAlt.texture"));
+	this->textures.push_back(std::make_shared<Texture>("textures/alt2.texture"));
 	this->textures.push_back(std::make_shared<Texture>("textures/collectible.texture"));
+}
+
+
+void Game::init() {
+	static Wall a(ElementProperties::getDefault()
+			->setHeight(6000)
+			->setVerticalOffset(0),
+		"textures/wallAlt.texture");
+
+	this->betterWalls.clear();
+	this->betterWalls.push_back(a.getDefaultState().withPoints(Rect{ {1,1}, {30,30} }));
 }
 
 Game::Game(Size windowSize, std::string windowTitle, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount) :
@@ -244,10 +262,10 @@ Game::Game(Size windowSize, std::string windowTitle, double playerStartingAngle,
 	this->renderer.addCanvas(mazeDrawingCanvas);
 	this->renderer.addCanvas(projectionDrawingCanvas);
 
+	this->init();
 	this->loadTextures();
 	this->generateCollectibles(collectiblesAmount);
 	this->newLevel();
-
 }
 
 Game::~Game() {}
@@ -256,14 +274,14 @@ Game::~Game() {}
 bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
-	this->currentVerticalOffset += 40;
+	/*this->currentVerticalOffset += 40;
 	if (this->currentVerticalOffset< 8000) {
 		for (int i = 0; i < this->walls.size() / 2; i++)
 			this->walls[i]->verticalOffset = this->currentVerticalOffset;
 	}
 	else {
 		this->currentVerticalOffset = 0;
-	}
+	}*/
 
 	if (!this->pause) {
 		double cursorXDelta = this->screenSize.x / 2 - this->renderer.getMousePosition().x;
@@ -301,13 +319,14 @@ bool Game::update(double elapsedTime) {
 	}
 
 	this->player.update();
-	this->player.cast(this->walls, this->collectibles);
+	//this->player.cast(this->walls, this->collectibles);
+	this->player.betterCast(this->betterWalls, this->collectibles);
 
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
 	this->renderProjection();
-	this->renderMinimap();
+	//this->renderMinimap();
 
 	this->renderer.update();
 }
