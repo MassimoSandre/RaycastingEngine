@@ -22,8 +22,7 @@
 
 int main(int argc, char *argv[]) {
     Game game({WINDOW_WIDTH, WINDOW_HEIGHT},
-        WINDOW_TITLE,
-        0.0f, 
+        WINDOW_TITLE, 
         DEFAULT_FOV, 
         N_RAYS, 
         RAYS_LENGTH,

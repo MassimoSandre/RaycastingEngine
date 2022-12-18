@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectible.h" />
+    <ClInclude Include="entity\Entities.h" />
     <ClInclude Include="entity\entities\IEntity.h" />
     <ClInclude Include="entity\EntityProperties.h" />
     <ClInclude Include="entity\EntityState.h" />

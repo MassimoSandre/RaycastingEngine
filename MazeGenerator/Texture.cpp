@@ -4,6 +4,7 @@
 Texture::Texture() {}
 
 Texture::Texture(std::string file) {
+	if (file == "") return;
 	std::ifstream rf(file, std::ios::out | std::ios::binary);
 
 	if (!rf) {

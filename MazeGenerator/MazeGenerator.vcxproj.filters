@@ -143,6 +143,9 @@
     <ClInclude Include="entity\EntityProperties.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="entity\Entities.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MazeGenerator.rc">

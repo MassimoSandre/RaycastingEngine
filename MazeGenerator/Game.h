@@ -4,7 +4,6 @@
 #include "Maze.h"
 #include <vector>
 #include <memory>
-#include "Entity.h"
 #include "Segment.h"
 #include "Texture.h"
 #include <GLFW/glfw3.h>
@@ -35,7 +34,7 @@ private:
 	Player player;
 
 	std::vector<std::shared_ptr<Segment>> walls;
-	std::vector<std::shared_ptr<Entity>> collectibles;
+	//std::vector<std::shared_ptr<Entity>> collectibles;
 
 	std::vector<std::shared_ptr<Texture>> textures;
 
@@ -68,15 +67,15 @@ private:
 	void keyHandler(double multiplier);
 	bool levelCompleted();
 	void newLevel();
-	void placeCollectible(std::shared_ptr<Entity>& e);
-	void placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities);
+	/*void placeCollectible(std::shared_ptr<Entity>& e);
+	void placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities);*/
 	void renderMinimap();
 	void renderProjection();
 	void loadTextures();
 
 	void init();
 public:
-	Game(Size windowSize, std::string windowTitle, double playerStartingAngle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount);
+	Game(Size windowSize, std::string windowTitle, double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount);
 	~Game();
 
 	bool update(double elapsedTime);
@@ -85,8 +84,8 @@ public:
 	void addWall(std::shared_ptr<Segment> segment);
 	void addWalls(std::vector<ObstacleState> segments);
 
-	void generateCollectible();
-	void generateCollectibles(int amount);
-	void addCollectible(std::shared_ptr<Entity> collectible);
-	void addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles);
+	/*void generateCollectible();
+	void generateCollectibles(int amount);*/
+	/*void addCollectible(std::shared_ptr<Entity> collectible);
+	void addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles);*/
 };

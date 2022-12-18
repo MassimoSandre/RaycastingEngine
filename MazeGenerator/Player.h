@@ -6,8 +6,6 @@
 
 class Player  {
 private:
-	EntityState state;
-
 	ViewInfo info;
 	
 	double fov;
@@ -21,7 +19,11 @@ private:
 	//void castEntity(std::shared_ptr<Entity> segment, int entityId);
 
 public:
-	Player(Coordinates center, double fov, int nRays, double raysLength, double baseAngle);
+	EntityState state;
+
+	Player(double fov, int nRays, double raysLength);
+
+	void assignEntityState(EntityState state);
 
 	std::vector<std::shared_ptr<Segment>> rays;
 	

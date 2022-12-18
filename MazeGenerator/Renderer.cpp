@@ -158,20 +158,20 @@ void Renderer::drawSegments(std::vector<std::shared_ptr<Segment>>& segments, RGB
 	}
 }
 
-void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, int canvas) {
-	this->drawCollectible(collectible, { 255,255,255 }, canvas);
-}
-void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, int canvas) {
-	this->drawCollectibles(collectibles, { 255,255,255 }, canvas);
-}
-void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, RGB color, int canvas) {
-	this->drawCircle(collectible->center, collectible->length / 2, color, canvas);
-}
-void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, RGB color, int canvas) {
-	for (int i = 0; i < collectibles.size(); i++) {
-		this->drawCircle(collectibles[i]->center, collectibles[i]->length / 2, color, canvas);
-	}
-}
+//void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, int canvas) {
+//	this->drawCollectible(collectible, { 255,255,255 }, canvas);
+//}
+//void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, int canvas) {
+//	this->drawCollectibles(collectibles, { 255,255,255 }, canvas);
+//}
+//void Renderer::drawCollectible(std::shared_ptr<Entity>& collectible, RGB color, int canvas) {
+//	this->drawCircle(collectible->center, collectible->length / 2, color, canvas);
+//}
+//void Renderer::drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, RGB color, int canvas) {
+//	for (int i = 0; i < collectibles.size(); i++) {
+//		this->drawCircle(collectibles[i]->center, collectibles[i]->length / 2, color, canvas);
+//	}
+//}
 
 void Renderer::drawView(std::vector<std::shared_ptr<Segment>>& r, int canvas, bool connect) {
 	this->drawView(r, { 255,255,255 }, connect, canvas);

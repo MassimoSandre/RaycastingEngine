@@ -92,3 +92,70 @@ EntityState MovingEntity::getDefaultState() {
 
 	return state;
 }
+
+Segment MovingEntity::move(EntityState& state, Coordinates offsets) {
+	Segment s(state.position, state.position.add(offsets));
+	return s;
+}
+
+void MovingEntity::tryMove(EntityState& state, Segment& move, std::vector<std::shared_ptr<Segment>>& walls, double multiplier) {
+	double moveLen = move.length;
+	move.setLength(MOVE_CHECK_DISTANCE);
+
+	Segment moveX(move.p1, { move.p2.x, move.p1.y });
+	Segment moveY(move.p1, { move.p1.x, move.p2.y });
+
+	double moveXCoef = moveX.length / move.length;
+	double moveYCoef = moveY.length / move.length;
+
+	bool possible = true;
+	for (std::shared_ptr<Segment> w : walls) {
+		IntersectionInfo info = moveX.getIntersection(*w);
+
+		if (info.intersection.x != -1 || info.intersection.y != -1) {
+			double d1 = info.intersection.distance(moveX.p1);
+
+			double d2 = info.intersection.distance(moveX.p2);
+
+			if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+			if (d2 > MOVE_CHECK_DISTANCE) continue;
+			possible = false;
+			break;
+		}
+
+	}
+	if (possible) {
+		moveX.setLength(moveLen * moveXCoef * multiplier);
+		applyMove(state, moveX);
+		moveY.translate({ double(moveX.p1.x > moveX.p2.x ? -moveX.length : +moveX.length) , 0 });
+	}
+
+	possible = true;
+	for (std::shared_ptr<Segment>& w : walls) {
+		IntersectionInfo info = moveY.getIntersection(*w);
+
+		if (info.intersection.x != -1 || info.intersection.y != -1) {
+			double d1 = info.intersection.distance(moveY.p1);
+
+			double d2 = info.intersection.distance(moveY.p2);
+
+			if (d1 > MOVE_CHECK_DISTANCE) continue;
+
+
+			if (d2 > MOVE_CHECK_DISTANCE) continue;
+			possible = false;
+			break;
+		}
+
+	}
+	if (possible) {
+		moveY.setLength(moveLen * moveYCoef * multiplier);
+		applyMove(state, moveY);
+	}
+}
+
+void MovingEntity::applyMove(EntityState& state, Segment& moveSegment) {
+	state.position = moveSegment.p2;
+}

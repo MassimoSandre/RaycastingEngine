@@ -18,8 +18,15 @@ public:
 	Segment follow(Coordinates target, double distance);*/
 
 	MovingEntity();
-	MovingEntity(EntityProperties* properties, std::string textureFileName);
+	MovingEntity(EntityProperties* properties, std::string textureFileName="");
 
 	EntityState getDefaultState() override;
+
+	static Segment move(EntityState& state, Coordinates offsets);
+	
+	static void tryMove(EntityState& state, Segment& move, std::vector<std::shared_ptr<Segment>>& walls, double multiplier);
+
+	static void applyMove(EntityState& state, Segment& moveSegment);
+
 };
 
