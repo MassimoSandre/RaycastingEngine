@@ -13,17 +13,41 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="File di intestazione\Segments">
-      <UniqueIdentifier>{7f4851c7-fda1-412d-b4a7-849036b330a8}</UniqueIdentifier>
+    <Filter Include="File di intestazione\entity">
+      <UniqueIdentifier>{7628df3b-ff0f-4a02-8033-44ad101bb912}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di origine\Segments">
-      <UniqueIdentifier>{a77bc33c-4a0b-46f3-a3d5-1d9075b35fdd}</UniqueIdentifier>
+    <Filter Include="File di intestazione\utils">
+      <UniqueIdentifier>{16ca5c4c-2ff2-406c-ae84-02e2229b9456}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione\Segments\Entities">
-      <UniqueIdentifier>{2683e1de-5993-4041-b926-f5978f7de246}</UniqueIdentifier>
+    <Filter Include="File di intestazione\entity\entities">
+      <UniqueIdentifier>{3db7ee29-eb7b-4eb8-896a-91e9d0e93942}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di origine\Segments\Entities">
-      <UniqueIdentifier>{8cc13b35-fd92-4d16-9c3e-0c8aaa66a463}</UniqueIdentifier>
+    <Filter Include="File di intestazione\levelgenerator">
+      <UniqueIdentifier>{49005526-c639-4fdb-bbbe-8b5d8068f406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\obstacle">
+      <UniqueIdentifier>{def4e746-e9b0-4a11-a922-8be97546f901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\obstacle\obstacles">
+      <UniqueIdentifier>{28023478-3461-4ddd-8b34-eb6a80544ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\entity">
+      <UniqueIdentifier>{867da7ad-3c19-4c6e-a1af-24e56b72c971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\entity\entities">
+      <UniqueIdentifier>{089d4546-f562-4804-aaa1-bdfe1f3972f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\levelgenerator">
+      <UniqueIdentifier>{f8b1b960-e924-4d8f-974d-fb8a3532555a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\obstacle">
+      <UniqueIdentifier>{24478ae9-dd69-40c2-8a4c-23937870390f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\obstacle\obstacles">
+      <UniqueIdentifier>{6518efaf-c8b6-4498-a419-4727b994d309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\utils">
+      <UniqueIdentifier>{5163a03e-61bd-47e9-bd45-45de29946d25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,118 +57,106 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Maze.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Collectible.cpp">
-      <Filter>File di origine\Segments\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>File di origine\Segments</Filter>
-    </ClCompile>
-    <ClCompile Include="Segment.cpp">
-      <Filter>File di origine\Segments</Filter>
-    </ClCompile>
-    <ClCompile Include="MovingEntity.cpp">
-      <Filter>File di origine\Segments\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="SmartEntity.cpp">
-      <Filter>File di origine\Segments\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>File di origine\Segments\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="utils\utils.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="obstacle\ObstacleProperties.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="obstacle\ObstacleState.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="obstacle\obstacles\Wall.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="obstacle\Obstacles.cpp">
-      <Filter>File di origine</Filter>
+    <ClCompile Include="entity\EntityProperties.cpp">
+      <Filter>File di origine\entity</Filter>
     </ClCompile>
     <ClCompile Include="entity\EntityState.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="entity\EntityProperties.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>File di origine\entity</Filter>
     </ClCompile>
     <ClCompile Include="entity\entities\IEntity.cpp">
+      <Filter>File di origine\entity\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="levelgenerator\Maze.cpp">
+      <Filter>File di origine\levelgenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\ObstacleProperties.cpp">
+      <Filter>File di origine\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\ObstacleState.cpp">
+      <Filter>File di origine\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\Obstacles.cpp">
+      <Filter>File di origine\obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\obstacles\Wall.cpp">
+      <Filter>File di origine\obstacle\obstacles</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.cpp">
+      <Filter>File di origine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Collectible.cpp">
       <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="entity\entities\MovingEntity.cpp">
+      <Filter>File di origine\entity\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\Segment.cpp">
+      <Filter>File di origine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\Texture.cpp">
+      <Filter>File di origine\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Maze.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="Collectible.h">
-      <Filter>File di intestazione\Segments\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Segment.h">
-      <Filter>File di intestazione\Segments</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>File di intestazione\Segments</Filter>
-    </ClInclude>
-    <ClInclude Include="MovingEntity.h">
-      <Filter>File di intestazione\Segments\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="SmartEntity.h">
-      <Filter>File di intestazione\Segments\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>File di intestazione\Segments\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\ViewInfo.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="obstacle\ObstacleProperties.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="obstacle\ObstacleState.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="obstacle\obstacles\IObstacle.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="obstacle\obstacles\Wall.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="obstacle\Obstacles.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="entity\entities\IEntity.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="entity\EntityState.h">
-      <Filter>File di intestazione</Filter>
+    <ClInclude Include="entity\Entities.h">
+      <Filter>File di intestazione\entity</Filter>
     </ClInclude>
     <ClInclude Include="entity\EntityProperties.h">
+      <Filter>File di intestazione\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\EntityState.h">
+      <Filter>File di intestazione\entity</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\entities\IEntity.h">
+      <Filter>File di intestazione\entity\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="levelgenerator\Maze.h">
+      <Filter>File di intestazione\levelgenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ViewInfo.h">
+      <Filter>File di intestazione\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\ObstacleProperties.h">
+      <Filter>File di intestazione\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\Obstacles.h">
+      <Filter>File di intestazione\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\ObstacleState.h">
+      <Filter>File di intestazione\obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\obstacles\IObstacle.h">
+      <Filter>File di intestazione\obstacle\obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\obstacles\Wall.h">
+      <Filter>File di intestazione\obstacle\obstacles</Filter>
+    </ClInclude>
+    <ClInclude Include="Collectible.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="entity\Entities.h">
+    <ClInclude Include="Player.h">
       <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\entities\MovingEntity.h">
+      <Filter>File di intestazione\entity\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Texture.h">
+      <Filter>File di intestazione\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Segment.h">
+      <Filter>File di intestazione\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 #include "Player.h"
-#include "Ray.h"
 #include "utils/utils.cpp"
-#include "MovingEntity.h"
+#include "entity/entities/MovingEntity.h"
 #include <cmath>
 
 Player::Player(double fov, int nRays, double raysLength)  {
@@ -31,7 +30,7 @@ void Player::pointRaysToView() {
 	for (int i = 0; i < this->nRays; i++) {
 		x = (double(i) / double(this->nRays)) - 0.5;
 		angle = atan2(x, this->focalLength);
-		this->rays[i]->setAngle(this->baseAngle + angle);
+		this->rays[i]->setAngle(this->state.angle + angle);
 	}
 }
 void Player::castWall(ObstacleState& wall, int wallFace) {
@@ -51,7 +50,7 @@ void Player::castWall(ObstacleState& wall, int wallFace) {
 		double d2 = intersection.intersection.distance(this->rays[i]->p2);
 		if (d2 > this->rays[i]->length) continue;
 		
-		this->info[this->nRays - 1 - i].push_back({  d1 * (double)cos(this->rays[i]->angle - this->baseAngle), intersection.colOffset, wall.height, wall.verticalOffset, wall.owner });
+		this->info[this->nRays - 1 - i].push_back({  d1 * (double)cos(this->rays[i]->angle - this->state.angle), intersection.colOffset, wall.height, wall.verticalOffset, wall.owner });
 
 		this->rays[i]->changeP2(intersection.intersection);
 	}
@@ -65,7 +64,7 @@ void Player::pointTo(Coordinates p) {
 }
 
 void Player::rotate(double angle) {
-	this->baseAngle += angle;
+	this->state.angle += angle;
 		
 	for (int i = 0; i < this->nRays; i++) {
 		this->rays[i]->setAngle(this->rays[i]->angle + angle);
@@ -81,22 +80,22 @@ void Player::update() {
 	}
 }
 Segment Player::moveForward(double distance) {
-	double angle = this->baseAngle;
+	double angle = this->state.angle;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return MovingEntity::move(this->state, o);
 }
 Segment Player::moveBackward(double distance) {
-	double angle = this->baseAngle + 3.1415;
+	double angle = this->state.angle + 3.1415;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return MovingEntity::move(this->state, o);
 }
 Segment Player::moveLeftward(double distance) {
-	double angle = this->baseAngle + 3.1415 / 2;
+	double angle = this->state.angle + 3.1415 / 2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return MovingEntity::move(this->state, o);
 }
 Segment Player::moveRightward(double distance) {
-	double angle = this->baseAngle - 3.1415 / 2;
+	double angle = this->state.angle - 3.1415 / 2;
 	Coordinates o = { distance * cos(angle), -distance * sin(angle) };
 	return MovingEntity::move(this->state, o);
 }

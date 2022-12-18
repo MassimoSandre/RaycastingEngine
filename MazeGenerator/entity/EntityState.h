@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 #include "entities/IEntity.h"
-#include "../Segment.h"
+#include "../utils/Segment.h"
 
 class IEntity;
 class EntityState {

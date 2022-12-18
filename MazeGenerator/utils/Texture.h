@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/utils.cpp"
+#include "utils.cpp"
 #include <string>
 
 class Texture {

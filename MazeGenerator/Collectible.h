@@ -1,5 +1,5 @@
 #pragma once
-#include "Segment.h"
+#include "utils/Segment.h"
 #include "entity/entities/IEntity.h"
 #include "entity/EntityState.h"
 

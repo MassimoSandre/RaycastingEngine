@@ -1,6 +1,6 @@
 #pragma once
 #include "../ObstacleProperties.h"
-#include "../../Texture.h"
+#include "../../utils/Texture.h"
 
 class ObstacleState;
 class IObstacle {

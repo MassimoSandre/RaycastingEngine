@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "utils/utils.cpp"
-#include "Segment.h"
+#include "utils/Segment.h"
 
 #define TRIANGLES_IN_CIRCLE 20
 

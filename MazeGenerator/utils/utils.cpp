@@ -71,8 +71,6 @@ typedef struct CellWeight {
 	int south;
 } CellWeight;
 
-enum RayType {Generic, Obstacle, View, EntitySegment};
-
 typedef struct IntersectionInfo {
 	Coordinates intersection;
 	double colOffset;
@@ -88,16 +86,3 @@ typedef struct Canvas {
 	Coordinates realSize;
 } Canvas;
 
-typedef struct RenderInfo {
-	RayType type;
-	double distance;
-	double colOffset;
-	int id;
-	int textureId;
-	double height;
-	double verticalOffset;
-	//std::shared_ptr<MapElement> element;
-} RenderInfo;
-
-typedef std::vector<RenderInfo> RayInfo;
-typedef std::vector<RayInfo> RenderingInfo;

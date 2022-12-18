@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "../../Texture.h"
+#include "../../utils/Texture.h"
 #include "../EntityProperties.h"
 #include "../EntityState.h"
 

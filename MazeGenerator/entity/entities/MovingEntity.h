@@ -1,7 +1,7 @@
 #pragma once
 
-#include "entity/entities/IEntity.h"
-#include "entity/EntityState.h"
+#include "IEntity.h"
+#include "../EntityState.h"
 
 #define MOVE_CHECK_DISTANCE 3
 

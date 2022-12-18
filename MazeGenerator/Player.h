@@ -11,7 +11,6 @@ private:
 	double fov;
 	int nRays;
 	double raysLength;
-	double baseAngle;
 	double focalLength;
 	
 	void pointRaysToView();

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "../Segment.h"
+#include "../utils/Segment.h"
 #include "../utils/utils.cpp"
 
 class IObstacle; 

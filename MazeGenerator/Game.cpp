@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "entity/Entities.h"
 
 double Game::map(double value, double istart, double istop, double ostart, double ostop) {
 	return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));

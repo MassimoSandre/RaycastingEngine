@@ -138,45 +138,41 @@
   <ItemGroup>
     <ClCompile Include="Collectible.cpp" />
     <ClCompile Include="entity\entities\IEntity.cpp" />
+    <ClCompile Include="entity\entities\MovingEntity.cpp" />
     <ClCompile Include="entity\EntityProperties.cpp" />
     <ClCompile Include="entity\EntityState.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Maze.cpp" />
+    <ClCompile Include="levelgenerator\Maze.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MovingEntity.cpp" />
     <ClCompile Include="obstacle\Obstacles.cpp" />
     <ClCompile Include="obstacle\ObstacleProperties.cpp" />
     <ClCompile Include="obstacle\ObstacleState.cpp" />
     <ClCompile Include="obstacle\obstacles\Wall.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SmartEntity.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="utils\Segment.cpp" />
+    <ClCompile Include="utils\Texture.cpp" />
     <ClCompile Include="utils\utils.cpp" />
-    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Segment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectible.h" />
     <ClInclude Include="entity\Entities.h" />
     <ClInclude Include="entity\entities\IEntity.h" />
+    <ClInclude Include="entity\entities\MovingEntity.h" />
     <ClInclude Include="entity\EntityProperties.h" />
     <ClInclude Include="entity\EntityState.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Maze.h" />
-    <ClInclude Include="MovingEntity.h" />
+    <ClInclude Include="levelgenerator\Maze.h" />
     <ClInclude Include="obstacle\Obstacles.h" />
     <ClInclude Include="obstacle\ObstacleProperties.h" />
     <ClInclude Include="obstacle\ObstacleState.h" />
     <ClInclude Include="obstacle\obstacles\IObstacle.h" />
     <ClInclude Include="obstacle\obstacles\Wall.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="SmartEntity.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="utils\Segment.h" />
+    <ClInclude Include="utils\Texture.h" />
     <ClInclude Include="utils\ViewInfo.h" />
-    <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Segment.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MazeGenerator.rc" />

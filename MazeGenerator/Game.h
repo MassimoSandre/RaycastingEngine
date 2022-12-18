@@ -1,16 +1,17 @@
 #pragma once
 #include "Renderer.h"
 #include "Player.h"
-#include "Maze.h"
+#include "levelgenerator/Maze.h"
 #include <vector>
 #include <memory>
-#include "Segment.h"
-#include "Texture.h"
+#include "utils/Segment.h"
+#include "utils/Texture.h"
 #include <GLFW/glfw3.h>
 #include "obstacle/ObstacleState.h"
 #include "obstacle/obstacles/Wall.h"
 #include "utils/ViewInfo.h"
 #include "obstacle/Obstacles.h"
+#include "entity/Entities.h"
 
 #define MOVE_DISTANCE 1 
 

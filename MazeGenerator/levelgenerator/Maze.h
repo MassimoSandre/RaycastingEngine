@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
-#include "utils/utils.cpp"
-#include "Segment.h"
+#include "../utils/utils.cpp"
+#include "../utils/Segment.h"
 #include <queue>
-#include "obstacle/obstacles/IObstacle.h"
-#include "obstacle/ObstacleState.h"
+#include "../obstacle/obstacles/IObstacle.h"
+#include "../obstacle/ObstacleState.h"
 
 
 class Maze {

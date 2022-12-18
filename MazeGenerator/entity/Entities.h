@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MovingEntity.h"
+#include "entities/MovingEntity.h"
 #include "EntityProperties.h"
 
 namespace Entities {

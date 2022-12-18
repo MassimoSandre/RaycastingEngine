@@ -1,17 +1,17 @@
 #pragma once
 
-#include "utils/utils.cpp"
+#include "utils.cpp"
 
 class Segment {
 public:
-	RayType type;
+	//RayType type;
 	Coordinates p1;
 	Coordinates p2;
 	double length;
 	double angle;
-	int textureId;
-	double height;
-	double verticalOffset;
+	//int textureId;
+	//double height;
+	//double verticalOffset;
 
 	void calculateP2();
 
@@ -37,3 +37,5 @@ public:
 
 	IntersectionInfo getIntersection(Segment& segment);
 };
+
+typedef Segment Ray;
