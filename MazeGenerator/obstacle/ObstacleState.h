@@ -4,6 +4,7 @@
 #include <memory>
 #include "../utils/Segment.h"
 #include "../utils/utils.cpp"
+#include "../IElement.h"
 
 class IObstacle; 
 class ObstacleState {	

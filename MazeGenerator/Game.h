@@ -34,12 +34,13 @@ private:
 	Maze generator;
 	Player player;
 
-	std::vector<std::shared_ptr<Segment>> walls;
+	//std::vector<std::shared_ptr<Segment>> walls;
 	//std::vector<std::shared_ptr<Entity>> collectibles;
 
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	std::vector<ObstacleState> betterWalls;
+	std::vector<EntityState> betterCollectibles;
 
 	bool pause = false;
 	bool canTogglePause = true;
@@ -68,8 +69,8 @@ private:
 	void keyHandler(double multiplier);
 	bool levelCompleted();
 	void newLevel();
-	/*void placeCollectible(std::shared_ptr<Entity>& e);
-	void placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities);*/
+	void placeCollectible(EntityState& collectible);
+	void placeCollectibles(std::vector<EntityState>& entities);
 	void renderMinimap();
 	void renderProjection();
 	void loadTextures();
@@ -82,11 +83,11 @@ public:
 	bool update(double elapsedTime);
 	void render();
 
-	void addWall(std::shared_ptr<Segment> segment);
-	void addWalls(std::vector<ObstacleState> segments);
+	void addWall(ObstacleState segment);
+	void addWalls(std::vector<ObstacleState>& segments);
 
-	/*void generateCollectible();
-	void generateCollectibles(int amount);*/
-	/*void addCollectible(std::shared_ptr<Entity> collectible);
-	void addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles);*/
+	void generateCollectible();
+	void generateCollectibles(int amount);
+	void addCollectible(EntityState collectible);
+	void addCollectibles(std::vector<EntityState>& collectibles);
 };

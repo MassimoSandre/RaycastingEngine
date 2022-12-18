@@ -15,7 +15,7 @@ private:
 	
 	void pointRaysToView();
 	void castWall(ObstacleState& wall, int wallFace);
-	//void castEntity(std::shared_ptr<Entity> segment, int entityId);
+	void castEntity(EntityState& entity);
 
 public:
 	EntityState state;
@@ -37,8 +37,8 @@ public:
 	Segment moveRightward(double distance);
 	
 	
-	void cast(std::vector<std::shared_ptr<Segment>> segments);//, std::vector<std::shared_ptr<Entity>> entities);
-	void betterCast(std::vector<ObstacleState>& states);// , std::vector<std::shared_ptr<Entity>>& entities);
+	//void cast(std::vector<std::shared_ptr<Segment>> segments);//, std::vector<std::shared_ptr<Entity>> entities);
+	void betterCast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities);
 	
 	ViewInfo getFixedDistances();
 };

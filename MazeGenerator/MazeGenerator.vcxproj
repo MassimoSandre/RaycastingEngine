@@ -136,7 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Collectible.cpp" />
+    <ClCompile Include="entity\entities\Collectible.cpp" />
     <ClCompile Include="entity\entities\IEntity.cpp" />
     <ClCompile Include="entity\entities\MovingEntity.cpp" />
     <ClCompile Include="entity\EntityProperties.cpp" />
@@ -155,13 +155,14 @@
     <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collectible.h" />
     <ClInclude Include="entity\Entities.h" />
+    <ClInclude Include="entity\entities\Collectible.h" />
     <ClInclude Include="entity\entities\IEntity.h" />
     <ClInclude Include="entity\entities\MovingEntity.h" />
     <ClInclude Include="entity\EntityProperties.h" />
     <ClInclude Include="entity\EntityState.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IElement.h" />
     <ClInclude Include="levelgenerator\Maze.h" />
     <ClInclude Include="obstacle\Obstacles.h" />
     <ClInclude Include="obstacle\ObstacleProperties.h" />

@@ -1,20 +1,15 @@
 #pragma once
 #include "../ObstacleProperties.h"
 #include "../../utils/Texture.h"
+#include "../../IElement.h"
 
 class ObstacleState;
-class IObstacle {
+class IObstacle : public IElement {
 protected:
-	double HEIGHT;
-	double VERTICAL_OFFSET;
-
 	std::shared_ptr<IObstacle> self;
-
 public:
-	Texture texture;
-
 	IObstacle() {}
-	IObstacle(ObstacleProperties* properties, std::string textureFileName) : texture(textureFileName) {
+	IObstacle(ObstacleProperties* properties, std::string textureFileName) : IElement(textureFileName) {
 		this->HEIGHT = properties->height;
 		this->VERTICAL_OFFSET = properties->verticalOffset;
 	}

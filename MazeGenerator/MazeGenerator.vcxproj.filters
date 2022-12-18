@@ -87,9 +87,6 @@
     <ClCompile Include="utils\utils.cpp">
       <Filter>File di origine\utils</Filter>
     </ClCompile>
-    <ClCompile Include="Collectible.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -101,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="utils\Texture.cpp">
       <Filter>File di origine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="entity\entities\Collectible.cpp">
+      <Filter>File di origine\entity\entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +143,6 @@
     <ClInclude Include="obstacle\obstacles\Wall.h">
       <Filter>File di intestazione\obstacle\obstacles</Filter>
     </ClInclude>
-    <ClInclude Include="Collectible.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -157,6 +154,12 @@
     </ClInclude>
     <ClInclude Include="utils\Segment.h">
       <Filter>File di intestazione\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\entities\Collectible.h">
+      <Filter>File di intestazione\entity\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="IElement.h">
+      <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

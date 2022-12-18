@@ -3,6 +3,7 @@
 #include <vector>
 #include "entities/IEntity.h"
 #include "../utils/Segment.h"
+#include "../IElement.h"
 
 class IEntity;
 class EntityState {

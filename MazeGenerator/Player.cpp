@@ -56,7 +56,27 @@ void Player::castWall(ObstacleState& wall, int wallFace) {
 	}
 }
 
-//void Player::castEntity(std::shared_ptr<Entity> segment, int entityId) {}
+void Player::castEntity(EntityState& entity) {
+	for (int i = 0; i < this->nRays; i++) {
+		IntersectionInfo intersection = this->rays[i]->getIntersection(entity.segment);
+
+		if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
+
+		if (intersection.intersection.x == 0 && intersection.intersection.y == 0) continue;
+
+		double d1 = intersection.intersection.distance(this->state.position);
+		if (d1 == 0) break;
+
+		//if (d1 > this->raysLength) continue;
+		if (d1 > this->rays[i]->length) continue;
+
+		double d2 = intersection.intersection.distance(this->rays[i]->p2);
+		if (d2 > this->rays[i]->length) continue;
+
+		this->info[this->nRays - 1 - i].push_back({ d1 * (double)cos(this->rays[i]->angle - this->state.angle), intersection.colOffset, entity.height, entity.verticalOffset, entity.owner });
+	}
+	
+}
 
 void Player::pointTo(Coordinates p) {
 	this->state.angle = this->state.position.getAngle(p);
@@ -100,12 +120,7 @@ Segment Player::moveRightward(double distance) {
 	return MovingEntity::move(this->state, o);
 }
 
-
-void Player::cast(std::vector<std::shared_ptr<Segment>> segments)/*, std::vector<std::shared_ptr<Entity>> entities); */ {
-
-}
-
-void Player::betterCast(std::vector<ObstacleState>& states)/*, std::vector<std::shared_ptr<Entity>>& entities); */ {
+void Player::betterCast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities) {
 	for (int i = 0; i < this->nRays; i++) {
 		this->info[i].clear();
 		this->rays[i]->setLength(this->raysLength);
@@ -128,6 +143,13 @@ void Player::betterCast(std::vector<ObstacleState>& states)/*, std::vector<std::
 
 		this->castEntity(entities[i], i);
 	}*/
+	for (EntityState& e : entities) {
+		if (e.segment.length <= this->raysLength &&
+			e.segment.p1.distance(this->state.position) >= 2 * this->raysLength &&
+			e.segment.p2.distance(this->state.position) >= 2 * this->raysLength) continue;
+
+			this->castEntity(e);
+	}
 }
 
 ViewInfo Player::getFixedDistances() {

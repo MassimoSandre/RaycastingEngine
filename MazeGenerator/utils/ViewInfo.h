@@ -9,7 +9,7 @@ typedef struct {
 	double colOffset;
 	double height;
 	double verticalOffset;
-	std::shared_ptr<IObstacle> element;
+	std::shared_ptr<IElement> element;
 } v;
 
 typedef std::vector<v> ri;

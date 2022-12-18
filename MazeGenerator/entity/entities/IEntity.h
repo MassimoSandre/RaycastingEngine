@@ -4,13 +4,11 @@
 #include "../../utils/Texture.h"
 #include "../EntityProperties.h"
 #include "../EntityState.h"
+#include "../../IElement.h"
 
 class EntityState;
-class IEntity {
+class IEntity : public IElement{
 protected:
-	double HEIGHT;
-	double VERTICAL_OFFSET;
-
 	std::shared_ptr<IEntity> self;
 
 public:

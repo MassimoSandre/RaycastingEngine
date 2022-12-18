@@ -1,7 +1,7 @@
 #pragma once
-#include "utils/Segment.h"
-#include "entity/entities/IEntity.h"
-#include "entity/EntityState.h"
+#include "../../utils/Segment.h"
+#include "IEntity.h"
+#include "../EntityState.h"
 
 class Collectible : public IEntity {
 public:

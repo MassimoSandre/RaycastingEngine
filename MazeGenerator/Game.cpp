@@ -50,85 +50,88 @@ bool Game::levelCompleted() {
 void Game::newLevel() {
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
-	this->walls.clear();
+	//this->walls.clear();
 	this->betterWalls.clear();
-	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness, std::make_shared<Wall>(Obstacles::brickWall)));
+	this->betterWalls = generator.getWalls(this->cellSize, this->cellSize.toCoordinates(), this->wallThickness, std::make_shared<Wall>(Obstacles::brickWall));
+
 	this->player.state.position = { double(this->cellSize.x) / 2,3 * double(this->cellSize.y) / 2 };
 
-	//this->placeCollectibles(this->collectibles);
+	this->placeCollectibles(this->betterCollectibles);
 }
 
-//void Game::placeCollectible(std::shared_ptr<Entity>& e) {
-//	srand((unsigned int)time(NULL));
-//	
-//	int newx = rand() % this->currentMazeSize.x + 1;
-//	int newy = rand() % this->currentMazeSize.y + 1;
-//
-//	e->center = { (double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y) };
-//}
-//void Game::placeCollectibles(std::vector<std::shared_ptr<Entity>>& entities) {
-//	srand((unsigned int)time(NULL));
-//	for (int i = 0; i < entities.size(); i++) {
-//		int newx = rand() % this->currentMazeSize.x + 1;
-//		int newy = rand() % this->currentMazeSize.y + 1;
-//
-//		entities[i]->center = {(double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y)};
-//	}
-//}
+void Game::placeCollectible(EntityState& collectible) {
+	srand((unsigned int)time(NULL));
+	
+	int newx = rand() % this->currentMazeSize.x + 1;
+	int newy = rand() % this->currentMazeSize.y + 1;
+
+	collectible.position = { (double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y) };
+	collectible.set(collectible.position, collectible.length, collectible.angle);
+}
+void Game::placeCollectibles(std::vector<EntityState>& entities) {
+	srand((unsigned int)time(NULL));
+	for (int i = 0; i < entities.size(); i++) {
+		int newx = rand() % this->currentMazeSize.x + 1;
+		int newy = rand() % this->currentMazeSize.y + 1;
+
+		entities[i].position = {(double(newx) + 0.5) * double(this->cellSize.x),(double(newy) + 0.5) * double(this->cellSize.y)};
+		entities[i].set(entities[i].position, entities[i].length, entities[i].angle);
+	}
+}
 void Game::renderMinimap() {
 	double angle;
 	double step = double(MINIMAP_RANGE) / double(MINIMAP_SIZE/2);
 	Coordinates p;
 	this->renderer.drawCircle(Coordinates{ MINIMAP_RANGE, MINIMAP_RANGE }, MINIMAP_RANGE, RGB{0,0,0}, MAZE_CANVAS);
-	for (std::shared_ptr<Segment> const& w : this->walls) {
-		if (w->p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
-			if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
-				// both p1 and p2 are in range
-				this->renderer.drawLine(
-					w->p1.x - this->player.state.position.x + MINIMAP_RANGE, w->p1.y - this->player.state.position.y + MINIMAP_RANGE,
-					w->p2.x - this->player.state.position.x + MINIMAP_RANGE, w->p2.y - this->player.state.position.y + MINIMAP_RANGE,
-					{255,0,0},
-					MAZE_CANVAS);
-			}
-			else {
-				// p1 is in range, p2 isn't
-				angle = w->p1.getAngle(w->p2);
-				p = w->p1;
-				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
-					this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-					p.x += step * cos(angle);
-					p.y -= step * sin(angle);
-				}
-			}
-		}
-		else if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
-			// p2 is in range, p1 isn't
-			angle = w->p2.getAngle(w->p1);
-			p = w->p2;
-			while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p2) < w->length) {
-				this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-				p.x += step * cos(angle);
-				p.y -= step * sin(angle);
-			}
-			
-		}
-		else if (!(w->length <= MINIMAP_RANGE &&
-			w->p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
-			w->p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
-			angle = w->p1.getAngle(w->p2);
-			p = w->p1;
-			while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(w->p1) < w->length) {
-				p.x += step * cos(angle);
-				p.y -= step * sin(angle);
-				
-			}
-			while (p.distance(this->player.state.position) <= MINIMAP_RANGE &&  p.distance(w->p1) < w->length) {
-				this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-				p.x += step * cos(angle);
-				p.y -= step * sin(angle);
-			}
-		}
-	}
+	//for (std::shared_ptr<Segment> const& w : this->walls) {
+	//	if (w->p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
+	//		if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+	//			// both p1 and p2 are in range
+	//			this->renderer.drawLine(
+	//				w->p1.x - this->player.state.position.x + MINIMAP_RANGE, w->p1.y - this->player.state.position.y + MINIMAP_RANGE,
+	//				w->p2.x - this->player.state.position.x + MINIMAP_RANGE, w->p2.y - this->player.state.position.y + MINIMAP_RANGE,
+	//				{255,0,0},
+	//				MAZE_CANVAS);
+	//		}
+	//		else {
+	//			// p1 is in range, p2 isn't
+	//			angle = w->p1.getAngle(w->p2);
+	//			p = w->p1;
+	//			while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
+	//				this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+	//				p.x += step * cos(angle);
+	//				p.y -= step * sin(angle);
+	//			}
+	//		}
+	//	}
+	//	else if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+	//		// p2 is in range, p1 isn't
+	//		angle = w->p2.getAngle(w->p1);
+	//		p = w->p2;
+	//		while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p2) < w->length) {
+	//			this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+	//			p.x += step * cos(angle);
+	//			p.y -= step * sin(angle);
+	//		}
+	//		
+	//	}
+	//	else if (!(w->length <= MINIMAP_RANGE &&
+	//		w->p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
+	//		w->p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
+	//		angle = w->p1.getAngle(w->p2);
+	//		p = w->p1;
+	//		while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(w->p1) < w->length) {
+	//			p.x += step * cos(angle);
+	//			p.y -= step * sin(angle);
+	//			
+	//		}
+	//		while (p.distance(this->player.state.position) <= MINIMAP_RANGE &&  p.distance(w->p1) < w->length) {
+	//			this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+	//			p.x += step * cos(angle);
+	//			p.y -= step * sin(angle);
+	//		}
+	//	}
+	//}
 	/*for (std::shared_ptr<Entity> const& e : this->collectibles) {
 		if (e->center.distance(this->player.center) <= MINIMAP_RANGE - e->length/2 ) {
 			this->renderer.drawCircle(e->center - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, e->length/2 , { 255,255,0 }, MAZE_CANVAS);
@@ -138,7 +141,6 @@ void Game::renderMinimap() {
 	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.state.position - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
 }
 void Game::renderProjection() {
-	//this->renderer.drawProjection(this->player.getFixedDistances(), this->cameraVerticalOffset, PROJECTION_CANVAS);
 	ViewInfo info = this->player.getFixedDistances();
 	size_t len = info.size();
 
@@ -250,7 +252,7 @@ Game::Game(Size windowSize, std::string windowTitle,double fov, int noRays, doub
 	this->renderer.addCanvas(projectionDrawingCanvas);
 
 	this->init();
-	//this->generateCollectibles(collectiblesAmount);
+	this->generateCollectibles(collectiblesAmount);
 	this->newLevel();
 }
 
@@ -294,19 +296,20 @@ bool Game::update(double elapsedTime) {
 		this->newLevel();
 	}
 
-	/*for (int i = 0; i < this->collectibles.size(); i++) {
-		this->collectibles[i]->faceTo(this->player.state.position);
-	}*/
+	for (int i = 0; i < this->betterCollectibles.size(); i++) {
+		this->betterCollectibles[i].faceTo(this->player.state.position);
+	}
 
-	/*for (std::shared_ptr<Entity>& e : this->collectibles) {
-		if (this->player.collideWithEntity(e)) {
+	for (EntityState& e : this->betterCollectibles) {
+		if (e.owner->collideWith(e, player.state.position)) {
+			std::cout << "Amognus";
 			this->placeCollectible(e);
 		}
-	}*/
+	}
 
 	this->player.update();
 	//this->player.cast(this->walls, this->collectibles);
-	this->player.betterCast(this->betterWalls/*, this->collectibles*/);
+	this->player.betterCast(this->betterWalls, this->betterCollectibles);
 
 	return !this->closing && !this->renderer.closing();
 }
@@ -318,28 +321,28 @@ void Game::render() {
 	this->renderer.update();
 }
 
-void Game::addWall(std::shared_ptr<Segment> segment) {
-	this->walls.push_back(segment);
+void Game::addWall(ObstacleState segment) {
+	this->betterWalls.push_back(segment);
 }
-void Game::addWalls(std::vector<ObstacleState> segments) {
+void Game::addWalls(std::vector<ObstacleState>& segments) {
 	for (int i = 0; i < segments.size(); i++) {
 		this->betterWalls.push_back(segments[i]);
 	}
 }
-//
-//void Game::generateCollectible() {
-//	this->collectibles.push_back(std::make_shared<Entity>(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
-//}
-//void Game::generateCollectibles(int amount) {
-//	for (int i = 0; i < amount; i++) {
-//		this->collectibles.push_back(std::make_shared<Entity>(Coordinates{ 0,0 }, this->cellSize.x / 3, 0.0));
-//	}
-//}
-//void Game::addCollectible(std::shared_ptr<Entity> collectible) {
-//	this->collectibles.push_back(collectible);
-//}
-//void Game::addCollectibles(std::vector<std::shared_ptr<Entity>> collectibles) {
-//	for (int i = 0; i < collectibles.size(); i++) {
-//		this->collectibles.push_back(collectibles[i]);
-//	}
-//}
+
+void Game::generateCollectible() {
+	this->betterCollectibles.push_back(Entities::coin.getDefaultState().with(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
+}
+void Game::generateCollectibles(int amount) {
+	for (int i = 0; i < amount; i++) {
+		this->generateCollectible();
+	}
+}
+void Game::addCollectible(EntityState collectible) {
+	this->betterCollectibles.push_back(collectible);
+}
+void Game::addCollectibles(std::vector<EntityState>& collectibles) {
+	for (int i = 0; i < collectibles.size(); i++) {
+		this->betterCollectibles.push_back(collectibles[i]);
+	}
+}
