@@ -3,9 +3,11 @@
 #include <memory>
 #include "../../Texture.h"
 #include "../EntityProperties.h"
+#include "../EntityState.h"
 
 class EntityState;
 class IEntity {
+protected:
 	double HEIGHT;
 	double VERTICAL_OFFSET;
 
@@ -14,11 +16,10 @@ class IEntity {
 public:
 	Texture texture;
 
-	IEntity() {}
-	IEntity(EntityProperties* properties, std::string textureFileName) : texture(textureFileName) {
-		this->HEIGHT = properties->height;
-		this->VERTICAL_OFFSET = properties->verticalOffset;
-	}
+	IEntity();
+	IEntity(EntityProperties* properties, std::string textureFileName);
+
+	static bool collideWith(EntityState state, Coordinates p);
 
 	virtual EntityState getDefaultState() = 0;
 };

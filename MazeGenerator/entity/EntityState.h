@@ -8,19 +8,20 @@ class IEntity;
 class EntityState {
 public:
 	std::shared_ptr <IEntity> owner;
-	std::vector<Segment> segments;
+	Segment segment;
+	Coordinates position;
+	double length;
+	double angle;
+
 	double height;
 	double verticalOffset;
 
 
 	EntityState();
 
-	template <typename... Points>
-	void setPoints(std::initializer_list<Coordinates> l);
-	void setPoints(Rect rect);
+	void faceTo(Coordinates p);
 
-	template <typename... Points>
-	EntityState withPoints(std::initializer_list<Coordinates> l);
-	EntityState withPoints(Rect rect);
+	void set(Coordinates position, double length, double angle=0);
+	EntityState with(Coordinates position, double length, double angle=0);
 
 };

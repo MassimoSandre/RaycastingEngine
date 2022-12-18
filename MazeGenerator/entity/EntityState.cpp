@@ -1,55 +1,43 @@
 #include "EntityState.h"
 
 EntityState::EntityState() {
-	this->segments.clear();
 	this->height = 0;
 	this->verticalOffset = 0;
-	//this->owner = nullptr;
+	this->owner = nullptr;
 }
 
-template <typename... Points>
-void EntityState::setPoints(std::initializer_list<Coordinates> l) {
-	int i = 0;
-	Coordinates p1, p0;
-	for (auto& p : l) {
-		if (i > 0) {
-			this->segments.push_back(Segment(p1, p));
-		}
-		else p0 = p;
+void EntityState::faceTo(Coordinates p) {
+	double angle = this->position.getAngle(p);
 
-		p1 = p;
+	Coordinates newP1 = this->position, newP2 = this->position;
 
-		i++;
-		if (i == l.size()) {
-			this->segments.push_back(Segment(p1, p0));
-		}
-	}
+	newP1.x = int(position.x + (this->length / 2) * cos(angle + 3.1415f / 2.0f));
+	newP1.y = int(position.y - (this->length / 2) * sin(angle + 3.1415f / 2.0f));
+
+	newP2.x = int(position.x + (this->length / 2) * cos(angle - 3.1415f / 2.0f));
+	newP2.y = int(position.y - (this->length / 2) * sin(angle - 3.1415f / 2.0f));
+
+
+	this->segment.p1 = newP1;
+	this->segment.p2 = newP2;
 }
 
-void EntityState::setPoints(Rect rect) {
-	Coordinates p1, p2, p3, p4;
-	p1.x = rect.topLeft.x;
-	p1.y = rect.topLeft.y;
+void EntityState::set(Coordinates position, double length, double angle) {
+	this->position = position;
+	double distanceFromCenter = length / 2;
 
-	p2.x = rect.topLeft.x + rect.size.x;
-	p2.y = rect.topLeft.y;
+	Coordinates newP1 = position, newP2 = position;
 
-	p3.x = rect.topLeft.x + rect.size.x;
-	p3.y = rect.topLeft.y + rect.size.y;
+	newP1.x += distanceFromCenter * cos(angle + 3.1415f / 2.0f);
+	newP1.y -= distanceFromCenter * sin(angle + 3.1415f / 2.0f);
 
-	p4.x = rect.topLeft.x;
-	p4.y = rect.topLeft.y + rect.size.y;
+	newP2.x += distanceFromCenter * cos(angle - 3.1415f / 2.0f);
+	newP2.y -= distanceFromCenter * sin(angle - 3.1415f / 2.0f);
 
-	this->setPoints({ p1, p2, p3, p4 });
+	this->segment.changePoints(newP1, newP2);
 }
 
-template <typename... Points>
-EntityState EntityState::withPoints(std::initializer_list<Coordinates> l) {
-	this->setPoints(l);
-	return *this;
-}
-
-EntityState EntityState::withPoints(Rect rect) {
-	this->setPoints(rect);
+EntityState EntityState::with(Coordinates position, double length, double angle) {
+	this->set(position, length, angle);
 	return *this;
 }

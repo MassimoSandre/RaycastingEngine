@@ -136,7 +136,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Collectible.cpp" />
+    <ClCompile Include="entity\entities\IEntity.cpp" />
     <ClCompile Include="entity\EntityProperties.cpp" />
     <ClCompile Include="entity\EntityState.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -156,7 +157,7 @@
     <ClCompile Include="Segment.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Collectible.h" />
     <ClInclude Include="entity\entities\IEntity.h" />
     <ClInclude Include="entity\EntityProperties.h" />
     <ClInclude Include="entity\EntityState.h" />

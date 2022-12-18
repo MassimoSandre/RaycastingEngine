@@ -1,7 +1,5 @@
 #include "Wall.h"
-Wall::Wall() : IObstacle() {
-	this->self = std::make_shared<Wall>(*this);
-}
+Wall::Wall() : IObstacle() {}
 Wall::Wall(ObstacleProperties* properties, std::string textureFileName) : IObstacle(properties, textureFileName) {
 	this->self = std::make_shared<Wall>(*this);
 }

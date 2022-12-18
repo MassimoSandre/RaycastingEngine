@@ -8,7 +8,6 @@ ObstacleState::ObstacleState() {
 	//this->owner = nullptr;
 }
 
-template <typename... Points>
 void ObstacleState::setPoints(std::initializer_list<Coordinates> l) {
 	int i=0;
 	Coordinates p1,p0;
@@ -44,7 +43,6 @@ void ObstacleState::setPoints(Rect rect) {
 	this->setPoints({ p1, p2, p3, p4 });
 }
 
-template <typename... Points>
 ObstacleState ObstacleState::withPoints(std::initializer_list<Coordinates> l) {
 	this->setPoints(l);
 	return *this;

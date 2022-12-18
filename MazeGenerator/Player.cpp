@@ -3,4 +3,53 @@
 #include "utils/utils.cpp"
 #include <cmath>
 
-Player::Player(Coordinates center, double fov, int nRays, double raysLength, double baseAngle) : SmartEntity(center, 0, fov, nRays, raysLength, baseAngle) {}
+Player::Player(Coordinates center, double fov, int nRays, double raysLength, double baseAngle)  {
+
+}
+
+
+void pointRaysToView() {
+
+}
+void castWall(ObstacleState& wall, int wallFace) {
+
+}
+
+//void castEntity(std::shared_ptr<Entity> segment, int entityId) {}
+
+void pointTo(Coordinates p) {
+
+}
+
+void rotate(double angle) {
+
+}
+
+void update() {
+
+}
+Segment moveForward(double distance) {
+
+}
+Segment moveBackward(double distance) {
+
+}
+Segment moveLeftward(double distance) {
+
+}
+Segment moveRightward(double distance) {
+
+}
+
+
+void cast(std::vector<std::shared_ptr<Segment>> segments)/*, std::vector<std::shared_ptr<Entity>> entities); */ {
+
+}
+
+void betterCast(std::vector<ObstacleState>& states)/*, std::vector<std::shared_ptr<Entity>>& entities); */ {
+
+}
+
+ViewInfo getFixedDistances() {
+
+}

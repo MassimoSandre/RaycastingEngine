@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Entity.h"
+#include "entity/entities/IEntity.h"
+#include "entity/EntityState.h"
 
 #define MOVE_CHECK_DISTANCE 3
 
-class MovingEntity : public Entity {
+class MovingEntity : public IEntity {
 public:
-	MovingEntity();
+	/*MovingEntity();
 	MovingEntity(Coordinates center, double length, double angle);
 
 	void applyMove(Segment& moveSegment);
@@ -14,6 +15,11 @@ public:
 
 	Segment move(Coordinates offsets);
 	Segment moveTo(Coordinates newPosition);
-	Segment follow(Coordinates target, double distance);
+	Segment follow(Coordinates target, double distance);*/
+
+	MovingEntity();
+	MovingEntity(EntityProperties* properties, std::string textureFileName);
+
+	EntityState getDefaultState() override;
 };
 

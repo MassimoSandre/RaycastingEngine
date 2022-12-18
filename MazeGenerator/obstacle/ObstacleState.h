@@ -16,11 +16,9 @@ public:
 
 	ObstacleState();
 
-	template <typename... Points>
 	void setPoints(std::initializer_list<Coordinates> l);
 	void setPoints(Rect rect);
 
-	template <typename... Points>
 	ObstacleState withPoints(std::initializer_list<Coordinates> l);
 	ObstacleState withPoints(Rect rect);
 	

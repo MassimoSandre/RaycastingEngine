@@ -42,7 +42,7 @@
     <ClCompile Include="Texture.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
+    <ClCompile Include="Collectible.cpp">
       <Filter>File di origine\Segments\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Ray.cpp">
@@ -81,6 +81,9 @@
     <ClCompile Include="entity\EntityProperties.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="entity\entities\IEntity.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -95,7 +98,7 @@
     <ClInclude Include="Texture.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="Collectible.h">
       <Filter>File di intestazione\Segments\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Segment.h">
