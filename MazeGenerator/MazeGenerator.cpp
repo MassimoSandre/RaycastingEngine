@@ -18,7 +18,7 @@
 #define DEFAULT_CELL_SIZE 36
 #define DEFAULT_WALL_THICKNESS 2
 
-#define DEBUG_INFO false
+#define DEBUG_INFO true
 
 int main(int argc, char *argv[]) {
     Game game({WINDOW_WIDTH, WINDOW_HEIGHT},

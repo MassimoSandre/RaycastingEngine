@@ -3,6 +3,9 @@
 #include "utils/utils.cpp"
 #include "Segment.h"
 #include <queue>
+#include "obstacle/obstacles/IObstacle.h"
+#include "obstacle/ObstacleState.h"
+
 
 class Maze {
 private:
@@ -19,6 +22,6 @@ public:
 	
 	void setSize(Size size);
 
-	std::vector<std::shared_ptr<Segment>> getWalls(Size cellSize, Coordinates offset, double wallThinkness=1.0f);
+	std::vector<ObstacleState> getWalls(Size cellSize, Coordinates offset, double wallThinkness, std::shared_ptr<IObstacle> obstacle);
 
 };

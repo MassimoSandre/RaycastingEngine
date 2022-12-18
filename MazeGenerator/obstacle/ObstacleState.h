@@ -2,27 +2,27 @@
 
 #include <vector>
 #include <memory>
-#include "Segment.h"
-#include "utils/utils.cpp"
+#include "../Segment.h"
+#include "../utils/utils.cpp"
 
-class MapElement; 
-class ElementState {	
+class IObstacle; 
+class ObstacleState {	
 public:
-	std::shared_ptr <MapElement> owner;
+	std::shared_ptr <IObstacle> owner;
 	std::vector<Segment> segments;
 	double height;
 	double verticalOffset;
 
 
-	ElementState();
+	ObstacleState();
 
 	template <typename... Points>
 	void setPoints(std::initializer_list<Coordinates> l);
 	void setPoints(Rect rect);
 
 	template <typename... Points>
-	ElementState withPoints(std::initializer_list<Coordinates> l);
-	ElementState withPoints(Rect rect);
+	ObstacleState withPoints(std::initializer_list<Coordinates> l);
+	ObstacleState withPoints(Rect rect);
 	
 };
 

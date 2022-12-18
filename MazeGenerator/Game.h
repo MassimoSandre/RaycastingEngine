@@ -8,9 +8,10 @@
 #include "Segment.h"
 #include "Texture.h"
 #include <GLFW/glfw3.h>
-#include "ElementState.h"
-#include "Wall.h"
+#include "obstacle/ObstacleState.h"
+#include "obstacle/obstacles/Wall.h"
 #include "utils/ViewInfo.h"
+#include "obstacle/Obstacles.h"
 
 #define MOVE_DISTANCE 1 
 
@@ -38,7 +39,7 @@ private:
 
 	std::vector<std::shared_ptr<Texture>> textures;
 
-	std::vector<ElementState> betterWalls;
+	std::vector<ObstacleState> betterWalls;
 
 	bool pause = false;
 	bool canTogglePause = true;
@@ -82,7 +83,7 @@ public:
 	void render();
 
 	void addWall(std::shared_ptr<Segment> segment);
-	void addWalls(std::vector<std::shared_ptr<Segment>> segments);
+	void addWalls(std::vector<ObstacleState> segments);
 
 	void generateCollectible();
 	void generateCollectibles(int amount);

@@ -60,16 +60,19 @@
     <ClCompile Include="Player.cpp">
       <Filter>File di origine\Segments\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="ElementState.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="ElementProperties.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="utils\utils.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\ObstacleProperties.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\ObstacleState.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\obstacles\Wall.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="obstacle\Obstacles.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,9 +95,6 @@
     <ClInclude Include="Segment.h">
       <Filter>File di intestazione\Segments</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>File di intestazione\Segments</Filter>
-    </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>File di intestazione\Segments</Filter>
     </ClInclude>
@@ -107,16 +107,22 @@
     <ClInclude Include="Player.h">
       <Filter>File di intestazione\Segments\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="MapElement.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ElementState.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="ElementProperties.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="utils\ViewInfo.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\ObstacleProperties.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\ObstacleState.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\obstacles\IObstacle.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\obstacles\Wall.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle\Obstacles.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
@@ -133,6 +139,12 @@
       <Filter>File di risorse</Filter>
     </None>
     <None Include="textures\collectible.texture">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="textures\alt2.texture">
+      <Filter>File di risorse</Filter>
+    </None>
+    <None Include="textures\wallAlt.texture">
       <Filter>File di risorse</Filter>
     </None>
   </ItemGroup>

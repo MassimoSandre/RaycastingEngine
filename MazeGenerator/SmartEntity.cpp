@@ -38,7 +38,7 @@ void SmartEntity::pointRaysToView() {
 //	}
 //}
 
-void SmartEntity::castWall(ElementState& wall, int wallFace) {
+void SmartEntity::castWall(ObstacleState& wall, int wallFace) {
 	for (int i = 0; i < this->nRays; i++) {
 		IntersectionInfo intersection = this->rays[i]->getIntersection(wall.segments[wallFace]);
 
@@ -46,7 +46,7 @@ void SmartEntity::castWall(ElementState& wall, int wallFace) {
 
 		if (intersection.intersection.x == 0 && intersection.intersection.y == 0) continue;
 
-		double d1 = intersection.intersection.distance(this->center.toInt());
+		double d1 = intersection.intersection.distance(this->center);
 		if (d1 == 0) break;
 
 		//if (d1 > this->raysLength) continue;
@@ -165,13 +165,13 @@ void SmartEntity::cast(std::vector<std::shared_ptr<Segment>> segments, std::vect
 	//}
 }
 
-void SmartEntity::betterCast(std::vector<ElementState>& states, std::vector<std::shared_ptr<Entity>>& entities) {
+void SmartEntity::betterCast(std::vector<ObstacleState>& states, std::vector<std::shared_ptr<Entity>>& entities) {
 	for (int i = 0; i < this->nRays; i++) {
 		this->info[i].clear();
 		this->rays[i]->setLength(this->raysLength);
 	}
 
-	for (ElementState& e : states) {	
+	for (ObstacleState& e : states) {	
 		for (int i = 0; i < e.segments.size(); i++) {
 			if (e.segments[i].length <= this->raysLength &&
 				e.segments[i].p1.distance(this->center) >= 2 * this->raysLength &&

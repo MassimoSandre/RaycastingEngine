@@ -1,7 +1,7 @@
-#include "ElementState.h"
+#include "ObstacleState.h"
 
 
-ElementState::ElementState() {
+ObstacleState::ObstacleState() {
 	this->segments.clear();
 	this->height = 0;
 	this->verticalOffset = 0;
@@ -9,7 +9,7 @@ ElementState::ElementState() {
 }
 
 template <typename... Points>
-void ElementState::setPoints(std::initializer_list<Coordinates> l) {
+void ObstacleState::setPoints(std::initializer_list<Coordinates> l) {
 	int i=0;
 	Coordinates p1,p0;
 	for (auto& p : l) {
@@ -27,7 +27,7 @@ void ElementState::setPoints(std::initializer_list<Coordinates> l) {
 	}
 }
 
-void ElementState::setPoints(Rect rect) {
+void ObstacleState::setPoints(Rect rect) {
 	Coordinates p1, p2, p3, p4;
 	p1.x = rect.topLeft.x;
 	p1.y = rect.topLeft.y;
@@ -45,12 +45,12 @@ void ElementState::setPoints(Rect rect) {
 }
 
 template <typename... Points>
-ElementState ElementState::withPoints(std::initializer_list<Coordinates> l) {
+ObstacleState ObstacleState::withPoints(std::initializer_list<Coordinates> l) {
 	this->setPoints(l);
 	return *this;
 }
 
-ElementState ElementState::withPoints(Rect rect) {
+ObstacleState ObstacleState::withPoints(Rect rect) {
 	this->setPoints(rect);
 	return *this;
 }

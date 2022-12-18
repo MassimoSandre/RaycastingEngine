@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 double Game::map(double value, double istart, double istop, double ostart, double ostop) {
 	return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 }
@@ -52,7 +51,8 @@ void Game::newLevel() {
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
 	this->walls.clear();
-	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness));
+	this->betterWalls.clear();
+	this->addWalls(generator.getWalls(this->cellSize, this->cellSize.toCoordinates() , this->wallThickness, std::make_shared<Wall>(Obstacles::brickWall)));
 	this->player.center = { double(this->cellSize.x) / 2,3 * double(this->cellSize.y) / 2 };
 
 	this->placeCollectibles(this->collectibles);
@@ -190,14 +190,12 @@ void Game::renderProjection() {
 			offset = (wallHeight - rectHeight) / 2;
 			Size textureSize = info[i][k].element->texture.size;
 
-			int normalPixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * info[i][k].height);
-			int pixelHeight = int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].height)) - int(PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
-
+			double normalPixelHeight = double(PIXEL_HEIGHT_REAL_HEIGHT_RATIO) * info[i][k].height;
+			double pixelHeight = normalPixelHeight - (PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (info[i][k].verticalOffset));
 
 			grey = this->map(pow(info[i][k].distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
 
 			p.y = (this->projectionDrawingCanvas.realSize.y - rectHeight ) / 2 + offset;
-
 
 			int c = int(info[i][k].colOffset) - textureSize.x/2;
 			if (c >= 0) {
@@ -205,9 +203,7 @@ void Game::renderProjection() {
 			}
 			else {
 				c = (textureSize.x - c % textureSize.x) % textureSize.x;
-
 			}
-			
 			rectHeight = rectHeight / normalPixelHeight;
 
 			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
@@ -233,13 +229,7 @@ void Game::loadTextures() {
 
 
 void Game::init() {
-	static Wall a(ElementProperties::getDefault()
-			->setHeight(6000)
-			->setVerticalOffset(0),
-		"textures/wallAlt.texture");
-
-	this->betterWalls.clear();
-	this->betterWalls.push_back(a.getDefaultState().withPoints(Rect{ {1,1}, {30,30} }));
+	Obstacles::load();	
 }
 
 Game::Game(Size windowSize, std::string windowTitle, double playerStartingAngle,double fov, int noRays, double viewLength, Size firstMazeSize, int mazeSizeIncrement, Size cellSize, double wallThickness, int collectiblesAmount) :
@@ -324,6 +314,7 @@ bool Game::update(double elapsedTime) {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
+	
 	this->renderProjection();
 	//this->renderMinimap();
 
@@ -333,9 +324,9 @@ void Game::render() {
 void Game::addWall(std::shared_ptr<Segment> segment) {
 	this->walls.push_back(segment);
 }
-void Game::addWalls(std::vector<std::shared_ptr<Segment>> segments) {
+void Game::addWalls(std::vector<ObstacleState> segments) {
 	for (int i = 0; i < segments.size(); i++) {
-		this->walls.push_back(segments[i]);
+		this->betterWalls.push_back(segments[i]);
 	}
 }
 

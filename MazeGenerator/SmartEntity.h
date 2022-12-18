@@ -3,7 +3,7 @@
 #include <cmath>
 #include "MovingEntity.h"
 #include "Ray.h"
-#include "ElementState.h"
+#include "obstacle/ObstacleState.h"
 #include "utils/ViewInfo.h"
 
 class SmartEntity : public MovingEntity {
@@ -17,7 +17,7 @@ protected:
 	double focalLength;
 
 	void pointRaysToView();
-	void castWall(ElementState& wall, int wallFace);
+	void castWall(ObstacleState& wall, int wallFace);
 	void castEntity(std::shared_ptr<Entity> segment, int entityId);
 
 public:
@@ -38,7 +38,7 @@ public:
 
 
 	void cast(std::vector<std::shared_ptr<Segment>> segments, std::vector<std::shared_ptr<Entity>> entities);
-	void betterCast(std::vector<ElementState>& states, std::vector<std::shared_ptr<Entity>>& entities);
+	void betterCast(std::vector<ObstacleState>& states, std::vector<std::shared_ptr<Entity>>& entities);
 
 	ViewInfo getFixedDistances();
 };

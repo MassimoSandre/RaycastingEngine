@@ -1,13 +1,13 @@
 #include "Wall.h"
-Wall::Wall() : MapElement() {
+Wall::Wall() : IObstacle() {
 	this->self = std::make_shared<Wall>(*this);
 }
-Wall::Wall(ElementProperties* properties, std::string textureFileName) : MapElement(properties, textureFileName) {
+Wall::Wall(ObstacleProperties* properties, std::string textureFileName) : IObstacle(properties, textureFileName) {
 	this->self = std::make_shared<Wall>(*this);
 }
 
-ElementState Wall::getDefaultState() {
-	ElementState state;
+ObstacleState Wall::getDefaultState() {
+	ObstacleState state;
 	state.height = this->HEIGHT;
 	state.verticalOffset = this->VERTICAL_OFFSET;
 	state.owner = this->self;

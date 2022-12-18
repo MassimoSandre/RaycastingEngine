@@ -2,14 +2,14 @@
 
 #include <memory>
 #include <vector>
-#include "../MapElement.h"
+#include "../obstacle/obstacles/IObstacle.h"
 
 typedef struct {
 	double distance;
 	double colOffset;
 	double height;
 	double verticalOffset;
-	std::shared_ptr<MapElement> element;
+	std::shared_ptr<IObstacle> element;
 } v;
 
 typedef std::vector<v> ri;

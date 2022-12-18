@@ -1,6 +1,5 @@
 #include "Maze.h"
 
-
 #define DEFAULT_MAZE_WIDTH 10
 #define DEFAULT_MAZE_HEIGHT 10
 
@@ -135,8 +134,8 @@ void Maze::setSize(Size size) {
 	this->height = size.y;
 }
 
-std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates offset, double wallThinkness) {
-	std::vector<std::shared_ptr<Segment>> walls;
+std::vector<ObstacleState> Maze::getWalls(Size cellSize, Coordinates offset, double wallThinkness, std::shared_ptr<IObstacle> obstacle) {
+	std::vector<ObstacleState> walls;
 
 	Line t;
 
@@ -153,11 +152,10 @@ std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates 
 			t.p1.y += offset.y;
 			t.p2.x += offset.x;
 			t.p2.y += offset.y;
-
-			Segment w(t.p1, t.p2);
-			w.height = 8000;
-			w.textureId = 0;
-			walls.push_back(std::make_shared<Segment>(w));
+			
+			ObstacleState s = obstacle->getDefaultState();
+			s.setPoints({ t.p1,t.p2 });
+			walls.push_back(s);
 		}
 	}
 	else {
@@ -208,22 +206,9 @@ std::vector<std::shared_ptr<Segment>> Maze::getWalls(Size cellSize, Coordinates 
 				t2.p2.y = t.p2.y + wallThinkness * 2;
 			}
 
-			Segment w1(t.p1, t.p2);
-			w1.height = 8000;
-			w1.textureId = 0;
-			walls.push_back(std::make_shared<Segment>(w1));
-			Segment w2(t2.p1, t2.p2);
-			w2.height = 8000;
-			w2.textureId = 0;
-			walls.push_back(std::make_shared<Segment>(w2));
-			Segment w3(t.p1, t2.p1);
-			w3.height = 8000;
-			w3.textureId = 0;
-			walls.push_back(std::make_shared<Segment>(w3));
-			Segment w4(t.p2, t2.p2);
-			w4.height = 8000;
-			w4.textureId = 0;
-			walls.push_back(std::make_shared<Segment>(w4));
+			ObstacleState s = obstacle->getDefaultState();
+			s.setPoints({ t.p1,t.p2, t2.p2, t2.p1 });
+			walls.push_back(s);
 		}
 	}
 	return walls;
