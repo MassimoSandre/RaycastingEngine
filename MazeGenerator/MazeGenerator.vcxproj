@@ -24,6 +24,7 @@
     <ProjectGuid>{7367302b-a6ce-4d1a-9df7-f0147ad1e21c}</ProjectGuid>
     <RootNamespace>MazeGenerator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>RaycastingEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -136,9 +137,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="entity\EntityProperties.cpp" />
+    <ClCompile Include="entity\EntityState.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Maze.cpp" />
-    <ClCompile Include="MazeGenerator.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="MovingEntity.cpp" />
     <ClCompile Include="obstacle\Obstacles.cpp" />
     <ClCompile Include="obstacle\ObstacleProperties.cpp" />
@@ -154,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="entity\entities\IEntity.h" />
+    <ClInclude Include="entity\EntityProperties.h" />
+    <ClInclude Include="entity\EntityState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MovingEntity.h" />

@@ -27,7 +27,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MazeGenerator.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -73,6 +73,12 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="obstacle\Obstacles.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="entity\EntityState.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="entity\EntityProperties.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,6 +129,15 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="obstacle\Obstacles.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\entities\IEntity.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\EntityState.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="entity\EntityProperties.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
