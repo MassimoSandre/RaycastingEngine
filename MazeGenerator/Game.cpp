@@ -83,60 +83,62 @@ void Game::renderMinimap() {
 	double step = double(MINIMAP_RANGE) / double(MINIMAP_SIZE/2);
 	Coordinates p;
 	this->renderer.drawCircle(Coordinates{ MINIMAP_RANGE, MINIMAP_RANGE }, MINIMAP_RANGE, RGB{0,0,0}, MAZE_CANVAS);
-	//for (std::shared_ptr<Segment> const& w : this->walls) {
-	//	if (w->p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
-	//		if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
-	//			// both p1 and p2 are in range
-	//			this->renderer.drawLine(
-	//				w->p1.x - this->player.state.position.x + MINIMAP_RANGE, w->p1.y - this->player.state.position.y + MINIMAP_RANGE,
-	//				w->p2.x - this->player.state.position.x + MINIMAP_RANGE, w->p2.y - this->player.state.position.y + MINIMAP_RANGE,
-	//				{255,0,0},
-	//				MAZE_CANVAS);
-	//		}
-	//		else {
-	//			// p1 is in range, p2 isn't
-	//			angle = w->p1.getAngle(w->p2);
-	//			p = w->p1;
-	//			while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p1) < w->length) {
-	//				this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-	//				p.x += step * cos(angle);
-	//				p.y -= step * sin(angle);
-	//			}
-	//		}
-	//	}
-	//	else if (w->p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
-	//		// p2 is in range, p1 isn't
-	//		angle = w->p2.getAngle(w->p1);
-	//		p = w->p2;
-	//		while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(w->p2) < w->length) {
-	//			this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-	//			p.x += step * cos(angle);
-	//			p.y -= step * sin(angle);
-	//		}
-	//		
-	//	}
-	//	else if (!(w->length <= MINIMAP_RANGE &&
-	//		w->p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
-	//		w->p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
-	//		angle = w->p1.getAngle(w->p2);
-	//		p = w->p1;
-	//		while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(w->p1) < w->length) {
-	//			p.x += step * cos(angle);
-	//			p.y -= step * sin(angle);
-	//			
-	//		}
-	//		while (p.distance(this->player.state.position) <= MINIMAP_RANGE &&  p.distance(w->p1) < w->length) {
-	//			this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
-	//			p.x += step * cos(angle);
-	//			p.y -= step * sin(angle);
-	//		}
-	//	}
-	//}
-	/*for (std::shared_ptr<Entity> const& e : this->collectibles) {
-		if (e->center.distance(this->player.center) <= MINIMAP_RANGE - e->length/2 ) {
-			this->renderer.drawCircle(e->center - this->player.center + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, e->length/2 , { 255,255,0 }, MAZE_CANVAS);
+	for (int i = 0; i < this->betterWalls.size(); i++) {
+		for (int j = 0; j < this->betterWalls[i].segments.size(); j++) {
+			if (this->betterWalls[i].segments[j].p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
+				if (this->betterWalls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+					// both p1 and p2 are in range
+					this->renderer.drawLine(
+						this->betterWalls[i].segments[j].p1.x - this->player.state.position.x + MINIMAP_RANGE, this->betterWalls[i].segments[j].p1.y - this->player.state.position.y + MINIMAP_RANGE,
+						this->betterWalls[i].segments[j].p2.x - this->player.state.position.x + MINIMAP_RANGE, this->betterWalls[i].segments[j].p2.y - this->player.state.position.y + MINIMAP_RANGE,
+						{ 255,0,0 },
+						MAZE_CANVAS);
+				}
+				else {
+					// p1 is in range, p2 isn't
+					angle = this->betterWalls[i].segments[j].p1.getAngle(this->betterWalls[i].segments[j].p2);
+					p = this->betterWalls[i].segments[j].p1;
+					while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+						this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+						p.x += step * cos(angle);
+						p.y -= step * sin(angle);
+					}
+				}
+			}
+			else if (this->betterWalls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+				// p2 is in range, p1 isn't
+				angle = this->betterWalls[i].segments[j].p2.getAngle(this->betterWalls[i].segments[j].p1);
+				p = this->betterWalls[i].segments[j].p2;
+				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p2) < this->betterWalls[i].segments[j].length) {
+					this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+					p.x += step * cos(angle);
+					p.y -= step * sin(angle);
+				}
+
+			}
+			else if (!(this->betterWalls[i].segments[j].length <= MINIMAP_RANGE &&
+				this->betterWalls[i].segments[j].p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
+				this->betterWalls[i].segments[j].p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
+				angle = this->betterWalls[i].segments[j].p1.getAngle(this->betterWalls[i].segments[j].p2);
+				p = this->betterWalls[i].segments[j].p1;
+				while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+					p.x += step * cos(angle);
+					p.y -= step * sin(angle);
+
+				}
+				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+					this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
+					p.x += step * cos(angle);
+					p.y -= step * sin(angle);
+				}
+			}
 		}
-	}*/
+	}
+	for (int i = 0; i < this->betterCollectibles.size(); i++) {
+		if (this->betterCollectibles[i].position.distance(this->player.state.position) <= MINIMAP_RANGE - this->betterCollectibles[i].length / 2) {
+			this->renderer.drawCircle(this->betterCollectibles[i].position - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, this->betterCollectibles[i].length/2 , { 255,255,0 }, MAZE_CANVAS);
+		}
+	}
 	
 	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.state.position - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
 }
@@ -302,7 +304,6 @@ bool Game::update(double elapsedTime) {
 
 	for (EntityState& e : this->betterCollectibles) {
 		if (e.owner->collideWith(e, player.state.position)) {
-			std::cout << "Amognus";
 			this->placeCollectible(e);
 		}
 	}

@@ -12,8 +12,6 @@ protected:
 	std::shared_ptr<IEntity> self;
 
 public:
-	Texture texture;
-
 	IEntity();
 	IEntity(EntityProperties* properties, std::string textureFileName);
 
