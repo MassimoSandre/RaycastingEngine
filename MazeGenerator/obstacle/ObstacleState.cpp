@@ -5,7 +5,7 @@ ObstacleState::ObstacleState() {
 	this->segments.clear();
 	this->height = 0;
 	this->verticalOffset = 0;
-	//this->owner = nullptr;
+	this->owner = nullptr;
 }
 
 void ObstacleState::setPoints(std::initializer_list<Coordinates> l) {

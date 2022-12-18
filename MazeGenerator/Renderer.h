@@ -59,11 +59,6 @@ public:
 	void drawSegment(std::shared_ptr<Segment>& segment, RGB color, int canvas = 0);
 	void drawSegments(std::vector<std::shared_ptr<Segment>>& segments, RGB color, int canvas = 0);
 
-	/*void drawCollectible(std::shared_ptr<Entity>& collectible, int canvas = 0);
-	void drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, int canvas = 0);
-	void drawCollectible(std::shared_ptr<Entity>& collectible, RGB color, int canvas = 0);
-	void drawCollectibles(std::vector<std::shared_ptr<Entity>>& collectibles, RGB color, int canvas = 0);*/
-
 	void drawView(std::vector<std::shared_ptr<Segment>>& r, int canvas = 0, bool connect = true);
 	void drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, int canvas = 0,bool connect = true);
 	void drawView(std::vector<std::shared_ptr<Segment>>& r, RGB color, Coordinates center, int canvas = 0, bool connect = true);

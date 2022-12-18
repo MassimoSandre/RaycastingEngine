@@ -144,7 +144,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="levelgenerator\Maze.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="obstacle\Obstacles.cpp" />
     <ClCompile Include="obstacle\ObstacleProperties.cpp" />
     <ClCompile Include="obstacle\ObstacleState.cpp" />
     <ClCompile Include="obstacle\obstacles\Wall.cpp" />

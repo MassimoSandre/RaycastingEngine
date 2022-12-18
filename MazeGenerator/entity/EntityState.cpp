@@ -17,7 +17,6 @@ void EntityState::faceTo(Coordinates p) {
 	newP2.x = int(position.x + (this->length / 2) * cos(angle - 3.1415f / 2.0f));
 	newP2.y = int(position.y - (this->length / 2) * sin(angle - 3.1415f / 2.0f));
 
-
 	this->segment.changePoints(newP1, newP2);
 }
 
@@ -34,7 +33,6 @@ void EntityState::set(Coordinates position, double length, double angle) {
 
 	newP2.x += distanceFromCenter * cos(angle);
 	newP2.y -= distanceFromCenter * sin(angle);
-
 
 	this->segment.changePoints(newP1, newP2);
 }

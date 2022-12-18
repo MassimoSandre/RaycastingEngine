@@ -38,7 +38,7 @@ void Game::keyHandler(double multiplier) {
 		}
 	}
 	if (move.length > 0) {
-		MovingEntity::applyMove(this->player.state,move/*, this->walls, multiplier*/);
+		MovingEntity::tryMove(this->player.state,move, this->walls, multiplier);
 	}
 }
 
@@ -50,13 +50,13 @@ bool Game::levelCompleted() {
 void Game::newLevel() {
 	this->generator.setSize(this->currentMazeSize);
 	this->generator.generate();
-	//this->walls.clear();
-	this->betterWalls.clear();
-	this->betterWalls = generator.getWalls(this->cellSize, this->cellSize.toCoordinates(), this->wallThickness, std::make_shared<Wall>(Obstacles::brickWall));
+	
+	this->walls.clear();
+	this->walls = generator.getWalls(this->cellSize, this->cellSize.toCoordinates(), this->wallThickness, std::make_shared<Wall>(Obstacles::brickWall));
 
 	this->player.state.position = { double(this->cellSize.x) / 2,3 * double(this->cellSize.y) / 2 };
 
-	this->placeCollectibles(this->betterCollectibles);
+	this->placeCollectibles(this->collectibles);
 }
 
 void Game::placeCollectible(EntityState& collectible) {
@@ -83,50 +83,50 @@ void Game::renderMinimap() {
 	double step = double(MINIMAP_RANGE) / double(MINIMAP_SIZE/2);
 	Coordinates p;
 	this->renderer.drawCircle(Coordinates{ MINIMAP_RANGE, MINIMAP_RANGE }, MINIMAP_RANGE, RGB{0,0,0}, MAZE_CANVAS);
-	for (int i = 0; i < this->betterWalls.size(); i++) {
-		for (int j = 0; j < this->betterWalls[i].segments.size(); j++) {
-			if (this->betterWalls[i].segments[j].p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
-				if (this->betterWalls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+	for (int i = 0; i < this->walls.size(); i++) {
+		for (int j = 0; j < this->walls[i].segments.size(); j++) {
+			if (this->walls[i].segments[j].p1.distance(this->player.state.position) <= MINIMAP_RANGE) {
+				if (this->walls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
 					// both p1 and p2 are in range
 					this->renderer.drawLine(
-						this->betterWalls[i].segments[j].p1.x - this->player.state.position.x + MINIMAP_RANGE, this->betterWalls[i].segments[j].p1.y - this->player.state.position.y + MINIMAP_RANGE,
-						this->betterWalls[i].segments[j].p2.x - this->player.state.position.x + MINIMAP_RANGE, this->betterWalls[i].segments[j].p2.y - this->player.state.position.y + MINIMAP_RANGE,
+						this->walls[i].segments[j].p1.x - this->player.state.position.x + MINIMAP_RANGE, this->walls[i].segments[j].p1.y - this->player.state.position.y + MINIMAP_RANGE,
+						this->walls[i].segments[j].p2.x - this->player.state.position.x + MINIMAP_RANGE, this->walls[i].segments[j].p2.y - this->player.state.position.y + MINIMAP_RANGE,
 						{ 255,0,0 },
 						MAZE_CANVAS);
 				}
 				else {
 					// p1 is in range, p2 isn't
-					angle = this->betterWalls[i].segments[j].p1.getAngle(this->betterWalls[i].segments[j].p2);
-					p = this->betterWalls[i].segments[j].p1;
-					while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+					angle = this->walls[i].segments[j].p1.getAngle(this->walls[i].segments[j].p2);
+					p = this->walls[i].segments[j].p1;
+					while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->walls[i].segments[j].p1) < this->walls[i].segments[j].length) {
 						this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
 						p.x += step * cos(angle);
 						p.y -= step * sin(angle);
 					}
 				}
 			}
-			else if (this->betterWalls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
+			else if (this->walls[i].segments[j].p2.distance(this->player.state.position) <= MINIMAP_RANGE) {
 				// p2 is in range, p1 isn't
-				angle = this->betterWalls[i].segments[j].p2.getAngle(this->betterWalls[i].segments[j].p1);
-				p = this->betterWalls[i].segments[j].p2;
-				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p2) < this->betterWalls[i].segments[j].length) {
+				angle = this->walls[i].segments[j].p2.getAngle(this->walls[i].segments[j].p1);
+				p = this->walls[i].segments[j].p2;
+				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->walls[i].segments[j].p2) < this->walls[i].segments[j].length) {
 					this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
 					p.x += step * cos(angle);
 					p.y -= step * sin(angle);
 				}
 
 			}
-			else if (!(this->betterWalls[i].segments[j].length <= MINIMAP_RANGE &&
-				this->betterWalls[i].segments[j].p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
-				this->betterWalls[i].segments[j].p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
-				angle = this->betterWalls[i].segments[j].p1.getAngle(this->betterWalls[i].segments[j].p2);
-				p = this->betterWalls[i].segments[j].p1;
-				while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+			else if (!(this->walls[i].segments[j].length <= MINIMAP_RANGE &&
+				this->walls[i].segments[j].p1.distance(this->player.state.position) >= 2 * MINIMAP_RANGE &&
+				this->walls[i].segments[j].p2.distance(this->player.state.position) >= 2 * MINIMAP_RANGE)) {
+				angle = this->walls[i].segments[j].p1.getAngle(this->walls[i].segments[j].p2);
+				p = this->walls[i].segments[j].p1;
+				while (p.distance(this->player.state.position) > MINIMAP_RANGE && p.distance(this->walls[i].segments[j].p1) < this->walls[i].segments[j].length) {
 					p.x += step * cos(angle);
 					p.y -= step * sin(angle);
 
 				}
-				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->betterWalls[i].segments[j].p1) < this->betterWalls[i].segments[j].length) {
+				while (p.distance(this->player.state.position) <= MINIMAP_RANGE && p.distance(this->walls[i].segments[j].p1) < this->walls[i].segments[j].length) {
 					this->renderer.drawPixel(p - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, RGB{ 255,0,0 }, MAZE_CANVAS);
 					p.x += step * cos(angle);
 					p.y -= step * sin(angle);
@@ -134,9 +134,9 @@ void Game::renderMinimap() {
 			}
 		}
 	}
-	for (int i = 0; i < this->betterCollectibles.size(); i++) {
-		if (this->betterCollectibles[i].position.distance(this->player.state.position) <= MINIMAP_RANGE - this->betterCollectibles[i].length / 2) {
-			this->renderer.drawCircle(this->betterCollectibles[i].position - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, this->betterCollectibles[i].length/2 , { 255,255,0 }, MAZE_CANVAS);
+	for (int i = 0; i < this->collectibles.size(); i++) {
+		if (this->collectibles[i].position.distance(this->player.state.position) <= MINIMAP_RANGE - this->collectibles[i].length / 2) {
+			this->renderer.drawCircle(this->collectibles[i].position - this->player.state.position + Coordinates{ MINIMAP_RANGE,MINIMAP_RANGE }, this->collectibles[i].length/2 , { 255,255,0 }, MAZE_CANVAS);
 		}
 	}
 	
@@ -180,8 +180,6 @@ void Game::renderProjection() {
 
 			grey = this->map(pow(distance, 0.5), -10, pow(this->viewLength, 0.5), 200, 0);
 
-			//grey = this->map(pow(abs(this->projectionDrawingSquare.size.y / 2 - j * CHUNK_SIZE), 0.8), 0, pow(this->projectionDrawingSquare.size.y / 2, 0.8), 0, 180);
-
 			this->renderer.drawRect(Coordinates{ p.x,(double)j + int(offset) }, Coordinates{ rectWidth, double(CHUNK_SIZE + int(offset)) }, { int(grey),int(grey),int(grey) }, PROJECTION_CANVAS);
 
 			j += CHUNK_SIZE;
@@ -210,7 +208,7 @@ void Game::renderProjection() {
 			}
 			rectHeight = rectHeight / normalPixelHeight;
 
-			for (int j = normalPixelHeight - pixelHeight; j < normalPixelHeight; j++) {
+			for (int j = int(normalPixelHeight - pixelHeight); j < normalPixelHeight; j++) {
 				RGBA color = info[i][k].element->texture.texture[c * textureSize.y + j % textureSize.y];
 
 				if (color.a != 0) {
@@ -225,7 +223,6 @@ void Game::renderProjection() {
 		}
 	}
 }
-
 
 void Game::init() {
 	Obstacles::load();	
@@ -264,15 +261,6 @@ Game::~Game() {}
 bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
 
-	/*this->currentVerticalOffset += 40;
-	if (this->currentVerticalOffset< 8000) {
-		for (int i = 0; i < this->walls.size() / 2; i++)
-			this->walls[i]->verticalOffset = this->currentVerticalOffset;
-	}
-	else {
-		this->currentVerticalOffset = 0;
-	}*/
-
 	if (!this->pause) {
 		double cursorXDelta = this->screenSize.x / 2 - this->renderer.getMousePosition().x;
 		this->renderer.setMousePosition({ (double)this->screenSize.x / 2, (double)this->screenSize.y / 2 });
@@ -298,19 +286,18 @@ bool Game::update(double elapsedTime) {
 		this->newLevel();
 	}
 
-	for (int i = 0; i < this->betterCollectibles.size(); i++) {
-		this->betterCollectibles[i].faceTo(this->player.state.position);
+	for (int i = 0; i < this->collectibles.size(); i++) {
+		this->collectibles[i].faceTo(this->player.state.position);
 	}
 
-	for (EntityState& e : this->betterCollectibles) {
+	for (EntityState& e : this->collectibles) {
 		if (e.owner->collideWith(e, player.state.position)) {
 			this->placeCollectible(e);
 		}
 	}
 
 	this->player.update();
-	//this->player.cast(this->walls, this->collectibles);
-	this->player.betterCast(this->betterWalls, this->betterCollectibles);
+	this->player.cast(this->walls, this->collectibles);
 
 	return !this->closing && !this->renderer.closing();
 }
@@ -323,16 +310,16 @@ void Game::render() {
 }
 
 void Game::addWall(ObstacleState segment) {
-	this->betterWalls.push_back(segment);
+	this->walls.push_back(segment);
 }
 void Game::addWalls(std::vector<ObstacleState>& segments) {
 	for (int i = 0; i < segments.size(); i++) {
-		this->betterWalls.push_back(segments[i]);
+		this->walls.push_back(segments[i]);
 	}
 }
 
 void Game::generateCollectible() {
-	this->betterCollectibles.push_back(Entities::coin.getDefaultState().with(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
+	this->collectibles.push_back(Entities::coin.getDefaultState().with(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
 }
 void Game::generateCollectibles(int amount) {
 	for (int i = 0; i < amount; i++) {
@@ -340,10 +327,10 @@ void Game::generateCollectibles(int amount) {
 	}
 }
 void Game::addCollectible(EntityState collectible) {
-	this->betterCollectibles.push_back(collectible);
+	this->collectibles.push_back(collectible);
 }
 void Game::addCollectibles(std::vector<EntityState>& collectibles) {
 	for (int i = 0; i < collectibles.size(); i++) {
-		this->betterCollectibles.push_back(collectibles[i]);
+		this->collectibles.push_back(collectibles[i]);
 	}
 }

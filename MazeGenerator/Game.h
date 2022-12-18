@@ -34,13 +34,10 @@ private:
 	Maze generator;
 	Player player;
 
-	//std::vector<std::shared_ptr<Segment>> walls;
-	//std::vector<std::shared_ptr<Entity>> collectibles;
-
 	std::vector<std::shared_ptr<Texture>> textures;
 
-	std::vector<ObstacleState> betterWalls;
-	std::vector<EntityState> betterCollectibles;
+	std::vector<ObstacleState> walls;
+	std::vector<EntityState> collectibles;
 
 	bool pause = false;
 	bool canTogglePause = true;

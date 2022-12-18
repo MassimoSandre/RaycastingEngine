@@ -8,8 +8,6 @@ void Segment::calculateP2() {
 }
 
 Segment::Segment() {
-	/*this->type = Generic;
-	this->verticalOffset = 0.0;*/
 	this->angle = 0.0;
 	this->length = 0.0;
 	this->p1 = { 0,0 };
@@ -17,16 +15,12 @@ Segment::Segment() {
 }
 
 Segment::Segment(Coordinates p1, Coordinates p2) {
-	/*this->type = Generic;
-	this->verticalOffset = 0.0;*/
 	this->p1 = p1;
 	this->p2 = p2;
 	this->length = p1.distance(p2);
 	this->angle = p1.getAngle(p2);
 }
 Segment::Segment(Coordinates p1, double length, double angle) {
-	/*this->type = Generic;
-	this->verticalOffset = 0.0;*/
 	this->p1 = p1;
 	this->length = length;
 	this->angle = angle;
@@ -81,8 +75,6 @@ void Segment::translate(Coordinates offsets) {
 	this->p2.x += offsets.x;
 	this->p2.y += offsets.y;
 }
-
-
 
 IntersectionInfo Segment::getIntersection(Segment& segment) {
 

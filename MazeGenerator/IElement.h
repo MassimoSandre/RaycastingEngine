@@ -9,7 +9,7 @@ protected:
 public:
 	Texture texture;
 
-	IElement() {}
-	IElement(std::string textureFileName) : texture(textureFileName) {}
+	IElement() : HEIGHT(0), VERTICAL_OFFSET(0) {}
+	IElement(std::string textureFileName) : HEIGHT(0), VERTICAL_OFFSET(0),texture(textureFileName) {}
 };
 

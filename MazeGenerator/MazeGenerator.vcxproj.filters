@@ -78,9 +78,6 @@
     <ClCompile Include="obstacle\ObstacleState.cpp">
       <Filter>File di origine\obstacle</Filter>
     </ClCompile>
-    <ClCompile Include="obstacle\Obstacles.cpp">
-      <Filter>File di origine\obstacle</Filter>
-    </ClCompile>
     <ClCompile Include="obstacle\obstacles\Wall.cpp">
       <Filter>File di origine\obstacle\obstacles</Filter>
     </ClCompile>

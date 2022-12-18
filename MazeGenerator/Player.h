@@ -36,9 +36,7 @@ public:
 	Segment moveLeftward(double distance);
 	Segment moveRightward(double distance);
 	
-	
-	//void cast(std::vector<std::shared_ptr<Segment>> segments);//, std::vector<std::shared_ptr<Entity>> entities);
-	void betterCast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities);
+	void cast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities);
 	
 	ViewInfo getFixedDistances();
 };

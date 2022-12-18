@@ -22,6 +22,4 @@ public:
 
 	ObstacleState withPoints(std::initializer_list<Coordinates> l);
 	ObstacleState withPoints(Rect rect);
-	
 };
-

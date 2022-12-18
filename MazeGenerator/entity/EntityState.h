@@ -24,5 +24,4 @@ public:
 
 	void set(Coordinates position, double length, double angle=0);
 	EntityState with(Coordinates position, double length, double angle=0);
-
 };

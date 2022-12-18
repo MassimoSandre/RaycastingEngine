@@ -4,14 +4,10 @@
 
 class Segment {
 public:
-	//RayType type;
 	Coordinates p1;
 	Coordinates p2;
 	double length;
 	double angle;
-	//int textureId;
-	//double height;
-	//double verticalOffset;
 
 	void calculateP2();
 
@@ -32,8 +28,6 @@ public:
 	void setAngle(double angle);
 	void rotate(double angle);
 	void translate(Coordinates offsets);
-
-	//void faceTo(Coordinates p);
 
 	IntersectionInfo getIntersection(Segment& segment);
 };

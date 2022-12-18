@@ -44,7 +44,6 @@ void Player::castWall(ObstacleState& wall, int wallFace) {
 		double d1 = intersection.intersection.distance(this->state.position);
 		if (d1 == 0) break;
 
-		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 
 		double d2 = intersection.intersection.distance(this->rays[i]->p2);
@@ -67,7 +66,6 @@ void Player::castEntity(EntityState& entity) {
 		double d1 = intersection.intersection.distance(this->state.position);
 		if (d1 == 0) break;
 
-		//if (d1 > this->raysLength) continue;
 		if (d1 > this->rays[i]->length) continue;
 
 		double d2 = intersection.intersection.distance(this->rays[i]->p2);
@@ -120,7 +118,7 @@ Segment Player::moveRightward(double distance) {
 	return MovingEntity::move(this->state, o);
 }
 
-void Player::betterCast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities) {
+void Player::cast(std::vector<ObstacleState>& states, std::vector<EntityState>& entities) {
 	for (int i = 0; i < this->nRays; i++) {
 		this->info[i].clear();
 		this->rays[i]->setLength(this->raysLength);
@@ -136,13 +134,6 @@ void Player::betterCast(std::vector<ObstacleState>& states, std::vector<EntitySt
 		}
 	}
 
-	/*for (int i = 0; i < entities.size(); i++) {
-		if (entities[i]->length <= this->raysLength &&
-			entities[i]->p1.distance(this->center) >= 2 * this->raysLength &&
-			entities[i]->p2.distance(this->center) >= 2 * this->raysLength) continue;
-
-		this->castEntity(entities[i], i);
-	}*/
 	for (EntityState& e : entities) {
 		if (e.segment.length <= this->raysLength &&
 			e.segment.p1.distance(this->state.position) >= 2 * this->raysLength &&
