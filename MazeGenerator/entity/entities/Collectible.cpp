@@ -1,7 +1,7 @@
 #include "Collectible.h"
 
 Collectible::Collectible() : IEntity() {}
-Collectible::Collectible(EntityProperties* properties, std::string textureFileName) : IEntity(properties, textureFileName) {
+Collectible::Collectible(IElementProperties* properties, std::string textureFileName) : IEntity(properties, textureFileName) {
 	this->self = std::make_shared<Collectible>(*this);
 }
 

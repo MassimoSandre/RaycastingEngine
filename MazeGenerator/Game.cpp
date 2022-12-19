@@ -320,7 +320,7 @@ void Game::addWalls(std::vector<ObstacleState>& segments) {
 }
 
 void Game::generateCollectible() {
-	this->collectibles.push_back(Entities::coin.getDefaultState().with(Coordinates{0,0}, this->cellSize.x / 3, 0.0));
+	this->collectibles.push_back(Entities::coin.getDefaultState().with(Coordinates{0,0}, 16, 0.0));
 }
 void Game::generateCollectibles(int amount) {
 	for (int i = 0; i < amount; i++) {

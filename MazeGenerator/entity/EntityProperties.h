@@ -1,12 +1,8 @@
 #pragma once
-class EntityProperties {
+#include "../IElementProperties.h"
+
+class EntityProperties : public IElementProperties {
 public:
-	double height;
-	double verticalOffset;
-
-	static EntityProperties* getDefault();
-
-	EntityProperties* setHeight(double height);
-	EntityProperties* setVerticalOffset(double verticalOffset);
+	static IElementProperties* getDefault();
 };
 

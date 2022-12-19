@@ -1,12 +1,8 @@
 #pragma once
-class ObstacleProperties {
+#include "../IElementProperties.h"
+
+class ObstacleProperties : public IElementProperties {
 public:
-	double height;
-	double verticalOffset;
-
-	static ObstacleProperties* getDefault();
-
-	ObstacleProperties* setHeight(double height);
-	ObstacleProperties* setVerticalOffset(double verticalOffset);
+	static IElementProperties* getDefault();
 };
 

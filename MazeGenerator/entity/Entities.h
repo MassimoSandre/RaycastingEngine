@@ -13,9 +13,9 @@ namespace Entities {
 		Entities::player = MovingEntity(EntityProperties::getDefault());
 
 		Entities::coin = Collectible(EntityProperties::getDefault()
-			->setHeight(4000)
-			->setVerticalOffset(1000),
-			"textures/collectible.texture");
+			->setHeight(12000)
+			->setVerticalOffset(0),
+			"textures/zombie.texture");
 	}
 };
 

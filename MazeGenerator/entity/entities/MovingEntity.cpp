@@ -1,7 +1,7 @@
 #include "MovingEntity.h"
 
 MovingEntity::MovingEntity() : IEntity() {}
-MovingEntity::MovingEntity(EntityProperties* properties, std::string textureFileName) : IEntity(properties, textureFileName) {
+MovingEntity::MovingEntity(IElementProperties* properties, std::string textureFileName) : IEntity(properties, textureFileName) {
 	this->self = std::make_shared<MovingEntity>(*this);
 }
 

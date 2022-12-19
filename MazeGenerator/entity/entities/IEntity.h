@@ -13,7 +13,7 @@ protected:
 
 public:
 	IEntity();
-	IEntity(EntityProperties* properties, std::string textureFileName);
+	IEntity(IElementProperties* properties, std::string textureFileName);
 
 	static bool collideWith(EntityState state, Coordinates p);
 

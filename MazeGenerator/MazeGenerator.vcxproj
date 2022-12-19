@@ -142,6 +142,7 @@
     <ClCompile Include="entity\EntityProperties.cpp" />
     <ClCompile Include="entity\EntityState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IElementProperties.cpp" />
     <ClCompile Include="inventory\Inventory.cpp" />
     <ClCompile Include="inventory\ItemStack.cpp" />
     <ClCompile Include="levelgenerator\Maze.cpp" />
@@ -165,6 +166,8 @@
     <ClInclude Include="entity\EntityState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IElement.h" />
+    <ClInclude Include="IElementProperties.h" />
+    <ClInclude Include="IElementState.h" />
     <ClInclude Include="inventory\Inventory.h" />
     <ClInclude Include="inventory\ItemStack.h" />
     <ClInclude Include="levelgenerator\Maze.h" />

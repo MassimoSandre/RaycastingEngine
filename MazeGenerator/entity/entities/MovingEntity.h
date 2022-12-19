@@ -9,7 +9,7 @@
 class MovingEntity : public IEntity {
 public:
 	MovingEntity();
-	MovingEntity(EntityProperties* properties, std::string textureFileName="");
+	MovingEntity(IElementProperties* properties, std::string textureFileName="");
 
 	EntityState getDefaultState() override;
 

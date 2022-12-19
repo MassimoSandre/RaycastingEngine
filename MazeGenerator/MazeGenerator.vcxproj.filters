@@ -114,6 +114,9 @@
     <ClCompile Include="Register.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="IElementProperties.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -180,6 +183,12 @@
       <Filter>File di intestazione\inventory</Filter>
     </ClInclude>
     <ClInclude Include="Register.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="IElementState.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="IElementProperties.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

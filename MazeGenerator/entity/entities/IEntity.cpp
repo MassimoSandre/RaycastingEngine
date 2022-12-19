@@ -1,7 +1,7 @@
 #include "IEntity.h"
 
 IEntity::IEntity() {}
-IEntity::IEntity(EntityProperties* properties, std::string textureFileName) : IElement(textureFileName) {
+IEntity::IEntity(IElementProperties* properties, std::string textureFileName) : IElement(textureFileName) {
 	this->HEIGHT = properties->height;
 	this->VERTICAL_OFFSET = properties->verticalOffset;
 }

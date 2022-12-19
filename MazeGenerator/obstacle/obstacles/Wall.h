@@ -8,7 +8,7 @@
 class Wall : public IObstacle{
 public:
 	Wall() ;
-	Wall(ObstacleProperties* properties, std::string textureFileName);
+	Wall(IElementProperties* properties, std::string textureFileName);
 
 	ObstacleState getDefaultState() override;
 };

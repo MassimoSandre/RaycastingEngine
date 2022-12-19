@@ -9,7 +9,7 @@ protected:
 	std::shared_ptr<IObstacle> self;
 public:
 	IObstacle() {}
-	IObstacle(ObstacleProperties* properties, std::string textureFileName) : IElement(textureFileName) {
+	IObstacle(IElementProperties* properties, std::string textureFileName) : IElement(textureFileName) {
 		this->HEIGHT = properties->height;
 		this->VERTICAL_OFFSET = properties->verticalOffset;
 	}

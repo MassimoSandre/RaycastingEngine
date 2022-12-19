@@ -6,7 +6,7 @@
 class Collectible : public IEntity {
 public:
 	Collectible();
-	Collectible(EntityProperties* properties, std::string textureFileName);
+	Collectible(IElementProperties* properties, std::string textureFileName);
 
 	EntityState getDefaultState() override;
 };
