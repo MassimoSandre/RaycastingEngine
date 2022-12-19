@@ -3,6 +3,7 @@
 #include "obstacle/ObstacleState.h"
 #include "utils/ViewInfo.h"
 #include "entity/entities/IEntity.h"
+#include "inventory/Inventory.h"
 
 class Player  {
 private:
@@ -18,6 +19,8 @@ private:
 	void castEntity(EntityState& entity);
 
 public:
+	Inventory inventory;
+
 	EntityState state;
 
 	Player(double fov, int nRays, double raysLength);

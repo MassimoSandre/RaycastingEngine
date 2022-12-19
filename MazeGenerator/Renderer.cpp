@@ -65,9 +65,26 @@ bool Renderer::isKeyPressed(int key) {
 bool Renderer::isKeyReleased(int key) {
 	return glfwGetKey(this->window, key) == GLFW_RELEASE;
 }
-bool Renderer::leftClick() {
+
+bool Renderer::leftClickPressed() {
 	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 }
+bool Renderer::leftClickReleased() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE;
+}
+bool Renderer::middleClickClicked() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
+}
+bool Renderer::middleClickReleased() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE;
+}
+bool Renderer::rightClickPressed() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+}
+bool Renderer::rightClickReleased() {
+	return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE;
+}
+
 bool Renderer::closing() {
 	return glfwWindowShouldClose(this->window);
 }

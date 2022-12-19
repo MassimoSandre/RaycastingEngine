@@ -142,12 +142,15 @@
     <ClCompile Include="entity\EntityProperties.cpp" />
     <ClCompile Include="entity\EntityState.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="inventory\Inventory.cpp" />
+    <ClCompile Include="inventory\ItemStack.cpp" />
     <ClCompile Include="levelgenerator\Maze.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="obstacle\ObstacleProperties.cpp" />
     <ClCompile Include="obstacle\ObstacleState.cpp" />
     <ClCompile Include="obstacle\obstacles\Wall.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Register.cpp" />
     <ClCompile Include="utils\Segment.cpp" />
     <ClCompile Include="utils\Texture.cpp" />
     <ClCompile Include="utils\utils.cpp" />
@@ -162,6 +165,8 @@
     <ClInclude Include="entity\EntityState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IElement.h" />
+    <ClInclude Include="inventory\Inventory.h" />
+    <ClInclude Include="inventory\ItemStack.h" />
     <ClInclude Include="levelgenerator\Maze.h" />
     <ClInclude Include="obstacle\Obstacles.h" />
     <ClInclude Include="obstacle\ObstacleProperties.h" />
@@ -169,6 +174,7 @@
     <ClInclude Include="obstacle\obstacles\IObstacle.h" />
     <ClInclude Include="obstacle\obstacles\Wall.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Register.h" />
     <ClInclude Include="utils\Segment.h" />
     <ClInclude Include="utils\Texture.h" />
     <ClInclude Include="utils\ViewInfo.h" />

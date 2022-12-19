@@ -31,7 +31,14 @@ public:
 
 	bool isKeyPressed(int key);
 	bool isKeyReleased(int key);
-	bool leftClick();
+
+	bool leftClickPressed();
+	bool leftClickReleased();
+	bool middleClickClicked();
+	bool middleClickReleased();
+	bool rightClickPressed();
+	bool rightClickReleased();
+
 	bool closing();
 	
 	void hideCursor();

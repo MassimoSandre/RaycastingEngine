@@ -15,4 +15,5 @@ public:
 	}
 
 	virtual ObstacleState getDefaultState() = 0;
+
 };

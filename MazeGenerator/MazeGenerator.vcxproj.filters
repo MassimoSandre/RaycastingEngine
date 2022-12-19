@@ -49,6 +49,12 @@
     <Filter Include="File di origine\utils">
       <UniqueIdentifier>{5163a03e-61bd-47e9-bd45-45de29946d25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di origine\inventory">
+      <UniqueIdentifier>{1d9d956e-f9c1-46fd-a96b-87358d1abadf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\inventory">
+      <UniqueIdentifier>{260b4f31-6268-480a-8a1f-01911006b480}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -98,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="entity\entities\Collectible.cpp">
       <Filter>File di origine\entity\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="inventory\ItemStack.cpp">
+      <Filter>File di origine\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="inventory\Inventory.cpp">
+      <Filter>File di origine\inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Register.cpp">
+      <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +171,15 @@
       <Filter>File di intestazione\entity\entities</Filter>
     </ClInclude>
     <ClInclude Include="IElement.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="inventory\ItemStack.h">
+      <Filter>File di intestazione\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="inventory\Inventory.h">
+      <Filter>File di intestazione\inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Register.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

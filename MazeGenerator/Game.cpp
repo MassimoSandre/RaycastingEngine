@@ -293,6 +293,7 @@ bool Game::update(double elapsedTime) {
 	for (EntityState& e : this->collectibles) {
 		if (e.owner->collideWith(e, player.state.position)) {
 			this->placeCollectible(e);
+			this->player.inventory.addItemStack(ItemStack(e.owner, 1));
 		}
 	}
 
