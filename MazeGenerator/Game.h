@@ -19,10 +19,10 @@
 #define PROJECTION_CANVAS 2
 
 #define MINIMAP_SIZE 150
-#define MINIMAP_RANGE 100
+#define MINIMAP_RANGE 400
 
-#define DEFAULT_WALL_HEIGHT 16000.0
-#define PIXEL_HEIGHT_REAL_HEIGHT_RATIO 32.0/DEFAULT_WALL_HEIGHT
+#define DEFAULT_WALL_HEIGHT 32000.0
+#define PIXEL_HEIGHT_REAL_HEIGHT_RATIO 128.0/DEFAULT_WALL_HEIGHT
 
 #define CHUNK_SIZE 4
 #define WALL_PIXEL_HEIGHT 32
@@ -69,7 +69,10 @@ private:
 	void placeCollectible(EntityState& collectible);
 	void placeCollectibles(std::vector<EntityState>& entities);
 	void renderMinimap();
+
+	void renderColumn(int column, double distance, double colOffset, int wallId, double colsize);
 	void renderProjection();
+	
 	void loadTextures();
 
 	void init();
@@ -79,6 +82,8 @@ public:
 
 	bool update(double elapsedTime);
 	void render();
+
+	void updateTitle(std::string title);
 
 	void addWall(ObstacleState segment);
 	void addWalls(std::vector<ObstacleState>& segments);

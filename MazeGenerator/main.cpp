@@ -9,14 +9,14 @@
 #define WINDOW_HEIGHT 576
 
 // RAYCASTER
-#define RAYS_LENGTH 100
-#define N_RAYS 200
+#define RAYS_LENGTH 400
+#define N_RAYS 400
 #define DEFAULT_FOV 3.1415/2
 
 // MAZE
 #define DEFAULT_MAZE_SIZE 1
-#define DEFAULT_CELL_SIZE 72
-#define DEFAULT_WALL_THICKNESS 2
+#define DEFAULT_CELL_SIZE 144
+#define DEFAULT_WALL_THICKNESS 8
 
 #define DEBUG_INFO true
 
@@ -57,14 +57,17 @@ int main(int argc, char *argv[]) {
         totalSecondsElapsed += timeElapsed/1000000000.0;
         if (totalSecondsElapsed >= 1.0) {
             std::cout << "FPS:" << double(frame) / totalSecondsElapsed << std::endl;
+            game.updateTitle(std::to_string(double(frame) / totalSecondsElapsed));
             totalSecondsElapsed = 0.0;
             frame = 0;
         }
+
 #endif
         lastTime = now;
 
         if (unprocessed >= 1.0) {
             running = game.update(unprocessed*((double)DEFAULT_CELL_SIZE/36));
+
             game.render();
             unprocessed = 0.0;
 #if DEBUG_INFO

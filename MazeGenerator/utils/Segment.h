@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils.cpp"
+#include "ViewInfo.h"
 
 class Segment {
 public:
@@ -8,6 +9,8 @@ public:
 	Coordinates p2;
 	double length;
 	double angle;
+
+	RenderInfo renderInfo;
 
 	void calculateP2();
 
@@ -29,7 +32,7 @@ public:
 	void rotate(double angle);
 	void translate(Coordinates offsets);
 
-	IntersectionInfo getIntersection(Segment& segment);
+	void getIntersection(IntersectionInfo* info, Segment* segment);
 };
 
 typedef Segment Ray;

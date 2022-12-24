@@ -10,7 +10,9 @@ typedef struct {
 	double height;
 	double verticalOffset;
 	std::shared_ptr<IElement> element;
-} v;
+} RenderInfo;
 
-typedef std::vector<v> ri;
-typedef std::vector<ri> ViewInfo;
+typedef int RenderDIO;
+
+typedef std::vector<RenderInfo> RayInfo;
+typedef std::vector<RayInfo> ViewInfo;

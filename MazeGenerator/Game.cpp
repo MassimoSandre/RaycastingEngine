@@ -142,9 +142,183 @@ void Game::renderMinimap() {
 	
 	this->renderer.drawView(this->player.rays, {255,255,255}, this->player.state.position - Coordinates{MINIMAP_RANGE,MINIMAP_RANGE}, MAZE_CANVAS);
 }
+
+#include <chrono>
+
+void Game::renderColumn(int column, double distance, double colOffset, int wallId, double colsize) {
+	double rectHeight = (this->walls[wallId].height) / distance;
+	double wallHeight = (DEFAULT_WALL_HEIGHT + 2 * (this->cameraVerticalOffset)) / distance;
+	double offset = (wallHeight - rectHeight) / 2;
+	Size textureSize = this->walls[wallId].owner->texture.size;
+	
+	double normalPixelHeight = double(PIXEL_HEIGHT_REAL_HEIGHT_RATIO) * this->walls[wallId].height;
+
+	
+
+	double pixelHeight = normalPixelHeight - (PIXEL_HEIGHT_REAL_HEIGHT_RATIO * (this->walls[wallId].verticalOffset));
+
+	double grey = this->map(pow(distance, 0.8), 0, pow(this->viewLength, 0.8), 0.9, 0);
+
+	double y = (this->projectionDrawingCanvas.realSize.y - rectHeight) / 2 + offset;
+
+	int c = int(colOffset) - textureSize.x / 2;
+	if (c >= 0) {
+		c = c % textureSize.x;
+	}
+	else {
+		c = (textureSize.x - c % textureSize.x) % textureSize.x;
+	}
+	rectHeight = rectHeight / normalPixelHeight;
+	
+	for (int j = int(normalPixelHeight - pixelHeight); j < normalPixelHeight; j++) {
+		RGBA color = this->walls[wallId].owner->texture.texture[c * textureSize.y + j % textureSize.y];
+
+
+		
+		if (color.a != 0) {
+			color.r = int(double(color.r) * grey);
+			color.g = int(double(color.g) * grey);
+			color.b = int(double(color.b) * grey);
+			
+			this->renderer.drawFastRect({colsize*column, y}, Coordinates{ colsize , rectHeight }, color.toRGB(), this->projectionDrawingCanvas, {1024, 576});
+		}
+
+		y += rectHeight;
+		
+	}
+	
+}
+
 void Game::renderProjection() {
-	ViewInfo info = this->player.getFixedDistances();
-	size_t len = info.size();
+	
+	ViewInfo info;
+	
+	double distance{ 0 };
+	double colOffset{ 0 };
+	int wall = 0;
+	int wallCount = 0;
+	double colSize = this->projectionDrawingCanvas.realSize.x / this->player.rays.size();
+
+	IntersectionInfo intersection;
+	//double distance;
+
+	//std::vector<int> a(rays.size());
+	for (int i = 0; i < this->player.rays.size(); i++) {
+		this->player.rays[i]->setLength(this->player.raysLength);
+		//a[i] = 0;
+	}
+
+	//auto now1 = std::chrono::steady_clock::now();
+
+	for (int j = 0; j < this->player.rays.size(); j++) {
+		wallCount = 0;
+		wall = -1;
+		distance = -1;
+		for (ObstacleState& e : this->walls) {
+			for (int i = 0; i < e.segments.size(); i++) {
+				if (e.segments[i].length <= this->player.raysLength &&	
+					e.segments[i].p1.distance(this->player.rays[0]->p1) >= 1.5 * this->player.raysLength &&
+					e.segments[i].p2.distance(this->player.rays[0]->p1) >= 1.5 * this->player.raysLength) continue;
+
+				//this->player.castWall(e, i);
+			
+				//this->player.rays[j]->getIntersection(&info,&e.segments[i]);
+
+				double a1, b1, c1, a2, b2, c2, den;
+
+				a1 = (this->player.rays[j]->p2.y) - (this->player.rays[j]->p1.y);
+				b1 = (this->player.rays[j]->p1.x) - (this->player.rays[j]->p2.x);
+				c1 = a1 * (this->player.rays[j]->p1.x) + b1 * (this->player.rays[j]->p1.y);
+
+				a2 = (e.segments[i].p2.y) - (e.segments[i].p1.y);
+				b2 = (e.segments[i].p1.x) - (e.segments[i].p2.x);
+				c2 = a2 * (e.segments[i].p1.x) + b2 * (e.segments[i].p1.y);
+
+				den = a1 * b2 - a2 * b1;
+
+
+				if (den == 0.0) {
+					intersection.intersection = { -1,-1 };
+				}
+				else {
+
+					intersection.intersection = { ((b2 * c1 - b1 * c2) / den), ((a1 * c2 - a2 * c1) / den) };
+
+
+					intersection.colOffset = e.segments[i].p1.distance(intersection.intersection);
+
+
+					if (intersection.colOffset > e.segments[i].length) {
+						intersection.intersection = { -1,-1 };
+					}
+					else {
+						if (e.segments[i].p2.distance(intersection.intersection) > e.segments[i].length) {
+							intersection.intersection = { -1,-1 };
+						}
+						else {
+							intersection.colOffset -= e.segments[i].length / 2.0;
+						}
+					}
+				}
+
+				if (intersection.intersection.x < 0 || intersection.intersection.y < 0) continue;
+
+				if (intersection.intersection.x == 0 && intersection.intersection.y == 0) continue;
+
+				double d1 = intersection.intersection.distance(this->player.rays[0]->p1);
+				if (d1 == 0) continue;
+
+				if (d1 > this->player.rays[j]->length) continue;
+
+				double d2 = intersection.intersection.distance(this->player.rays[j]->p2);
+				if (d2 > this->player.rays[j]->length) continue;
+
+				//if (info[rays.size() - 1 - j].size() >= 1) {
+				//	//info[nRays - 1 - j][0] = RenderInfo{d1 * (double)cos(this->player.rays[j]->angle - state.angle), info.colOffset, e.height, e.verticalOffset, e.owner};
+				//	//info[nRays - 1 - j][0].distance =0;//.distance = d1 * (double)cos(this->player.rays[j]->angle - state.angle);
+				//	//fov = 90;
+				//	
+				//}
+				//else {
+				//	//info[nRays - 1 - j].push_back({ d1 * (double)cos(this->player.rays[j]->angle - state.angle), info.colOffset, e.height, e.verticalOffset, e.owner });
+				//}
+				//a[j] = RenderInfo{d1 /* (double)cos(this->player.rays[j]->angle - state.angle)*/, info.colOffset, e.height, e.verticalOffset, e.owner};
+				//this->player.rays[j]->p1.x = 1;
+				//this->player.rays[j]->changeP2(info.intersection); 
+				//this->player.rays[j]->calculateP2();
+				//distance = 0;
+				//azzo.distance = d1 * (double)cos(this->player.rays[j]->angle - this->player.state.angle);
+				if (distance == -1 || d1 * (double)cos(this->player.rays[j]->angle - this->player.state.angle) < distance) {
+					distance = d1 * (double)cos(this->player.rays[j]->angle - this->player.state.angle);
+					colOffset = intersection.colOffset;
+					wall = wallCount;
+				}
+				
+
+			}
+			wallCount++;
+
+		}
+		if (wall != -1)
+			this->renderColumn(this->player.nRays - j - 1, distance, colOffset, wall, colSize);
+	}
+
+	//for (EntityState& e : entities) {
+	//	if (e.segment.length <= raysLength &&
+	//		e.segment.p1.distance(state.position) >= 2 * raysLength &&
+	//		e.segment.p2.distance(state.position) >= 2 * raysLength) continue;
+
+	//		//castEntity(e);
+	//}
+
+
+	/*auto now2 = std::chrono::steady_clock::now();
+	double updateTime = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(now2 - now1).count();
+	std::cout << updateTime << std::endl;*/
+
+	return;
+	//ViewInfo info = this->player.getFixedDistances();
+	/*size_t len = info.size();
 
 	double rectWidth = this->projectionDrawingCanvas.realSize.x / len;
 
@@ -184,9 +358,9 @@ void Game::renderProjection() {
 
 			j += CHUNK_SIZE;
 
-		}
+		}*/
 
-		for (int k = 0; k < info[i].size(); k++) {
+		/*for (int k = 0; k < info[i].size(); k++) {
 			rectHeight = (info[i][k].height) / info[i][k].distance;
 			wallHeight = (DEFAULT_WALL_HEIGHT + 2*(this->cameraVerticalOffset)) / info[i][k].distance;
 			offset = (wallHeight - rectHeight) / 2;
@@ -220,8 +394,8 @@ void Game::renderProjection() {
 
 				p.y += rectHeight;
 			}
-		}
-	}
+		}*/
+	/*}*/
 }
 
 void Game::init() {
@@ -256,7 +430,7 @@ Game::Game(Size windowSize, std::string windowTitle,double fov, int noRays, doub
 }
 
 Game::~Game() {}
-
+#include <chrono>
 
 bool Game::update(double elapsedTime) {
 	this->keyHandler(elapsedTime);
@@ -298,7 +472,9 @@ bool Game::update(double elapsedTime) {
 	}
 
 	this->player.update();
-	this->player.cast(this->walls, this->collectibles);
+	double* a = (double*)malloc(sizeof(double) * this->player.rays.size());
+	this->player.cast(this->walls, this->collectibles, a);
+	free(a);
 
 	return !this->closing && !this->renderer.closing();
 }
@@ -308,6 +484,10 @@ void Game::render() {
 	this->renderMinimap();
 
 	this->renderer.update();
+}
+
+void Game::updateTitle(std::string title) {
+	this->renderer.updateTitle(title);
 }
 
 void Game::addWall(ObstacleState segment) {

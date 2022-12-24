@@ -9,12 +9,12 @@ namespace Obstacles {
 
 	static void load() {
 		Obstacles::darkWall = Wall(ObstacleProperties::getDefault()
-			->setHeight(16000)
+			->setHeight(32000)
 			->setVerticalOffset(0),
 			"textures/wallAlt.texture");
 
 		Obstacles::brickWall = Wall(ObstacleProperties::getDefault()
-			->setHeight(16000)
+			->setHeight(32000)
 			->setVerticalOffset(0),
 			"textures/brickwall.texture");
 	}

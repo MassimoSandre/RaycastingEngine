@@ -14,11 +14,13 @@ private:
 
 	std::vector<Canvas> drawingCanvas;
 
-	double scaleX(double x, int canvas);
-	double scaleY(double y, int canvas);
+	inline double scaleX(double x, int canvas);
+	inline double scaleY(double y, int canvas);
 public:
 	Renderer(Size windowSize, std::string windowTitle="Window");
 	~Renderer();
+
+	void updateTitle(std::string title);
 
 	void addCanvas(Canvas canvas);
 
@@ -77,6 +79,8 @@ public:
 	void drawRect(Coordinates topLeft, Coordinates size, RGB color, int canvas = 0);
 	void drawRect(Rect rect, int canvas = 0);
 	void drawRect(Rect rect, RGB color, int canvas = 0);
+
+	void drawFastRect(Coordinates topLeft, Coordinates size, RGB color, Canvas canvas, Coordinates screenSize);
 
 	void drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, int canvas);
 	void drawQuadrilateral(Coordinates p1, Coordinates p2, Coordinates p3, Coordinates p4, RGB color, int canvas);

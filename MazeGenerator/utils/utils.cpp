@@ -25,6 +25,12 @@ typedef struct Coordinates{
 	double y;
 
 	double distance(Coordinates coord) {
+		if (coord.x == x) {
+			return abs(coord.y - y);
+		}
+		if (coord.y == y) {
+			return abs(coord.x - x);
+		}
 		return sqrt((x - coord.x) * (x - coord.x) + (y - coord.y) * (y - coord.y));
 	}
 	double getAngle(Coordinates coord) {

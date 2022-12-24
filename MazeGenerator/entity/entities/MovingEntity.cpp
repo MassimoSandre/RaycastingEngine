@@ -32,7 +32,8 @@ void MovingEntity::tryMove(EntityState& state, Segment& move, std::vector<Obstac
 	bool possible = true;
 	for (int i = 0; i < walls.size(); i++) {
 		for (int j = 0; j < walls[i].segments.size(); j++) {
-			IntersectionInfo info = moveX.getIntersection(walls[i].segments[j]);
+			IntersectionInfo info;
+			moveX.getIntersection(&info, &walls[i].segments[j]);
 
 			if (info.intersection.x != -1 || info.intersection.y != -1) {
 				double d1 = info.intersection.distance(moveX.p1);
@@ -57,7 +58,8 @@ void MovingEntity::tryMove(EntityState& state, Segment& move, std::vector<Obstac
 	possible = true;
 	for (int i = 0; i < walls.size(); i++) {
 		for (int j = 0; j < walls[i].segments.size(); j++) {
-			IntersectionInfo info = moveY.getIntersection(walls[i].segments[j]);
+			IntersectionInfo info;
+			moveY.getIntersection(&info, &walls[i].segments[j]);
 
 			if (info.intersection.x != -1 || info.intersection.y != -1) {
 				double d1 = info.intersection.distance(moveY.p1);

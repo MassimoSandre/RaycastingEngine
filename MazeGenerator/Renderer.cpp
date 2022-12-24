@@ -37,6 +37,10 @@ Renderer::~Renderer() {
 	glfwTerminate();
 }
 
+void Renderer::updateTitle(std::string title) {
+	glfwSetWindowTitle(this->window, title.c_str());
+}
+
 void Renderer::init() {
 	if (!glfwInit()) {
 		throw std::ios_base::failure("glfw init failed");
@@ -257,6 +261,44 @@ void Renderer::drawRect(Rect rect, int canvas) {
 void Renderer::drawRect(Rect rect, RGB color, int canvas) {
 	this->drawRect(rect.topLeft, rect.size, color, canvas);
 }
+
+void Renderer::drawFastRect(Coordinates topLeft, Coordinates size, RGB color, Canvas canvas, Coordinates screenSize) {
+	double x1 = topLeft.x,
+		x2 = topLeft.x + size.x;
+	double y1 = topLeft.y,
+		y2 = topLeft.y + size.y;
+
+	
+	double x1f = x1 * (canvas.drawingRect.size.x / canvas.realSize.x);
+	x1f += canvas.drawingRect.topLeft.x;
+	x1f = (double)2 * x1f / (screenSize.x) - 1;
+	
+	
+	double y1f = y1 * (canvas.drawingRect.size.y / canvas.realSize.y);
+	y1f += canvas.drawingRect.topLeft.y;
+	y1f = (double)2 * y1f / (screenSize.y) - 1;
+	
+	double x2f = x2 * (canvas.drawingRect.size.x / canvas.realSize.x);
+	x2f += canvas.drawingRect.topLeft.x;
+	x2f = (double)2 * x2f / (screenSize.x) - 1;
+
+
+	double y2f = y2 * (canvas.drawingRect.size.y / canvas.realSize.y);
+	y2f += canvas.drawingRect.topLeft.y;
+	y2f = (double)2 * y2f / (screenSize.y) - 1;
+
+
+	glColor3ub(color.r, color.g, color.b);
+	glBegin(GL_TRIANGLES);
+	glVertex2d(x1f, -y1f);
+	glVertex2d(x1f, -y2f);
+	glVertex2d(x2f, -y2f);
+	glVertex2d(x2f, -y1f);
+	glVertex2d(x2f, -y2f);
+	glVertex2d(x1f, -y1f);
+	glEnd();
+}
+
 
 void Renderer::drawCircle(Coordinates center, double radius, int canvas) {
 	this->drawCircle(center, radius, { 255,255,255 }, canvas);
