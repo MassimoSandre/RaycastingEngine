@@ -190,7 +190,6 @@ void Game::renderColumn(int column, double distance, double colOffset, int wallI
 }
 
 void Game::renderProjection() {
-	
 	ViewInfo info;
 	
 	double distance{ 0 };
@@ -479,10 +478,9 @@ bool Game::update(double elapsedTime) {
 	return !this->closing && !this->renderer.closing();
 }
 void Game::render() {
-	
 	this->renderProjection();
 	this->renderMinimap();
-
+	
 	this->renderer.update();
 }
 

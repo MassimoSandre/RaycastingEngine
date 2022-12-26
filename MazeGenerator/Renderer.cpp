@@ -51,6 +51,7 @@ void Renderer::init() {
 		throw std::ios_base::failure("window creation failed");
 	}
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0);
 }
 
 Coordinates Renderer::getMousePosition() {
